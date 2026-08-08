@@ -2,3 +2,4 @@
 __pycache__/ 
 *.pyc 
 debliga.db 
+main_old.py 
