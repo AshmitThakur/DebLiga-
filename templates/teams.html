@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teams | LADC Debate League 2026</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
     <nav>
@@ -16,50 +16,51 @@
         <a href="/speaker-rankings">Speaker Rankings</a>
     </nav>
 
+
     <main>
+        <header class="page-header">
+            <h1>Teams</h1>
+            <p>Teams and speakers participating in the LADC Debate League 2026.</p>
+        </header>
 
-        <h1>Teams</h1>
-
-        <p>LADC Debate League 2026</p>
-
-        <div class="card-grid">
-
+        <section class="team-grid">
             {% for team in teams %}
+                <article class="team-card">
+                    <h2>
+                        <a href="/teams/{{ team.id }}">
+                            {{ team.name }}
+                        </a>
+                    </h2>
 
-            <div class="card">
+                    <p>Pool {{ team.pool_id }}</p>
 
-                <h2>
-                    <a href="/teams/{{ team.id }}">
-                        {{ team.name }}
-                    </a>
-                </h2>
+                    <h3>Speakers</h3>
 
-                <p>Pool {{ team.pool_id }}</p>
+                    {% if team.speakers %}
+                        <ul>
+                            {% for speaker in team.speakers %}
+                                <li>
+                                    <a href="/speakers/{{ speaker.id }}">
+                                        {{ speaker.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No speakers added yet.</p>
+                    {% endif %}
 
-                <h3>Speakers</h3>
-
-                {% for speaker in team.speakers %}
-
-                <p>
-                    <a href="/speakers/{{ speaker.id }}">
-                        {{ speaker.name }}
-                    </a>
-                </p>
-
-                {% else %}
-
-                <p>No speakers added yet.</p>
-
-                {% endfor %}
-
-            </div>
-
+                    <p>
+                        <a href="/teams/{{ team.id }}">
+                            View team profile →
+                        </a>
+                    </p>
+                </article>
+            {% else %}
+                <p>No teams have been added yet.</p>
             {% endfor %}
-
-        </div>
-
+        </section>
     </main>
 
 </body>
-
 </html>

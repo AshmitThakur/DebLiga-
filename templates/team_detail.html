@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>{{ team.name }} | DebLiga</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ team.name }} | LADC Debate League 2026</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
     <nav>
@@ -16,34 +16,104 @@
         <a href="/speaker-rankings">Speaker Rankings</a>
     </nav>
 
+
     <main>
+        <header class="page-header">
+            <p><a href="/teams">← Back to teams</a></p>
 
-        <h1>{{ team.name }}</h1>
+            <h1>{{ team.name }}</h1>
 
-        <p>
-            {{ pool.name }}
-        </p>
+            {% if pool %}
+                <p>{{ pool.name }}</p>
+            {% endif %}
 
-        <h2>Speakers</h2>
+            <div class="team-record">
+                <strong>{{ wins }} Wins</strong>
+                <span>•</span>
+                <strong>{{ losses }} Losses</strong>
+            </div>
+        </header>
 
-        {% for speaker in speakers %}
+        <section>
+            <h2>Speakers</h2>
 
-        <div class="card">
+            {% if speakers %}
+                <ul class="speaker-list">
+                    {% for speaker in speakers %}
+                        <li>
+                            <a href="/speakers/{{ speaker.id }}">
+                                {{ speaker.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No speakers have been added to this team yet.</p>
+            {% endif %}
+        </section>
 
-            <a href="/speakers/{{ speaker.id }}">
-                {{ speaker.name }}
-            </a>
+        <section>
+            <h2>Debate History</h2>
 
-        </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Stage</th>
+                            <th>Round</th>
+                            <th>Opponent</th>
+                            <th>Result</th>
+                            <th>Team Avg</th>
+                            <th>Opponent Avg</th>
+                        </tr>
+                    </thead>
 
-        {% else %}
-
-        <p>No speakers added yet.</p>
-
-        {% endfor %}
-
+                    <tbody>
+                        {% for item in history %}
+                            <tr>
+                                <td>
+                                    {{ item.debate.stage|replace("_", " ")|title }}
+                                </td>
+                                <td>
+                                    {{ item.round.number if item.round else "—" }}
+                                </td>
+                                <td>
+                                    {% if item.opponent %}
+                                        <a href="/teams/{{ item.opponent.id }}">
+                                            {{ item.opponent.name }}
+                                        </a>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                                <td>{{ item.result }}</td>
+                                <td>
+                                    {% if item.team_average_score is not none %}
+                                        {{ "%.2f"|format(item.team_average_score) }}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if item.opponent_average_score is not none %}
+                                        {{ "%.2f"|format(item.opponent_average_score) }}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6">
+                                    No debates recorded for this team yet.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
 </body>
-
 </html>

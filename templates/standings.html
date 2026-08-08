@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Standings | LADC Debate League 2026</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
     <nav>
@@ -16,63 +16,77 @@
         <a href="/speaker-rankings">Speaker Rankings</a>
     </nav>
 
+
     <main>
+        <header class="page-header">
+            <h1>Pool Standings</h1>
+            <p>
+                Teams are ranked by points/wins first, then by average team score.
+            </p>
+        </header>
 
-        <h1>Pool Standings</h1>
+        {% for pool_id, pool in pools.items() %}
+            <section class="standings-pool">
+                <h2>{{ pool.name }}</h2>
 
-        <table>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Team</th>
+                                <th>Played</th>
+                                <th>Wins</th>
+                                <th>Losses</th>
+                                <th>Points</th>
+                                <th>Avg Team Score</th>
+                            </tr>
+                        </thead>
 
-            <thead>
+                        <tbody>
+                            {% set pool_rows = namespace(count=0) %}
 
-                <tr>
-                    <th>Team</th>
-                    <th>Pool</th>
-                    <th>Played</th>
-                    <th>Wins</th>
-                    <th>Losses</th>
-                    <th>Points</th>
-                </tr>
+                            {% for team in table %}
+                                {% if team.pool_id == pool_id %}
+                                    {% set pool_rows.count = pool_rows.count + 1 %}
+                                    <tr>
+                                        <td>{{ team.rank }}</td>
+                                        <td>
+                                            <a href="/teams/{{ team.team_id }}">
+                                                {{ team.team_name }}
+                                            </a>
+                                        </td>
+                                        <td>{{ team.played }}</td>
+                                        <td>{{ team.wins }}</td>
+                                        <td>{{ team.losses }}</td>
+                                        <td><strong>{{ team.points }}</strong></td>
+                                        <td>
+                                            {{ "%.2f"|format(team.average_team_score) }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
 
-            </thead>
+                            {% if pool_rows.count == 0 %}
+                                <tr>
+                                    <td colspan="7">
+                                        No teams in this pool yet.
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% else %}
+            <p>No pools have been created yet.</p>
+        {% endfor %}
 
-            <tbody>
-
-                {% for team in table %}
-
-                <tr>
-
-                    <td>
-                        <a href="/teams/{{ team.team_id }}">
-                            {{ team.team_name }}
-                        </a>
-                    </td>
-
-                    <td>
-                        {{ pools[team.pool_id].name }}
-                    </td>
-
-                    <td>{{ team.played }}</td>
-
-                    <td>{{ team.wins }}</td>
-
-                    <td>{{ team.losses }}</td>
-
-                    <td>
-                        <strong>
-                            {{ team.points }}
-                        </strong>
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
+        <p class="standings-note">
+            If qualification is still exactly tied on both points and average
+            team score, the tie must be resolved manually before knockouts are generated.
+        </p>
     </main>
 
 </body>
-
 </html>

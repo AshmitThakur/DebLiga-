@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speaker Rankings | LADC Debate League 2026</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
     <nav>
@@ -16,62 +16,63 @@
         <a href="/speaker-rankings">Speaker Rankings</a>
     </nav>
 
+
     <main>
+        <header class="page-header">
+            <h1>Speaker Rankings</h1>
+            <p>Individual speaker scores and averages.</p>
+        </header>
 
-        <h1>Speaker Rankings</h1>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Speaker</th>
+                        <th>Team</th>
+                        <th>Debates</th>
+                        <th>Total Score</th>
+                        <th>Average Score</th>
+                    </tr>
+                </thead>
 
-        <table>
-
-            <thead>
-
-                <tr>
-                    <th>Rank</th>
-                    <th>Speaker</th>
-                    <th>Team</th>
-                    <th>Debates</th>
-                    <th>Average</th>
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                {% for speaker in rankings %}
-
-                <tr>
-
-                    <td>{{ loop.index }}</td>
-
-                    <td>
-                        <a href="/speakers/{{ speaker.speaker_id }}">
-                            {{ speaker.speaker_name }}
-                        </a>
-                    </td>
-
-                    <td>
-                        {{ teams[speaker.team_id].name }}
-                    </td>
-
-                    <td>
-                        {{ speaker.debates }}
-                    </td>
-
-                    <td>
-                        <strong>
-                            {{ speaker.average_score }}
-                        </strong>
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
+                <tbody>
+                    {% for speaker in rankings %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>
+                                <a href="/speakers/{{ speaker.speaker_id }}">
+                                    {{ speaker.speaker_name }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if teams.get(speaker.team_id) %}
+                                    <a href="/teams/{{ speaker.team_id }}">
+                                        {{ teams[speaker.team_id].name }}
+                                    </a>
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                            <td>{{ speaker.debates }}</td>
+                            <td>{{ "%.2f"|format(speaker.total_score) }}</td>
+                            <td>
+                                <strong>
+                                    {{ "%.2f"|format(speaker.average_score) }}
+                                </strong>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6">
+                                No speaker scores have been recorded yet.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </main>
 
 </body>
-
 </html>
