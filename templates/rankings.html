@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Speaker Rankings | LADC Debate League 2026</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/teams">Teams</a>
+        <a href="/schedule">Schedule</a>
+        <a href="/standings">Standings</a>
+        <a href="/speaker-rankings">Speaker Rankings</a>
+    </nav>
+
+    <main>
+
+        <h1>Speaker Rankings</h1>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Rank</th>
+                    <th>Speaker</th>
+                    <th>Team</th>
+                    <th>Debates</th>
+                    <th>Average</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for speaker in rankings %}
+
+                <tr>
+
+                    <td>{{ loop.index }}</td>
+
+                    <td>
+                        <a href="/speakers/{{ speaker.speaker_id }}">
+                            {{ speaker.speaker_name }}
+                        </a>
+                    </td>
+
+                    <td>
+                        {{ teams[speaker.team_id].name }}
+                    </td>
+
+                    <td>
+                        {{ speaker.debates }}
+                    </td>
+
+                    <td>
+                        <strong>
+                            {{ speaker.average_score }}
+                        </strong>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </main>
+
+</body>
+
+</html>

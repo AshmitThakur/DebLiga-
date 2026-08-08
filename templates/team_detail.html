@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ team.name }} | DebLiga</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/teams">Teams</a>
+        <a href="/schedule">Schedule</a>
+        <a href="/standings">Standings</a>
+        <a href="/speaker-rankings">Speaker Rankings</a>
+    </nav>
+
+    <main>
+
+        <h1>{{ team.name }}</h1>
+
+        <p>
+            {{ pool.name }}
+        </p>
+
+        <h2>Speakers</h2>
+
+        {% for speaker in speakers %}
+
+        <div class="card">
+
+            <a href="/speakers/{{ speaker.id }}">
+                {{ speaker.name }}
+            </a>
+
+        </div>
+
+        {% else %}
+
+        <p>No speakers added yet.</p>
+
+        {% endfor %}
+
+    </main>
+
+</body>
+
+</html>

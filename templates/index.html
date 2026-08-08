@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>{{ tournament_name }}</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="navbar">
+
+            <a href="/" class="club-brand">
+                <div class="logo-container">
+                    <img
+                        src="/static/images/LADC_logo.png"
+                        alt="Literary and Debating Club Logo"
+                        class="club-logo"
+                    >
+                </div>
+
+                <div class="club-name">
+                    <strong>LADC</strong>
+                    <span>Literary and Debating Club</span>
+                </div>
+            </a>
+
+            <nav class="top-navigation">
+                <a href="#">Home</a>
+                <a href="#">Schedule</a>
+                <a href="#">Teams</a>
+                <a href="#">Standings</a>
+            </nav>
+
+        </div>
+    </header>
+
+
+    <main>
+
+        <section class="hero-section">
+            <div class="hero-content">
+
+                <div class="edition-badge">
+                    {{ edition }}
+                </div>
+
+                <p class="hero-eyebrow">
+                    {{ club_name }} presents
+                </p>
+
+                <h1>
+                    Debate League
+                    <span>2026</span>
+                </h1>
+
+                <p class="hero-description">
+                    Five rounds. Two competitive pools. Ten teams.
+                    One league champion.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="#" class="primary-button">
+                        View Schedule
+                    </a>
+
+                    <a href="#" class="secondary-button">
+                        Explore Teams
+                    </a>
+                </div>
+
+                <div class="event-statistics">
+
+                    <div class="stat">
+                        <strong>10</strong>
+                        <span>Teams</span>
+                    </div>
+
+                    <div class="stat">
+                        <strong>2</strong>
+                        <span>Pools</span>
+                    </div>
+
+                    <div class="stat">
+                        <strong>5</strong>
+                        <span>League Rounds</span>
+                    </div>
+
+                    <div class="stat">
+                        <strong>5th</strong>
+                        <span>Edition</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="hero-visual">
+
+                <div class="visual-placeholder">
+                    <span>Debate League</span>
+                    <strong>Where arguments meet excellence.</strong>
+
+                    <p>
+                        Event photographs and highlights will appear here.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+
+        <section class="dashboard-section">
+
+            <div class="section-heading">
+                <div>
+                    <p class="section-label">Tournament Centre</p>
+                    <h2>Follow the league</h2>
+                </div>
+
+                <p>
+                    Access fixtures, team information, pool tables and
+                    individual speaker performances.
+                </p>
+            </div>
+
+
+            <div class="dashboard-grid">
+
+                <a href="#" class="dashboard-card schedule-card">
+
+                    <div class="card-number">01</div>
+
+                    <div class="card-content">
+                        <span class="card-label">Fixtures</span>
+                        <h3>League Schedule</h3>
+
+                        <p>
+                            View round-wise debates, rooms, adjudicators,
+                            motions and upcoming fixtures.
+                        </p>
+
+                        <span class="card-link">
+                            Open schedule →
+                        </span>
+                    </div>
+
+                </a>
+
+
+                <a href="#" class="dashboard-card teams-card">
+
+                    <div class="card-number">02</div>
+
+                    <div class="card-content">
+                        <span class="card-label">Participants</span>
+                        <h3>Teams and Speakers</h3>
+
+                        <p>
+                            Explore both pools, team members and each
+                            speaker’s debate history.
+                        </p>
+
+                        <span class="card-link">
+                            Explore teams →
+                        </span>
+                    </div>
+
+                </a>
+
+
+                <a href="#" class="dashboard-card standings-card">
+
+                    <div class="card-number">03</div>
+
+                    <div class="card-content">
+                        <span class="card-label">Competition</span>
+                        <h3>Pool Standings</h3>
+
+                        <p>
+                            Track wins, losses, points and qualification
+                            positions across Pool A and Pool B.
+                        </p>
+
+                        <span class="card-link">
+                            View standings →
+                        </span>
+                    </div>
+
+                </a>
+
+
+                <a href="#" class="dashboard-card speakers-card">
+
+                    <div class="card-number">04</div>
+
+                    <div class="card-content">
+                        <span class="card-label">Performance</span>
+                        <h3>Speaker Rankings</h3>
+
+                        <p>
+                            Compare average scores, total points, roles
+                            and round-wise speaker performances.
+                        </p>
+
+                        <span class="card-link">
+                            View rankings →
+                        </span>
+                    </div>
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <section class="about-section">
+
+            <div class="about-number">
+                05
+            </div>
+
+            <div class="about-content">
+                <p class="section-label">About the Event</p>
+
+                <h2>
+                    The fifth chapter of LADC’s flagship debate league
+                </h2>
+
+                <p>
+                    The LADC Debate League brings together speakers for
+                    a structured league tournament focused on consistent
+                    performance, argumentation, teamwork and competitive
+                    debating.
+                </p>
+
+                <p>
+                    DebLiga will serve as the official digital platform
+                    for schedules, results, standings and speaker records.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        <div>
+            <strong>LADC Debate League 2026</strong>
+            <span>Literary and Debating Club, NIT Jalandhar</span>
+        </div>
+
+        <p>
+            Tournament platform powered by <strong>DebLiga</strong>
+        </p>
+    </footer>
+
+</body>
+</html>

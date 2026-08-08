@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Standings | LADC Debate League 2026</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/teams">Teams</a>
+        <a href="/schedule">Schedule</a>
+        <a href="/standings">Standings</a>
+        <a href="/speaker-rankings">Speaker Rankings</a>
+    </nav>
+
+    <main>
+
+        <h1>Pool Standings</h1>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Team</th>
+                    <th>Pool</th>
+                    <th>Played</th>
+                    <th>Wins</th>
+                    <th>Losses</th>
+                    <th>Points</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for team in table %}
+
+                <tr>
+
+                    <td>
+                        <a href="/teams/{{ team.team_id }}">
+                            {{ team.team_name }}
+                        </a>
+                    </td>
+
+                    <td>
+                        {{ pools[team.pool_id].name }}
+                    </td>
+
+                    <td>{{ team.played }}</td>
+
+                    <td>{{ team.wins }}</td>
+
+                    <td>{{ team.losses }}</td>
+
+                    <td>
+                        <strong>
+                            {{ team.points }}
+                        </strong>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </main>
+
+</body>
+
+</html>

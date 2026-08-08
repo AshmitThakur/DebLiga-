@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ speaker.name }} | DebLiga</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/teams">Teams</a>
+        <a href="/schedule">Schedule</a>
+        <a href="/standings">Standings</a>
+        <a href="/speaker-rankings">Speaker Rankings</a>
+    </nav>
+
+    <main>
+
+        <h1>{{ speaker.name }}</h1>
+
+        <p>
+            Team:
+            <a href="/teams/{{ team.id }}">
+                {{ team.name }}
+            </a>
+        </p>
+
+        <h2>Debate History</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Round</th>
+                    <th>Role</th>
+                    <th>Score</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in history %}
+
+                <tr>
+
+                    <td>
+                        {{ item.round.number }}
+                    </td>
+
+                    <td>
+                        {{ item.role }}
+                    </td>
+
+                    <td>
+                        {{ item.score }}
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+                    <td colspan="3">
+                        No debate history yet.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </main>
+
+</body>
+
+</html>

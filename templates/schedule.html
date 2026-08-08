@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Schedule | LADC Debate League 2026</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/teams">Teams</a>
+        <a href="/schedule">Schedule</a>
+        <a href="/standings">Standings</a>
+        <a href="/speaker-rankings">Speaker Rankings</a>
+    </nav>
+
+    <main>
+
+        <h1>Debate Schedule</h1>
+
+        {% for debate in schedule %}
+
+        <div class="card">
+
+            <h2>
+                Round {{ debate.round.number }}
+            </h2>
+
+            {% if debate.round.motion %}
+
+            <p>
+                <strong>Motion:</strong>
+                {{ debate.round.motion }}
+            </p>
+
+            {% endif %}
+
+            <h3>
+                {{ debate.team1.name }}
+                VS
+                {{ debate.team2.name }}
+            </h3>
+
+            <p>
+                Room:
+                {{ debate.room or "TBA" }}
+            </p>
+
+            {% if debate.winner %}
+
+            <p>
+                <strong>Winner:</strong>
+                {{ debate.winner.name }}
+            </p>
+
+            {% else %}
+
+            <p>Result pending</p>
+
+            {% endif %}
+
+        </div>
+
+        {% else %}
+
+        <p>No debates scheduled yet.</p>
+
+        {% endfor %}
+
+    </main>
+
+</body>
+
+</html>

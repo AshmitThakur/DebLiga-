@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Teams | LADC Debate League 2026</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/teams">Teams</a>
+        <a href="/schedule">Schedule</a>
+        <a href="/standings">Standings</a>
+        <a href="/speaker-rankings">Speaker Rankings</a>
+    </nav>
+
+    <main>
+
+        <h1>Teams</h1>
+
+        <p>LADC Debate League 2026</p>
+
+        <div class="card-grid">
+
+            {% for team in teams %}
+
+            <div class="card">
+
+                <h2>
+                    <a href="/teams/{{ team.id }}">
+                        {{ team.name }}
+                    </a>
+                </h2>
+
+                <p>Pool {{ team.pool_id }}</p>
+
+                <h3>Speakers</h3>
+
+                {% for speaker in team.speakers %}
+
+                <p>
+                    <a href="/speakers/{{ speaker.id }}">
+                        {{ speaker.name }}
+                    </a>
+                </p>
+
+                {% else %}
+
+                <p>No speakers added yet.</p>
+
+                {% endfor %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

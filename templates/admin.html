@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DebLiga Admin</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+</head>
+
+<body>
+
+<nav class="admin-nav">
+    <a href="/">Public Home</a>
+    <a href="/schedule">Schedule</a>
+    <a href="/standings">Standings</a>
+    <a href="/speaker-rankings">Speaker Rankings</a>
+</nav>
+
+
+<main class="admin-container">
+
+    <header>
+        <h1>DebLiga Tournament Control</h1>
+
+        <p>
+            LADC Debate League 2026
+        </p>
+
+        <button
+            type="button"
+            onclick="loadAll()"
+        >
+            Refresh Dashboard
+        </button>
+    </header>
+
+
+    <div
+        id="message"
+        class="admin-message"
+    ></div>
+
+
+    <!-- ====================================== -->
+    <!-- SUMMARY -->
+    <!-- ====================================== -->
+
+    <section class="card">
+        <h2>Tournament Overview</h2>
+
+        <div id="summary">
+            Loading...
+        </div>
+    </section>
+
+
+    <!-- ====================================== -->
+    <!-- POOLS -->
+    <!-- ====================================== -->
+
+    <section class="card">
+
+        <h2>Pools</h2>
+
+        <form id="pool-form">
+
+            <input
+                id="pool-name"
+                type="text"
+                placeholder="Pool A"
+                required
+            >
+
+            <button type="submit">
+                Add Pool
+            </button>
+
+        </form>
+
+        <div id="pool-list"></div>
+
+    </section>
+
+
+    <!-- ====================================== -->
+    <!-- TEAMS -->
+    <!-- ====================================== -->
+
+    <section class="card">
+
+        <h2>Teams</h2>
+
+        <form id="team-form">
+
+            <input
+                id="team-name"
+                type="text"
+                placeholder="Team Name"
+                required
+            >
+
+            <select
+                id="team-pool"
+                required
+            ></select>
+
+            <button type="submit">
+                Add Team
+            </button>
+
+        </form>
+
+        <div id="team-list"></div>
+
+    </section>
+
+
+    <!-- ====================================== -->
+    <!-- SPEAKERS -->
+    <!-- ====================================== -->
+
+    <section class="card">
+
+        <h2>Speakers</h2>
+
+        <form id="speaker-form">
+
+            <input
+                id="speaker-name"
+                type="text"
+                placeholder="Speaker Name"
+                required
+            >
+
+            <select
+                id="speaker-team"
+                required
+            ></select>
+
+            <button type="submit">
+                Add Speaker
+            </button>
+
+        </form>
+
+        <div id="speaker-list"></div>
+
+    </section>
+
+
+    <!-- ====================================== -->
+    <!-- ROUNDS -->
+    <!-- ====================================== -->
+
+    <section class="card">
+
+        <h2>Rounds</h2>
+
+        <form id="round-form">
+
+            <input
+                id="round-number"
+                type="number"
+                min="1"
+                placeholder="Round Number"
+                required
+            >
+
+            <input
+                id="round-motion"
+                type="text"
+                placeholder="Motion (optional)"
+            >
+
+            <button type="submit">
+                Create Round
+            </button>
+
+        </form>
+
+        <div id="round-list"></div>
+
+    </section>
+
+
+    <!-- ====================================== -->
+    <!-- DEBATES -->
+    <!-- ====================================== -->
+
+    <section class="card">
+
+        <h2>Debates</h2>
+
+        <form id="debate-form">
+
+            <select
+                id="debate-round"
+                required
+            ></select>
+
+            <select
+                id="debate-team1"
+                required
+            ></select>
+
+            <span>vs</span>
+
+            <select
+                id="debate-team2"
+                required
+            ></select>
+
+            <input
+                id="debate-room"
+                type="text"
+                placeholder="Room"
+            >
+
+            <select
+                id="debate-stage"
+                required
+            >
+                <option value="pool">
+                    Pool Stage
+                </option>
+
+                <option value="semifinal">
+                    Semifinal
+                </option>
+
+                <option value="third_place">
+                    Third Place
+                </option>
+
+                <option value="final">
+                    Final
+                </option>
+            </select>
+
+            <button type="submit">
+                Create Debate
+            </button>
+
+        </form>
+
+        <div id="debate-list"></div>
+
+    </section>
+
+
+    <!-- ====================================== -->
+    <!-- RESULTS -->
+    <!-- ====================================== -->
+
+    <section class="card">
+
+        <h2>Enter / Edit Result</h2>
+
+        <p>
+            Select any debate. Existing scores are loaded automatically.
+        </p>
+
+        <form id="result-form">
+
+            <label>
+                Debate
+            </label>
+
+            <select
+                id="result-debate"
+                required
+            ></select>
+
+            <label>
+                Winner
+            </label>
+
+            <select
+                id="result-winner"
+                required
+            ></select>
+
+            <div id="result-speakers">
+                Select a debate first.
+            </div>
+
+            <button type="submit">
+                Save / Update Result
+            </button>
+
+            <button
+                id="clear-result-button"
+                type="button"
+            >
+                Clear Result
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- ====================================== -->
+    <!-- KNOCKOUTS -->
+    <!-- ====================================== -->
+
+    <section class="card">
+
+        <h2>Knockout Stage</h2>
+
+        <p>
+            When both pools are complete, generate:
+            A1 vs B2 and B1 vs A2.
+        </p>
+
+        <button
+            id="generate-knockouts"
+            type="button"
+        >
+            Generate Semifinals
+        </button>
+
+        <button
+            id="reset-knockouts"
+            type="button"
+        >
+            Reset Knockouts
+        </button>
+
+        <div id="knockout-list"></div>
+
+    </section>
+
+
+</main>
+
+
+<script src="/static/admin.js"></script>
+
+</body>
+
+</html>
