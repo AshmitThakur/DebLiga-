@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DebLiga Admin Login</title>
+    <link rel="stylesheet" href="/static/style.css?v=6">
+</head>
+<body>
+    <main class="admin-container">
+        <section class="card">
+            <h2>Admin Access</h2>
+            <p>Enter the passkey to access the DebLiga admin dashboard.</p>
+
+            {% if error %}
+                <p class="admin-message">{{ error }}</p>
+            {% endif %}
+
+            <form method="post" action="/admin">
+                <label for="passkey">Passkey</label>
+                <input type="password" id="passkey" name="passkey" required>
+                <button type="submit">Enter Admin Area</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

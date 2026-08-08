@@ -9,17 +9,15 @@ team = db.query(Team).filter(
     Team.name == "Team Phoenix"
 ).first()
 
-# Create speaker
-speaker = Speaker(
-    name="Ashmit",
-    team_id=team.id
-)
+# Find all speakers in that team
+speakers = db.query(Speaker).filter(
+    Speaker.team_id == team.id
+).all()
 
-db.add(speaker)
-db.commit()
-db.refresh(speaker)
+print("Team:", team.name)
+print("Speakers:")
 
-print("Speaker:", speaker.name)
-print("Team ID:", speaker.team_id)
+for speaker in speakers:
+    print("-", speaker.name)
 
 db.close()

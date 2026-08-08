@@ -11,7 +11,7 @@
 
     <title>{{ tournament_name }}</title>
 
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css?v=6">
 </head>
 
 
@@ -73,6 +73,16 @@
                     Speakers
                 </a>
 
+                <button
+                    class="theme-toggle"
+                    type="button"
+                    aria-label="Toggle light and dark theme"
+                    title="Toggle theme"
+                >
+                    <span class="theme-toggle-icon">☀</span>
+                    <span class="theme-toggle-label">Light</span>
+                </button>
+
             </nav>
 
         </div>
@@ -111,10 +121,14 @@
                 <p class="hero-description">
 
                     The 6th Edition of the LADC Debate League brings
-                    together speakers across two competitive pools for
-                    five league rounds, followed by the knockout stage
-                    and the race for the championship.
+                    together speakers from across the college debating
+                    community for a league-style tournament built around
+                    argument, rebuttal and competitive speaking.
 
+                </p>
+
+                <p class="hero-subtext">
+                    Organised by the Literary and Debating Club, NIT Jalandhar
                 </p>
 
 
@@ -137,52 +151,18 @@
 
                 </div>
 
+                <div class="hall-of-fame-teaser">
+                    <p>
+                        Latest Hall of Fame: <strong>{{ hall_of_fame[0].team }}</strong> — {{ hall_of_fame[0].winner }} ({{ hall_of_fame[0].year }}).
+                        <a href="#hall-of-fame">View the full list</a>.
+                    </p>
+                </div>
 
-                <div class="event-statistics">
-
-                    <div class="stat">
-
-                        <strong>10</strong>
-
-                        <span>
-                            Teams
-                        </span>
-
-                    </div>
-
-
-                    <div class="stat">
-
-                        <strong>2</strong>
-
-                        <span>
-                            Pools
-                        </span>
-
-                    </div>
-
-
-                    <div class="stat">
-
-                        <strong>5</strong>
-
-                        <span>
-                            League Rounds
-                        </span>
-
-                    </div>
-
-
-                    <div class="stat">
-
-                        <strong>6th</strong>
-
-                        <span>
-                            Edition
-                        </span>
-
-                    </div>
-
+                <div class="hero-brief">
+                    <p>
+                        The LADC Debate League 2026 is the student-led league-style competition from the Literary and Debating Club, NIT Jalandhar.
+                        Follow the schedule, teams and rankings as the league unfolds.
+                    </p>
                 </div>
 
             </div>
@@ -194,20 +174,17 @@
                 <div class="visual-placeholder">
 
                     <span>
-                        LADC Debate League
+                        VI / SIXTH EDITION
                     </span>
 
 
                     <strong>
-                        Where arguments meet excellence.
+                        Six editions. Countless arguments. One League.
                     </strong>
 
 
                     <p>
-
-                        Follow every fixture, result, ranking and
-                        qualification race throughout the 2026 league.
-
+                        APD FORMAT · AUCTION-BASED · EST. 2021
                     </p>
 
                 </div>
@@ -216,6 +193,133 @@
 
         </section>
 
+
+
+        <!-- ==================================================
+             LEGACY OF DEBATE
+             ================================================== -->
+
+        <section class="legacy-section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="section-label">
+                        A Legacy of Argument
+                    </p>
+
+
+                    <h2>
+                        Before the League, there was LADC.
+                    </h2>
+
+                </div>
+
+
+                <p>
+                    Debate League may have begun in 2021, but the Literary and Debating Club traces its roots back to the former Literary and Debating Society — LADS, documented at NIT Jalandhar at least as far back as the 2008–09 academic session.
+                </p>
+
+            </div>
+
+
+            <div class="legacy-copy-grid">
+
+                <div class="legacy-copy">
+
+                    <p>
+                        The society built a culture of argumentation, literary expression, quizzes and public speaking long before the league existed. Earlier generations were also associated with student literary initiatives such as <strong>CAPSlock</strong>, one of NITJ's early student newsletters.
+                    </p>
+
+                    <p>
+                        The organisation later evolved from <strong>LADS — Literary and Debating Society</strong> into the modern <strong>LADC — Literary and Debating Club</strong>, with the contemporary LADC identity appearing around the 2016 era. Today LADC is over 20 years old and one of the oldest clubs at NIT Jalandhar.
+                    </p>
+
+                    <p>
+                        Debate League is the newest chapter in that culture. The League started in 2021. The culture behind it started long before.
+                    </p>
+
+                </div>
+
+
+                <div class="legacy-timeline">
+
+                    <div class="legacy-step">
+                        <span class="legacy-step-head">2008–09+</span>
+                        <h3>LADS</h3>
+                        <p>The Literary and Debating Society is documented at NIT Jalandhar at least as far back as the 2008–09 academic session.</p>
+                    </div>
+
+                    <div class="legacy-step">
+                        <span class="legacy-step-head">The Early Years</span>
+                        <h3>Debate • Writing • Public Speaking</h3>
+                        <p>LADS develops a culture around argumentation, literary activity, quizzes and speaking events.</p>
+                    </div>
+
+                    <div class="legacy-step">
+                        <span class="legacy-step-head">CAPSlock</span>
+                        <h3>Ideas Beyond the Podium</h3>
+                        <p>Members of the early society were associated with CAPSlock, an early NITJ student newsletter.</p>
+                    </div>
+
+                    <div class="legacy-step">
+                        <span class="legacy-step-head">Around 2016</span>
+                        <h3>LADS → LADC</h3>
+                        <p>The society evolves into the modern Literary and Debating Club identity.</p>
+                    </div>
+
+                    <div class="legacy-step">
+                        <span class="legacy-step-head">2021</span>
+                        <h3>Debate League Begins</h3>
+                        <p>During the quarantine era, LADC launches Debate League.</p>
+                    </div>
+
+                    <div class="legacy-step">
+                        <span class="legacy-step-head">2026</span>
+                        <h3>The Sixth Edition</h3>
+                        <p>The debating tradition continues through the 6th Edition of the LADC Debate League.</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="legacy-secondary">
+
+                <div class="legacy-box">
+                    <h3>From Campus to the Circuit</h3>
+                    <p>Debate at LADC does not end at the institute gates. Members represent NIT Jalandhar at inter-college parliamentary debating competitions and university festivals across India, including PCTE Ludhiana, IIT Kanpur and PEC Chandigarh, and at international Afro-circuit tournaments.</p>
+                    <p>These tournaments turn campus practice into competitive experience against unfamiliar teams, different judging panels and stronger debating circuits.</p>
+                </div>
+
+                <div class="achievement-strip">
+                    <div>
+                        <strong>2023</strong>
+                        <span>PCTE British Parliamentary Debate — Champions</span>
+                    </div>
+                    <div>
+                        <strong>2024</strong>
+                        <span>PCTE British Parliamentary Debate — Runners-up</span>
+                    </div>
+                    <div>
+                        <strong>2025</strong>
+                        <span>PCTE British Parliamentary Debate — Champions</span>
+                    </div>
+                    <div>
+                        <strong>2025</strong>
+                        <span>Antaragni, IIT Kanpur — Debate Champions</span>
+                    </div>
+                    <div>
+                        <strong>2026</strong>
+                        <span>PCTE British Parliamentary Debate — Quarterfinalists</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
 
 
         <!-- ==================================================
@@ -443,6 +547,187 @@
             <div class="about-content">
 
                 <p class="section-label">
+                    More Than a Tournament
+                </p>
+
+
+                <h2>
+                    Born in quarantine, shaped by debate.
+                </h2>
+
+
+                <p>
+
+                    The LADC Debate League began in 2021, when debate needed
+                    a way to continue on a quieter campus. What started as a
+                    simple idea has grown into one of the most anticipated
+                    student-led traditions on campus.
+
+                </p>
+
+
+                <p>
+
+                    It is now a space where speakers learn to think clearly,
+                    speak confidently and defend their ideas under pressure.
+
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <section class="timeline-section">
+            <div class="section-heading compact-heading">
+                <div>
+                    <p class="section-label">A Growing Tradition</p>
+                    <h2>From 2021 to 2026</h2>
+                </div>
+                <p>
+                    What began as a response to a quiet campus has become a recurring LADC tradition built around strategy, sharp argument and the excitement of competition.
+                </p>
+            </div>
+        </section>
+
+
+
+        <section class="flow-section">
+            <div class="section-heading">
+                <div>
+                    <p class="section-label">How Debate League Works</p>
+                    <h2>From first entry to the finals</h2>
+                </div>
+                <p>
+                    The competition grows through a mix of strategy, teamwork and rounds of sharp argument.
+                </p>
+            </div>
+
+            <div class="flow-grid">
+                <article class="flow-card">
+                    <span>01</span>
+                    <h3>Register</h3>
+                    <p>Participants enter the League and join the pool.</p>
+                </article>
+                <article class="flow-card">
+                    <span>02</span>
+                    <h3>Auction</h3>
+                    <p>Team leaders shape their squads through an auction, adding strategy before the first debate begins.</p>
+                </article>
+                <article class="flow-card">
+                    <span>03</span>
+                    <h3>Teams</h3>
+                    <p>Competitors stay tied to their teams across the League.</p>
+                </article>
+                <article class="flow-card">
+                    <span>04</span>
+                    <h3>Debate</h3>
+                    <p>Rounds follow the Asian Parliamentary Debate format.</p>
+                </article>
+                <article class="flow-card">
+                    <span>05</span>
+                    <h3>Rankings</h3>
+                    <p>Standings and individual performances evolve as the League progresses.</p>
+                </article>
+                <article class="flow-card">
+                    <span>06</span>
+                    <h3>Finals</h3>
+                    <p>The strongest teams battle for the League title.</p>
+                </article>
+            </div>
+        </section>
+
+
+
+        <section class="split-section">
+            <div class="apd-card">
+                <p class="section-label">Asian Parliamentary Debate</p>
+                <h3>Two sides. One motion. A test of reasoning.</h3>
+                <p>
+                    Debate League follows the Asian Parliamentary Debate format.
+                    One side defends the motion as Government, while the other
+                    challenges it as Opposition.
+                </p>
+                <p>
+                    Success depends on clear structure, sharp analysis, strong
+                    rebuttals and teamwork under pressure.
+                </p>
+            </div>
+
+            <div class="auction-card">
+                <p class="section-label">Before the Arguments</p>
+                <h3>The League starts before the first motion.</h3>
+                <p>
+                    Captains → Player Pool → Auction → Squads → League.
+                    The auction adds a tactical edge before the first motion,
+                    turning preparation into part of the drama.
+                </p>
+            </div>
+        </section>
+
+
+
+        <section class="values-section">
+            <div class="section-heading">
+                <div>
+                    <p class="section-label">Why Debate League?</p>
+                    <h2>What participants gain</h2>
+                </div>
+            </div>
+
+            <div class="values-grid">
+                <article class="value-card">Think Faster</article>
+                <article class="value-card">Argue Better</article>
+                <article class="value-card">Master Rebuttals</article>
+                <article class="value-card">Speak With Confidence</article>
+                <article class="value-card">Work as a Team</article>
+                <article class="value-card">Enter Competitive Debating</article>
+            </div>
+        </section>
+
+
+
+        <section class="about-section compact">
+            <div class="about-number">
+                07
+            </div>
+
+            <div class="about-content">
+                <p class="section-label">Behind the League</p>
+                <h2>Literary and Debating Club, NIT Jalandhar</h2>
+                <p>
+                    At LADC, NIT Jalandhar, debate is not treated as an extra
+                    activity. It is a culture of reading, argument, rebuttal and
+                    public speaking that has grown through student-led
+                    participation and repeated competitive seasons.
+                </p>
+                <p>
+                    Debate League is the club’s competitive expression of that
+                    culture: a space where beginners and experienced speakers
+                    meet the same motion, the same pressure and the same
+                    opportunity to improve.
+                </p>
+                <p><strong>Think. Express. Evolve.</strong></p>
+            </div>
+        </section>
+
+
+
+        <!-- ==================================================
+             ABOUT THE DEBATE LEAGUE
+             ================================================== -->
+
+        <section class="about-section">
+
+            <div class="about-number">
+                06
+            </div>
+
+
+            <div class="about-content">
+
+                <p class="section-label">
                     About the Event
                 </p>
 
@@ -485,7 +770,29 @@
 
         </section>
 
+        <section class="dashboard-section" id="hall-of-fame">
+            <div class="section-heading">
+                <div>
+                    <p class="section-label">Hall of Fame</p>
+                    <h2>Previous league leaders</h2>
+                </div>
+                <p>
+                    Celebrating the champions who shaped the League over its six editions.
+                </p>
+            </div>
 
+            <div class="hall-of-fame-card">
+                <div class="hall-of-fame-list">
+                    {% for item in hall_of_fame %}
+                    <div class="hall-of-fame-item">
+                        <span class="hall-of-fame-year">{{ item.year }}</span>
+                        <span class="hall-of-fame-team">{{ item.team }}</span>
+                        <span class="hall-of-fame-winner">{{ item.winner }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
 
         <!-- ==================================================
              ABOUT LADC
@@ -516,21 +823,19 @@
                         <p>
 
                             The <strong>Literary and Debating Club
-                            (LADC), NIT Jalandhar</strong> is a student
-                            community centred around debating, public
-                            speaking, literary expression and the exchange
-                            of ideas.
+                            (LADC), NIT Jalandhar</strong> is one of the
+                            oldest student clubs on campus, with a history
+                            stretching back more than two decades.
 
                         </p>
 
 
                         <p>
 
-                            Through debates, speaking activities,
-                            discussions and competitive opportunities, the
-                            club provides a space for students to develop
-                            confidence, critical thinking, communication
-                            and the ability to build and defend ideas.
+                            Its alumni have gone on to careers in public
+                            service, policy and leadership, including paths
+                            linked to the Indian Foreign Service and other
+                            high-profile professional spaces.
 
                         </p>
 
@@ -539,8 +844,8 @@
 
                             The Debate League is one part of that larger
                             culture — giving both newer speakers and
-                            experienced debaters an environment to learn,
-                            compete and improve over multiple rounds.
+                            experienced debaters a place to learn, compete
+                            and grow.
 
                         </p>
 
@@ -756,6 +1061,44 @@
         </p>
 
     </footer>
+
+    <script>
+        (function () {
+            const storageKey = 'theme';
+            const root = document.documentElement;
+            const toggle = document.querySelector('.theme-toggle');
+            const icon = document.querySelector('.theme-toggle-icon');
+            const label = document.querySelector('.theme-toggle-label');
+
+            const applyTheme = function (theme) {
+                root.setAttribute('data-theme', theme);
+                if (toggle) {
+                    if (theme === 'dark') {
+                        icon.textContent = '🌙';
+                        label.textContent = 'Dark';
+                    } else {
+                        icon.textContent = '☀';
+                        label.textContent = 'Light';
+                    }
+                }
+            };
+
+            const savedTheme = localStorage.getItem(storageKey);
+            if (savedTheme === 'dark') {
+                applyTheme('dark');
+            } else {
+                applyTheme('light');
+            }
+
+            if (toggle) {
+                toggle.addEventListener('click', function () {
+                    const currentTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                    applyTheme(currentTheme);
+                    localStorage.setItem(storageKey, currentTheme);
+                });
+            }
+        })();
+    </script>
 
 </body>
 

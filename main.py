@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi import Depends, FastAPI, Form, HTTPException, Request
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -77,6 +77,15 @@ templates = Jinja2Templates(
 def home(
     request: Request
 ):
+    hall_of_fame = [
+        {"year": "2021", "team": "Nirvana", "winner": "Shreya"},
+        {"year": "2022", "team": "The Mavens", "winner": "Chhawinder"},
+        {"year": "2023", "team": "The Raging Raccoons", "winner": "Preeti"},
+        {"year": "2024", "team": "Coffee Tea Spikers", "winner": "Adesh"},
+        {"year": "2025", "team": "Panel Pls Understand", "winner": "Sukhman"},
+        {"year": "2026", "team": "???", "winner": "???"},
+    ]
+
     return templates.TemplateResponse(
         request=request,
         name="index.html",
@@ -84,6 +93,7 @@ def home(
             "tournament_name": "LADC Debate League 2026",
             "edition": "6th Edition",
             "club_name": "Literary and Debating Club",
+            "hall_of_fame": hall_of_fame,
         },
     )
 
@@ -1302,6 +1312,9 @@ def delete_speaker(
 # ADMIN PAGE
 # ==================================================
 
+ADMIN_PASSKEY = "LADC@BestDebLitClub2026"
+
+
 @app.get(
     "/admin",
     response_class=HTMLResponse
@@ -1309,6 +1322,41 @@ def delete_speaker(
 def admin_page(
     request: Request
 ):
+    return templates.TemplateResponse(
+        request=request,
+        name="admin_login.html",
+        context={}
+    )
+
+
+@app.post("/admin")
+def admin_login(
+    request: Request,
+    passkey: str = Form(...)
+):
+    if passkey != ADMIN_PASSKEY:
+        return templates.TemplateResponse(
+            request=request,
+            name="admin_login.html",
+            context={"error": "Incorrect passkey. Please try again."},
+        )
+
+    response = RedirectResponse(url="/admin/dashboard", status_code=303)
+    response.set_cookie(key="admin_access", value="allowed", httponly=True)
+    return response
+
+
+@app.get(
+    "/admin/dashboard",
+    response_class=HTMLResponse
+)
+def admin_dashboard(
+    request: Request
+):
+    access = request.cookies.get("admin_access")
+    if access != "allowed":
+        return RedirectResponse(url="/admin", status_code=303)
+
     return templates.TemplateResponse(
         request=request,
         name="admin.html",
