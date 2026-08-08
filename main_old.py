@@ -550,29 +550,6 @@ def submit_result(
             )
         )
 
-    scored_team_ids = {
-        speaker.team_id
-        for speaker, performance in validated
-    }
-
-    if debate.team1_id not in scored_team_ids:
-        raise HTTPException(
-            status_code=400,
-            detail=(
-                "Enter at least one speaker score "
-                "for Team 1"
-            )
-        )
-
-    if debate.team2_id not in scored_team_ids:
-        raise HTTPException(
-            status_code=400,
-            detail=(
-                "Enter at least one speaker score "
-                "for Team 2"
-            )
-        )
-
     debate.winner_team_id = (
         data.winner_team_id
     )
@@ -785,18 +762,6 @@ def schedule_page(
         for team in db.query(Team).all()
     }
 
-    pools = {
-        pool.id: pool
-        for pool in db.query(Pool).all()
-    }
-
-    stage_names = {
-        "pool": "Pool Stage",
-        "semifinal": "Semifinal",
-        "third_place": "Third Place Match",
-        "final": "Final"
-    }
-
     schedule = []
 
     for debate in debates:
@@ -820,35 +785,13 @@ def schedule_page(
                 debate.winner_team_id
             )
 
-        pool = None
-
-        if (
-            debate.stage == "pool"
-            and
-            team1
-        ):
-            pool = pools.get(
-                team1.pool_id
-            )
-
         schedule.append({
             "id": debate.id,
             "round": round_obj,
             "team1": team1,
             "team2": team2,
             "room": debate.room,
-            "winner": winner,
-            "stage": debate.stage,
-            "stage_name": stage_names.get(
-                debate.stage,
-                debate.stage
-            ),
-            "pool": pool,
-            "status": (
-                "Completed"
-                if winner
-                else "Pending"
-            )
+            "winner": winner
         })
 
     return templates.TemplateResponse(
@@ -858,6 +801,7 @@ def schedule_page(
             "schedule": schedule
         }
     )
+
 
 @app.get(
     "/standings",
@@ -943,134 +887,16 @@ def team_detail_page(
         team.pool_id
     )
 
-    debates = db.query(
-        Debate
-    ).filter(
-        (Debate.team1_id == team.id)
-        |
-        (Debate.team2_id == team.id)
-    ).order_by(
-        Debate.round_id,
-        Debate.id
-    ).all()
-
-    history = []
-
-    for debate in debates:
-
-        round_obj = db.get(
-            Round,
-            debate.round_id
-        )
-
-        opponent_id = (
-            debate.team2_id
-            if debate.team1_id == team.id
-            else debate.team1_id
-        )
-
-        opponent = db.get(
-            Team,
-            opponent_id
-        )
-
-        performances = db.query(
-            SpeakerPerformance
-        ).filter(
-            SpeakerPerformance.debate_id
-            == debate.id
-        ).all()
-
-        team_scores = []
-        opponent_scores = []
-
-        for performance in performances:
-
-            speaker = db.get(
-                Speaker,
-                performance.speaker_id
-            )
-
-            if not speaker:
-                continue
-
-            if speaker.team_id == team.id:
-                team_scores.append(
-                    performance.score
-                )
-
-            elif (
-                opponent
-                and
-                speaker.team_id == opponent.id
-            ):
-                opponent_scores.append(
-                    performance.score
-                )
-
-        team_average = (
-            round(
-                sum(team_scores) / len(team_scores),
-                2
-            )
-            if team_scores
-            else None
-        )
-
-        opponent_average = (
-            round(
-                sum(opponent_scores)
-                / len(opponent_scores),
-                2
-            )
-            if opponent_scores
-            else None
-        )
-
-        if debate.winner_team_id is None:
-            result = "Pending"
-
-        elif debate.winner_team_id == team.id:
-            result = "Won"
-
-        else:
-            result = "Lost"
-
-        history.append({
-            "debate": debate,
-            "round": round_obj,
-            "opponent": opponent,
-            "result": result,
-            "team_average_score":
-                team_average,
-            "opponent_average_score":
-                opponent_average
-        })
-
-    wins = sum(
-        1
-        for item in history
-        if item["result"] == "Won"
-    )
-
-    losses = sum(
-        1
-        for item in history
-        if item["result"] == "Lost"
-    )
-
     return templates.TemplateResponse(
         request=request,
         name="team_detail.html",
         context={
             "team": team,
             "pool": pool,
-            "speakers": speakers,
-            "history": history,
-            "wins": wins,
-            "losses": losses
+            "speakers": speakers
         }
     )
+
 
 @app.get(
     "/speakers/{speaker_id}",
@@ -1114,63 +940,17 @@ def speaker_detail_page(
             performance.debate_id
         )
 
-        if not debate:
-            continue
-
         round_obj = db.get(
             Round,
             debate.round_id
         )
 
-        opponent_id = (
-            debate.team2_id
-            if debate.team1_id == team.id
-            else debate.team1_id
-        )
-
-        opponent = db.get(
-            Team,
-            opponent_id
-        )
-
-        if debate.winner_team_id is None:
-            result = "Pending"
-
-        elif debate.winner_team_id == team.id:
-            result = "Won"
-
-        else:
-            result = "Lost"
-
         history.append({
             "round": round_obj,
             "role": performance.role,
             "score": performance.score,
-            "debate": debate,
-            "opponent": opponent,
-            "result": result
+            "debate": debate
         })
-
-    history.sort(
-        key=lambda item: (
-            item["round"].number
-            if item["round"]
-            else 999,
-            item["debate"].id
-        )
-    )
-
-    average_score = None
-
-    if performances:
-        average_score = round(
-            sum(
-                performance.score
-                for performance in performances
-            )
-            / len(performances),
-            2
-        )
 
     return templates.TemplateResponse(
         request=request,
@@ -1178,9 +958,7 @@ def speaker_detail_page(
         context={
             "speaker": speaker,
             "team": team,
-            "history": history,
-            "average_score": average_score,
-            "debates_played": len(history)
+            "history": history
         }
     )
 
@@ -1369,28 +1147,6 @@ def calculate_pool_standings(
         Debate.stage == "pool"
     ).all()
 
-    speakers = {
-        speaker.id: speaker
-        for speaker in db.query(
-            Speaker
-        ).all()
-    }
-
-    performances = db.query(
-        SpeakerPerformance
-    ).all()
-
-    performances_by_debate = {}
-
-    for performance in performances:
-
-        performances_by_debate.setdefault(
-            performance.debate_id,
-            []
-        ).append(
-            performance
-        )
-
     table = []
 
     for team in teams:
@@ -1398,62 +1154,24 @@ def calculate_pool_standings(
         played = 0
         wins = 0
         losses = 0
-        debate_averages = []
 
         for debate in debates:
 
             if debate.winner_team_id is None:
                 continue
 
-            if team.id not in [
+            if team.id in [
                 debate.team1_id,
                 debate.team2_id
             ]:
-                continue
 
-            played += 1
+                played += 1
 
-            if debate.winner_team_id == team.id:
-                wins += 1
-            else:
-                losses += 1
+                if debate.winner_team_id == team.id:
+                    wins += 1
 
-            team_scores = []
-
-            for performance in performances_by_debate.get(
-                debate.id,
-                []
-            ):
-
-                speaker = speakers.get(
-                    performance.speaker_id
-                )
-
-                if (
-                    speaker
-                    and
-                    speaker.team_id == team.id
-                ):
-                    team_scores.append(
-                        performance.score
-                    )
-
-            if team_scores:
-
-                debate_averages.append(
-                    sum(team_scores)
-                    / len(team_scores)
-                )
-
-        average_team_score = 0.0
-
-        if debate_averages:
-
-            average_team_score = round(
-                sum(debate_averages)
-                / len(debate_averages),
-                2
-            )
+                else:
+                    losses += 1
 
         table.append({
             "team_id": team.id,
@@ -1462,28 +1180,18 @@ def calculate_pool_standings(
             "played": played,
             "wins": wins,
             "losses": losses,
-            "points": wins,
-            "average_team_score":
-                average_team_score,
-            "scored_debates":
-                len(debate_averages)
+            "points": wins
         })
 
     table.sort(
         key=lambda team: (
-            -team["points"],
-            -team["average_team_score"],
+            -team["wins"],
             team["team_name"].lower()
         )
     )
 
-    for position, team in enumerate(
-        table,
-        start=1
-    ):
-        team["rank"] = position
-
     return table
+
 
 def validate_pool_complete(
     db: Session,
@@ -1580,65 +1288,37 @@ def validate_pool_complete(
         pool.id
     )
 
-    # Qualification / seeding rule:
-    # 1. Points / wins
-    # 2. Average team score
-    #
-    # If teams are still exactly tied on both,
-    # do not randomly decide qualification.
+    # We haven't decided the tournament tie-break rule yet.
+    # Therefore do not guess who is 1st/2nd when qualification
+    # or seeding is affected by a tie.
 
-    def still_tied(
-        team_a,
-        team_b
-    ):
+    if len(standings) >= 2:
 
-        return (
-            team_a["points"]
-            == team_b["points"]
-            and
-            team_a["average_team_score"]
-            == team_b["average_team_score"]
-        )
-
-    if (
-        len(standings) >= 2
-        and
-        still_tied(
-            standings[0],
-            standings[1]
-        )
-    ):
-
-        raise HTTPException(
-            status_code=400,
-            detail=(
-                f"{pool.name}: 1st and 2nd are "
-                "still tied on points and "
-                "average team score. "
-                "Resolve the tie before "
-                "generating knockouts."
+        if (
+            standings[0]["wins"]
+            == standings[1]["wins"]
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    f"Tie between top teams in {pool.name}. "
+                    "Resolve tie-break before generating knockouts."
+                )
             )
-        )
 
-    if (
-        len(standings) >= 3
-        and
-        still_tied(
-            standings[1],
-            standings[2]
-        )
-    ):
+    if len(standings) >= 3:
 
-        raise HTTPException(
-            status_code=400,
-            detail=(
-                f"{pool.name}: 2nd and 3rd are "
-                "still tied on points and "
-                "average team score. "
-                "Resolve the tie before "
-                "generating knockouts."
+        if (
+            standings[1]["wins"]
+            == standings[2]["wins"]
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    f"Tie affects qualification in {pool.name}. "
+                    "Resolve tie-break before generating knockouts."
+                )
             )
-        )
 
     return standings
 
