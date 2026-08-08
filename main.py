@@ -82,7 +82,7 @@ def home(
         name="index.html",
         context={
             "tournament_name": "LADC Debate League 2026",
-            "edition": "5th Edition",
+            "edition": "6th Edition",
             "club_name": "Literary and Debating Club",
         },
     )

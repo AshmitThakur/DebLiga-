@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
@@ -13,257 +14,749 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
+
 <body>
 
+    <!-- ==================================================
+         HEADER / NAVBAR
+         ================================================== -->
+
     <header class="site-header">
+
         <div class="navbar">
 
             <a href="/" class="club-brand">
+
                 <div class="logo-container">
+
                     <img
                         src="/static/images/LADC_logo.png"
                         alt="Literary and Debating Club Logo"
                         class="club-logo"
                     >
+
                 </div>
+
 
                 <div class="club-name">
+
                     <strong>LADC</strong>
-                    <span>Literary and Debating Club</span>
+
+                    <span>
+                        Literary and Debating Club
+                    </span>
+
                 </div>
+
             </a>
 
+
             <nav class="top-navigation">
-                <a href="#">Home</a>
-                <a href="#">Schedule</a>
-                <a href="#">Teams</a>
-                <a href="#">Standings</a>
+
+                <a href="/">
+                    Home
+                </a>
+
+                <a href="/schedule">
+                    Schedule
+                </a>
+
+                <a href="/teams">
+                    Teams
+                </a>
+
+                <a href="/standings">
+                    Standings
+                </a>
+
+                <a href="/speaker-rankings">
+                    Speakers
+                </a>
+
             </nav>
 
         </div>
+
     </header>
+
 
 
     <main>
 
+
+        <!-- ==================================================
+             HERO
+             ================================================== -->
+
         <section class="hero-section">
+
             <div class="hero-content">
 
                 <div class="edition-badge">
                     {{ edition }}
                 </div>
 
+
                 <p class="hero-eyebrow">
                     {{ club_name }} presents
                 </p>
+
 
                 <h1>
                     Debate League
                     <span>2026</span>
                 </h1>
 
+
                 <p class="hero-description">
-                    Five rounds. Two competitive pools. Ten teams.
-                    One league champion.
+
+                    The 6th Edition of the LADC Debate League brings
+                    together speakers across two competitive pools for
+                    five league rounds, followed by the knockout stage
+                    and the race for the championship.
+
                 </p>
 
+
                 <div class="hero-actions">
-                    <a href="#" class="primary-button">
+
+                    <a
+                        href="/schedule"
+                        class="primary-button"
+                    >
                         View Schedule
                     </a>
 
-                    <a href="#" class="secondary-button">
+
+                    <a
+                        href="/teams"
+                        class="secondary-button"
+                    >
                         Explore Teams
                     </a>
+
                 </div>
+
 
                 <div class="event-statistics">
 
                     <div class="stat">
+
                         <strong>10</strong>
-                        <span>Teams</span>
+
+                        <span>
+                            Teams
+                        </span>
+
                     </div>
 
+
                     <div class="stat">
+
                         <strong>2</strong>
-                        <span>Pools</span>
+
+                        <span>
+                            Pools
+                        </span>
+
                     </div>
 
+
                     <div class="stat">
+
                         <strong>5</strong>
-                        <span>League Rounds</span>
+
+                        <span>
+                            League Rounds
+                        </span>
+
                     </div>
 
+
                     <div class="stat">
-                        <strong>5th</strong>
-                        <span>Edition</span>
+
+                        <strong>6th</strong>
+
+                        <span>
+                            Edition
+                        </span>
+
                     </div>
 
                 </div>
 
             </div>
+
+
 
             <div class="hero-visual">
 
                 <div class="visual-placeholder">
-                    <span>Debate League</span>
-                    <strong>Where arguments meet excellence.</strong>
+
+                    <span>
+                        LADC Debate League
+                    </span>
+
+
+                    <strong>
+                        Where arguments meet excellence.
+                    </strong>
+
 
                     <p>
-                        Event photographs and highlights will appear here.
+
+                        Follow every fixture, result, ranking and
+                        qualification race throughout the 2026 league.
+
                     </p>
+
                 </div>
 
             </div>
+
         </section>
 
+
+
+        <!-- ==================================================
+             TOURNAMENT CENTRE
+             ================================================== -->
 
         <section class="dashboard-section">
 
             <div class="section-heading">
+
                 <div>
-                    <p class="section-label">Tournament Centre</p>
-                    <h2>Follow the league</h2>
+
+                    <p class="section-label">
+                        Tournament Centre
+                    </p>
+
+
+                    <h2>
+                        Follow the league
+                    </h2>
+
                 </div>
 
+
                 <p>
-                    Access fixtures, team information, pool tables and
+
+                    DebLiga brings the entire competition together in one
+                    place — fixtures, teams, standings, results and
                     individual speaker performances.
+
                 </p>
+
             </div>
+
 
 
             <div class="dashboard-grid">
 
-                <a href="#" class="dashboard-card schedule-card">
 
-                    <div class="card-number">01</div>
+                <!-- Schedule -->
+
+                <a
+                    href="/schedule"
+                    class="dashboard-card schedule-card"
+                >
+
+                    <div class="card-number">
+                        01
+                    </div>
+
 
                     <div class="card-content">
-                        <span class="card-label">Fixtures</span>
-                        <h3>League Schedule</h3>
+
+                        <span class="card-label">
+                            Fixtures
+                        </span>
+
+
+                        <h3>
+                            League Schedule
+                        </h3>
+
 
                         <p>
-                            View round-wise debates, rooms, adjudicators,
-                            motions and upcoming fixtures.
+
+                            View round-wise debates, rooms, motions,
+                            completed results and upcoming fixtures from
+                            the pool stage through the final.
+
                         </p>
+
 
                         <span class="card-link">
                             Open schedule →
                         </span>
+
                     </div>
 
                 </a>
 
 
-                <a href="#" class="dashboard-card teams-card">
 
-                    <div class="card-number">02</div>
+                <!-- Teams -->
+
+                <a
+                    href="/teams"
+                    class="dashboard-card teams-card"
+                >
+
+                    <div class="card-number">
+                        02
+                    </div>
+
 
                     <div class="card-content">
-                        <span class="card-label">Participants</span>
-                        <h3>Teams and Speakers</h3>
+
+                        <span class="card-label">
+                            Participants
+                        </span>
+
+
+                        <h3>
+                            Teams and Speakers
+                        </h3>
+
 
                         <p>
-                            Explore both pools, team members and each
-                            speaker’s debate history.
+
+                            Explore the teams in Pool A and Pool B,
+                            their speakers and individual debate histories.
+
                         </p>
+
 
                         <span class="card-link">
                             Explore teams →
                         </span>
+
                     </div>
 
                 </a>
 
 
-                <a href="#" class="dashboard-card standings-card">
 
-                    <div class="card-number">03</div>
+                <!-- Standings -->
+
+                <a
+                    href="/standings"
+                    class="dashboard-card standings-card"
+                >
+
+                    <div class="card-number">
+                        03
+                    </div>
+
 
                     <div class="card-content">
-                        <span class="card-label">Competition</span>
-                        <h3>Pool Standings</h3>
+
+                        <span class="card-label">
+                            Competition
+                        </span>
+
+
+                        <h3>
+                            Pool Standings
+                        </h3>
+
 
                         <p>
-                            Track wins, losses, points and qualification
-                            positions across Pool A and Pool B.
+
+                            Track wins, losses, points, average team
+                            scores and the qualification race in both pools.
+
                         </p>
+
 
                         <span class="card-link">
                             View standings →
                         </span>
+
                     </div>
 
                 </a>
 
 
-                <a href="#" class="dashboard-card speakers-card">
 
-                    <div class="card-number">04</div>
+                <!-- Speaker Rankings -->
+
+                <a
+                    href="/speaker-rankings"
+                    class="dashboard-card speakers-card"
+                >
+
+                    <div class="card-number">
+                        04
+                    </div>
+
 
                     <div class="card-content">
-                        <span class="card-label">Performance</span>
-                        <h3>Speaker Rankings</h3>
+
+                        <span class="card-label">
+                            Performance
+                        </span>
+
+
+                        <h3>
+                            Speaker Rankings
+                        </h3>
+
 
                         <p>
-                            Compare average scores, total points, roles
-                            and round-wise speaker performances.
+
+                            Compare individual speaker averages, total
+                            scores and debate-by-debate performances.
+
                         </p>
+
 
                         <span class="card-link">
                             View rankings →
                         </span>
+
                     </div>
 
                 </a>
 
+
             </div>
 
         </section>
 
+
+
+        <!-- ==================================================
+             ABOUT THE DEBATE LEAGUE
+             ================================================== -->
 
         <section class="about-section">
 
             <div class="about-number">
-                05
+                06
             </div>
 
+
             <div class="about-content">
-                <p class="section-label">About the Event</p>
+
+                <p class="section-label">
+                    About the Event
+                </p>
+
 
                 <h2>
-                    The fifth chapter of LADC’s flagship debate league
+                    The sixth chapter of the LADC Debate League
                 </h2>
 
-                <p>
-                    The LADC Debate League brings together speakers for
-                    a structured league tournament focused on consistent
-                    performance, argumentation, teamwork and competitive
-                    debating.
-                </p>
 
                 <p>
-                    DebLiga will serve as the official digital platform
-                    for schedules, results, standings and speaker records.
+
+                    The LADC Debate League is built around sustained
+                    competition rather than a single round. Teams compete
+                    through the league stage, build their position in the
+                    standings and fight for qualification into the
+                    knockouts.
+
                 </p>
+
+
+                <p>
+
+                    Across the tournament, speakers are challenged to
+                    develop stronger arguments, respond under pressure,
+                    work effectively with their teammates and improve
+                    through repeated competitive debating.
+
+                </p>
+
+
+                <p>
+
+                    <strong>DebLiga</strong> serves as the digital home of
+                    the tournament — maintaining schedules, results,
+                    standings, team records and speaker performances.
+
+                </p>
+
             </div>
 
         </section>
 
+
+
+        <!-- ==================================================
+             ABOUT LADC
+             ================================================== -->
+
+        <section class="club-story-section">
+
+            <div class="club-story">
+
+                <div class="club-story-intro">
+
+                    <div>
+
+                        <p class="section-label">
+                            Beyond the League
+                        </p>
+
+
+                        <h2>
+                            About LADC
+                        </h2>
+
+                    </div>
+
+
+                    <div class="club-story-copy">
+
+                        <p>
+
+                            The <strong>Literary and Debating Club
+                            (LADC), NIT Jalandhar</strong> is a student
+                            community centred around debating, public
+                            speaking, literary expression and the exchange
+                            of ideas.
+
+                        </p>
+
+
+                        <p>
+
+                            Through debates, speaking activities,
+                            discussions and competitive opportunities, the
+                            club provides a space for students to develop
+                            confidence, critical thinking, communication
+                            and the ability to build and defend ideas.
+
+                        </p>
+
+
+                        <p>
+
+                            The Debate League is one part of that larger
+                            culture — giving both newer speakers and
+                            experienced debaters an environment to learn,
+                            compete and improve over multiple rounds.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Club Pillars -->
+
+                <div class="club-pillars">
+
+
+                    <article class="pillar-card">
+
+                        <span class="pillar-number">
+                            01
+                        </span>
+
+
+                        <h3>
+                            Debate
+                        </h3>
+
+
+                        <p>
+
+                            Structured argumentation, rebuttal and
+                            competitive speaking that reward clarity,
+                            reasoning and quick thinking.
+
+                        </p>
+
+                    </article>
+
+
+
+                    <article class="pillar-card">
+
+                        <span class="pillar-number">
+                            02
+                        </span>
+
+
+                        <h3>
+                            Public Speaking
+                        </h3>
+
+
+                        <p>
+
+                            A platform for students to become more
+                            confident speakers and communicate ideas with
+                            greater precision and impact.
+
+                        </p>
+
+                    </article>
+
+
+
+                    <article class="pillar-card">
+
+                        <span class="pillar-number">
+                            03
+                        </span>
+
+
+                        <h3>
+                            Community
+                        </h3>
+
+
+                        <p>
+
+                            A space where speakers learn from one another,
+                            exchange perspectives and grow through
+                            competition as well as collaboration.
+
+                        </p>
+
+                    </article>
+
+
+                </div>
+
+
+
+                <!-- Club Highlights -->
+
+                <div class="club-highlights">
+
+                    <div class="club-highlight">
+
+                        <strong>
+                            Think
+                        </strong>
+
+                        <span>
+                            Analyse ideas and perspectives critically.
+                        </span>
+
+                    </div>
+
+
+                    <div class="club-highlight">
+
+                        <strong>
+                            Speak
+                        </strong>
+
+                        <span>
+                            Build confidence and communicate with purpose.
+                        </span>
+
+                    </div>
+
+
+                    <div class="club-highlight">
+
+                        <strong>
+                            Debate
+                        </strong>
+
+                        <span>
+                            Argue, rebut and respond under pressure.
+                        </span>
+
+                    </div>
+
+
+                    <div class="club-highlight">
+
+                        <strong>
+                            Grow
+                        </strong>
+
+                        <span>
+                            Improve through practice, feedback and competition.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CTA -->
+
+                <div class="club-cta">
+
+                    <div>
+
+                        <h3>
+                            Follow the 6th Edition.
+                        </h3>
+
+
+                        <p>
+
+                            Track every team, speaker and result throughout
+                            the LADC Debate League 2026.
+
+                        </p>
+
+                    </div>
+
+
+                    <a
+                        href="/schedule"
+                        class="primary-button"
+                    >
+                        View the League
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
     </main>
 
 
+
+    <!-- ==================================================
+         FOOTER
+         ================================================== -->
+
     <footer>
+
         <div>
-            <strong>LADC Debate League 2026</strong>
-            <span>Literary and Debating Club, NIT Jalandhar</span>
+
+            <strong>
+                LADC Debate League 2026
+            </strong>
+
+
+            <span>
+                Literary and Debating Club, NIT Jalandhar
+            </span>
+
         </div>
 
+
         <p>
-            Tournament platform powered by <strong>DebLiga</strong>
+
+            6th Edition · Tournament platform powered by
+            <strong>DebLiga</strong>
+
         </p>
+
     </footer>
 
 </body>
+
 </html>
