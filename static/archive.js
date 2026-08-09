@@ -29,10 +29,10 @@
                 teams: [
                     { name: 'Panel Pls Understand', leader: 'Sukhman', squad: [['Saniya', 30000], ['Ashmita', 8000], ['Jai', 6500], ['Javin', 5500]] },
                     { name: 'Icarus', leader: 'Amrit', squad: [['Suhani', 13000], ['Ekam', 24000], ['Shivam', 6500], ['Avon', 6500]] },
-                    { name: 'The Orators of Olympus', leader: 'Harsh', squad: [['Agam', 11500], ['Adesh', 11000], ['Pankhuri', 14000], ['Raveet', 13500]] },
+                    { name: 'The Orators of Olympus', leader: 'Harsh', squad: [['Agam', 11500], ['Adesh', 11000], ['Pankhuri', 14000], ['Ravneet', 13500]] },
                     { name: 'Court of Reason', leader: 'Kamalpreet', squad: [['Samairah', 32500], ['Prisha', 6500], ['Swayam', 6000], ['Anjali', 5000]] },
-                    { name: 'Meow Meow', leader: 'Tanu', squad: [['Shiva', 18000], ['Bareen', 12000], ['Prabhleen', 10000], ['Saurabh', 10000]] },
-                    { name: 'Phuss Phuss Gang', leader: 'Hiteshwar', squad: [['Tanveer', 19000], ['Vivek', 9000], ['Prabhoor', 14000], ['Naman', 8000]] },
+                    { name: 'Meow Meow', leader: 'Tanu', squad: [['Shriya', 18000], ['Barleen', 12000], ['Prabhleen', 10000], ['Saurabh', 10000]] },
+                    { name: 'Phuss Phuss Gang', leader: 'Jeetashwar', squad: [['Tanveer', 19000], ['Vivek', 9000], ['Prabhoor', 14000], ['Naman', 8000]] },
                     { name: 'The Nexus', leader: 'Ayan', squad: [['Nidhi', 7000], ['Ashmit', 29500], ['Jatin', 7500], ['Nandini', 6500]] }
                 ]
             }
