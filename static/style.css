@@ -3130,3 +3130,91 @@ footer a:hover {
     .archive-champion-line { font-size: .98rem; }
 }
 
+/* Completed Hall of Fame winners */
+.hall-of-fame-team { display: inline-flex; align-items: center; gap: 7px; }
+.hall-of-fame-trophy { display: inline-block; flex: 0 0 auto; font-size: .95em; line-height: 1; filter: drop-shadow(0 2px 3px rgba(220,166,29,.22)); }
+
+/* LADC light-blue accent polish for inner public pages */
+body:not([data-theme="dark"]) > nav + main .page-header {
+    border-color: rgba(82,185,232,.32); border-left-color: var(--gold);
+    background: linear-gradient(112deg,var(--bg-surface) 0%,var(--lighter-blue) 72%,rgba(223,244,255,.7) 100%);
+}
+body > nav + main .page-header::before {
+    content: ''; position: absolute; top: 0; right: 0; width: 34%; height: 4px;
+    background: linear-gradient(90deg,transparent,var(--blue));
+}
+body:not([data-theme="dark"]) > nav + main .section-heading {
+    padding: 18px 20px; border: 1px solid rgba(82,185,232,.2); border-radius: var(--radius-md);
+    background: linear-gradient(105deg,rgba(238,249,255,.85),rgba(255,255,255,.35));
+}
+body > nav + main .section-heading .section-label { color: var(--mid-blue); }
+body:not([data-theme="dark"]) > nav + main .team-card,
+body:not([data-theme="dark"]) > nav + main .debate-card,
+body:not([data-theme="dark"]) > nav + main .flow-card,
+body:not([data-theme="dark"]) > nav + main .value-card,
+body:not([data-theme="dark"]) > nav + main .auction-team-card,
+body:not([data-theme="dark"]) > nav + main .top-purchase-card {
+    background: linear-gradient(145deg,var(--bg-surface) 65%,rgba(223,244,255,.55));
+}
+body > nav + main .team-card,
+body > nav + main .debate-card,
+body > nav + main .flow-card,
+body > nav + main .value-card,
+body > nav + main .auction-team-card,
+body > nav + main .top-purchase-card { border-color: rgba(82,185,232,.25); }
+body > nav + main .team-card:hover,
+body > nav + main .debate-card:hover,
+body > nav + main .auction-team-card:hover,
+body > nav + main .top-purchase-card:hover { border-color: var(--blue); }
+body:not([data-theme="dark"]) > nav + main .table-wrap,
+body:not([data-theme="dark"]) > nav + main .archive-table-wrap {
+    border-color: rgba(82,185,232,.28); box-shadow: 0 7px 24px rgba(47,147,194,.08);
+}
+body:not([data-theme="dark"]) > nav + main tbody tr:nth-child(even) { background: rgba(238,249,255,.65); }
+body:not([data-theme="dark"]) > nav + main tbody tr:hover { background: var(--light-blue); }
+body > nav + main .standings-pool > h2,
+body > nav + main .schedule-section > h2 {
+    border-bottom-color: rgba(82,185,232,.4);
+    background: linear-gradient(90deg,rgba(82,185,232,.1),transparent 70%);
+}
+body:not([data-theme="dark"]) > nav + main .motion,
+body:not([data-theme="dark"]) > nav + main .matchup a,
+body:not([data-theme="dark"]) > nav + main .speaker-list li a,
+body:not([data-theme="dark"]) > nav + main .speaker-summary span,
+body:not([data-theme="dark"]) > nav + main .team-record strong {
+    border-color: rgba(82,185,232,.28); background-color: rgba(238,249,255,.72);
+}
+body > nav + main .matchup a:hover,
+body > nav + main .speaker-list li a:hover { border-color: var(--blue); background-color: var(--lighter-blue); }
+body:not([data-theme="dark"]) > nav + main .archive-section,
+body:not([data-theme="dark"]) > nav + main .auction-history-section {
+    border-color: rgba(82,185,232,.25);
+    background: linear-gradient(150deg,var(--bg-surface-secondary),rgba(223,244,255,.45));
+}
+[data-theme="dark"] body > nav + main .page-header,
+[data-theme="dark"] body > nav + main .section-heading {
+    border-color: rgba(76,184,232,.2); border-left-color: var(--gold);
+    background: linear-gradient(110deg,var(--bg-surface),rgba(20,45,68,.78));
+}
+[data-theme="dark"] body > nav + main .team-card,
+[data-theme="dark"] body > nav + main .debate-card,
+[data-theme="dark"] body > nav + main .flow-card,
+[data-theme="dark"] body > nav + main .value-card,
+[data-theme="dark"] body > nav + main .auction-team-card,
+[data-theme="dark"] body > nav + main .top-purchase-card {
+    border-color: rgba(76,184,232,.2); background: linear-gradient(145deg,var(--bg-surface) 68%,rgba(20,45,68,.55));
+}
+[data-theme="dark"] body > nav + main .table-wrap,
+[data-theme="dark"] body > nav + main .archive-table-wrap { border-color: rgba(76,184,232,.22); }
+[data-theme="dark"] body > nav + main .motion,
+[data-theme="dark"] body > nav + main .matchup a,
+[data-theme="dark"] body > nav + main .speaker-list li a,
+[data-theme="dark"] body > nav + main .speaker-summary span { border-color: rgba(76,184,232,.2); background-color: rgba(17,35,58,.78); }
+[data-theme="dark"] body > nav + main .archive-section,
+[data-theme="dark"] body > nav + main .auction-history-section { border-color: rgba(76,184,232,.2); background: linear-gradient(145deg,var(--bg-surface-secondary),rgba(17,35,58,.7)); }
+@media (max-width: 720px) {
+    body > nav + main .section-heading { padding: 15px 14px; }
+    .hall-of-fame-team { gap: 5px; }
+    .hall-of-fame-trophy { font-size: .9em; }
+}
+
