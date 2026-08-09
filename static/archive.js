@@ -43,6 +43,14 @@
     const content = document.getElementById('archive-content');
     if (!select || !content) return;
 
+    const teamEmojis = {
+        'Panel Pls Understand': '\u{1F3A4}', 'Tappu Sena': '\u2694\uFE0F',
+        'The Nexus': '\u{1F53A}', 'Court of Reason': '\u2696\uFE0F',
+        'The Orators of Olympus': '\u26A1', 'Meow Meow': '\u{1F431}',
+        'Icarus': '\u{1FABD}', 'Phuss Phuss Gang': '\u{1F4A8}'
+    };
+    function teamName(name) { return (teamEmojis[name] ? teamEmojis[name] + ' ' : '') + name; }
+
     Object.keys(editions).sort(function (a, b) { return b - a; }).forEach(function (year) {
         const option = document.createElement('option');
         option.value = year;
@@ -52,20 +60,21 @@
 
     function poolCard(name, teams) {
         const rows = teams.map(function (team, index) {
-            return `<tr><td><strong>${index + 1}</strong></td><td>${team[0]}</td><td>${team[1]}</td><td>${team[2]}</td><td>${team[3]}</td></tr>`;
+            return `<tr><td><strong>${index + 1}</strong></td><td>${teamName(team[0])}</td><td>${team[1]}</td><td>${team[2]}</td><td>${team[3]}</td></tr>`;
         }).join('');
-        return `<section class='archive-pool'><h3>${name}</h3><div class='archive-table-wrap'><table><thead><tr><th>Rank</th><th>Team</th><th>Played</th><th>W</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+        return `<section class='archive-pool'><h3>${name}</h3><div class='archive-table-wrap'><table><thead><tr><th>Rank</th><th>Team</th><th>Played</th><th><span class='result-heading' title='Wins' aria-label='Wins'>✅</span></th><th><span class='result-heading' title='Losses' aria-label='Losses'>❌</span></th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
     }
 
     function knockoutCard(match) {
-        const placement = match.result ? `<span class='archive-placement'>${match.result}: ${match.winner}</span>` : '';
-        return `<article class='archive-match'><p>${match.stage}</p><div><strong>${match.winner}</strong><span>def.</span><span>${match.loser}</span></div>${placement}</article>`;
+        const champion = match.result === 'Champion';
+        const placement = match.result ? `<span class='archive-placement${champion ? ' archive-champion-line' : ''}'>${champion ? '🏆 ' : ''}${match.result}: ${match.winner}</span>` : '';
+        return `<article class='archive-match${champion ? ' archive-final-winner' : ''}'><p>${match.stage}</p><div><strong>${teamName(match.winner)}</strong><span>def.</span><span>${teamName(match.loser)}</span></div>${placement}</article>`;
     }
 
     function render(year) {
         const edition = editions[year];
         const pools = Object.keys(edition.pools).map(function (name) { return poolCard(name, edition.pools[name]); }).join('');
-        content.innerHTML = `<header class='archive-edition-heading'><span>${year}</span><div><p>Archived Edition</p><h3>Standings and knockout results</h3></div></header><div class='archive-pools'>${pools}</div><section class='archive-knockouts'><h3>Knockouts</h3><div class='archive-match-grid'>${edition.knockouts.map(knockoutCard).join('')}</div></section>`;
+        content.innerHTML = `<header class='archive-edition-heading'><span>${year}</span><div><p>Archived Edition</p><h3>Standings and knockout results</h3></div></header>${year === '2025' ? `<div class='edition-champion-badge'><span>Debate League 2025 Winner</span><strong>🏆 Panel Pls Understand</strong></div>` : ''}<div class='archive-pools'>${pools}</div><section class='archive-knockouts'><h3>Knockouts</h3><div class='archive-match-grid'>${edition.knockouts.map(knockoutCard).join('')}</div></section>`;
     }
 
     function renderAuction() {

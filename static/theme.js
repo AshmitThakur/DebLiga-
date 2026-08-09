@@ -51,6 +51,24 @@
         document.addEventListener('keydown', function (event) { if (event.key === 'Escape') openMenu(false); });
         window.matchMedia('(min-width: 721px)').addEventListener('change', function (event) { if (event.matches) openMenu(false); });
     }
+    const teamEmojis = {
+        'Panel Pls Understand': '\u{1F3A4}', 'Tappu Sena': '\u2694\uFE0F',
+        'The Nexus': '\u{1F53A}', 'Court of Reason': '\u2696\uFE0F',
+        'The Orators of Olympus': '\u26A1', 'Meow Meow': '\u{1F431}',
+        'Icarus': '\u{1FABD}', 'Phuss Phuss Gang': '\u{1F4A8}'
+    };
+    document.querySelectorAll('.standings-pool tbody td:nth-child(2) a').forEach(function (team) {
+        const name = team.textContent.trim();
+        if (teamEmojis[name]) team.textContent = teamEmojis[name] + ' ' + name;
+    });
+    document.querySelectorAll('.hall-of-fame-item').forEach(function (item) {
+        const year = item.querySelector('.hall-of-fame-year');
+        const team = item.querySelector('.hall-of-fame-team');
+        if (year && team && year.textContent.trim() === '2025' && team.textContent.trim() === 'Panel Pls Understand') {
+            item.classList.add('hall-of-fame-champion');
+            team.textContent = '\u{1F3C6} Panel Pls Understand';
+        }
+    });
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     function animatePage() {
         if (reduceMotion.matches) return;

@@ -3088,3 +3088,45 @@ footer a:hover {
     .auction-matters ul { grid-template-columns: 1fr; }
 }
 
+/* Team identity and 2025 champion emphasis */
+.result-heading { display: inline-grid; place-items: center; min-width: 24px; font-size: .9rem; line-height: 1; }
+.standings-pool tbody td:nth-child(2) a,
+.archive-table-wrap tbody td:nth-child(2) { white-space: nowrap; }
+.hall-of-fame-champion {
+    border-color: rgba(220,166,29,.55);
+    background: linear-gradient(100deg,var(--warning-soft),var(--bg-surface-secondary));
+    box-shadow: 0 8px 24px rgba(220,166,29,.13);
+}
+.hall-of-fame-champion .hall-of-fame-year,
+.hall-of-fame-champion .hall-of-fame-team { color: var(--dark-gold); font-weight: 900; }
+.edition-champion-badge {
+    margin: 0 0 24px; padding: 15px 18px; display: inline-flex; flex-direction: column;
+    border: 1px solid rgba(220,166,29,.45); border-left: 5px solid var(--gold);
+    border-radius: var(--radius-sm); background: var(--warning-soft); box-shadow: 0 8px 24px rgba(220,166,29,.1);
+}
+.edition-champion-badge span { color: var(--text-muted); font-size: .7rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+.edition-champion-badge strong { color: var(--dark-gold); font-size: 1.12rem; }
+.archive-final-winner {
+    border-color: rgba(220,166,29,.65); border-left-color: var(--gold);
+    background: linear-gradient(115deg,var(--warning-soft),var(--bg-surface));
+    box-shadow: 0 10px 28px rgba(220,166,29,.16);
+}
+.archive-final-winner div > strong { color: var(--dark-gold); font-weight: 900; }
+.archive-champion-line {
+    margin-top: 14px; padding: 13px 14px; border: 1px solid rgba(220,166,29,.4);
+    border-radius: var(--radius-sm); color: var(--dark-gold); background: rgba(220,166,29,.12);
+    font-size: 1.08rem; font-weight: 900;
+}
+[data-theme=dark] .hall-of-fame-champion,
+[data-theme=dark] .archive-final-winner { background: linear-gradient(110deg,rgba(242,194,77,.13),var(--bg-surface)); }
+[data-theme=dark] .hall-of-fame-champion .hall-of-fame-year,
+[data-theme=dark] .hall-of-fame-champion .hall-of-fame-team,
+[data-theme=dark] .edition-champion-badge strong,
+[data-theme=dark] .archive-final-winner div > strong,
+[data-theme=dark] .archive-champion-line { color: var(--light-gold); }
+@media (max-width: 720px) {
+    .result-heading { font-size: .82rem; }
+    .edition-champion-badge { display: flex; width: 100%; }
+    .archive-champion-line { font-size: .98rem; }
+}
+
