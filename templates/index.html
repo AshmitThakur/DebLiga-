@@ -185,6 +185,17 @@
 
 
 
+        <section class='auction-promo' aria-labelledby='auction-promo-title'>
+            <div class='auction-promo-copy'>
+                <p class='section-label'>Debate League 2026</p>
+                <h2 id='auction-promo-title'>Debate League Auctions are coming soon.</h2>
+                <p>The auction returns soon — where captains build squads, strategy begins, and every pick can change the season.</p>
+                <p>All participants must complete <strong>Turn the Coat</strong> to confirm their Debate League registration. Register now and be part of the 2026 edition.</p>
+                <a class='primary-button auction-promo-cta' href='https://forms.gle/W75FgHXJ34Fw1GeJ9' target='_blank' rel='noopener noreferrer'>Register for Turn the Coat</a>
+            </div>
+            <div class='auction-promo-mark' aria-hidden='true'><span>AUCTION</span><strong>2026</strong><small>BUILD THE SQUAD</small></div>
+        </section>
+
         <!-- Detailed legacy/history moved to the dedicated History page. -->
 
 
@@ -192,7 +203,7 @@
              TOURNAMENT CENTRE
              ================================================== -->
 
-        <section class="dashboard-section">
+        <section class="dashboard-section homepage-feature-grid">
 
             <div class="section-heading">
 
@@ -399,17 +410,6 @@
 
 
 
-        <section class='auction-promo' aria-labelledby='auction-promo-title'>
-            <div class='auction-promo-copy'>
-                <p class='section-label'>Debate League 2026</p>
-                <h2 id='auction-promo-title'>Debate League Auctions are coming soon.</h2>
-                <p>The auction returns soon — where captains build squads, strategy begins, and every pick can change the season.</p>
-                <p>All participants must complete <strong>Turn the Coat</strong> to confirm their Debate League registration. Register now and be part of the 2026 edition.</p>
-                <a class='primary-button auction-promo-cta' href='https://forms.gle/W75FgHXJ34Fw1GeJ9' target='_blank' rel='noopener noreferrer'>Register for Turn the Coat</a>
-            </div>
-            <div class='auction-promo-mark' aria-hidden='true'><span>AUCTION</span><strong>2026</strong><small>BUILD THE SQUAD</small></div>
-        </section>
-
         <!-- ==================================================
              ABOUT THE DEBATE LEAGUE
              ================================================== -->
@@ -473,7 +473,7 @@
                         <span>Team Leader</span>
                     </div>
                     {% for item in hall_of_fame %}
-                    <div class="hall-of-fame-item{% if item.year == '2025' %} hall-of-fame-champion{% endif %}">
+                    <div class="hall-of-fame-item">
                         <span class="hall-of-fame-year">{{ item.year }}</span>
                         <span class="hall-of-fame-team">{% if item.year == '2026' %}???{% else %}<span class="hall-of-fame-trophy" aria-hidden="true">🏆</span>{{ item.team }}{% endif %}</span>
                         <span class="hall-of-fame-winner">{% if item.year == '2026' %}???{% else %}{{ item.winner }}{% endif %}</span>

@@ -241,7 +241,7 @@
                         <span>Team Leader</span>
                     </div>
                     {% for item in hall_of_fame %}
-                    <div class="hall-of-fame-item{% if item.year == '2025' %} hall-of-fame-champion{% endif %}">
+                    <div class="hall-of-fame-item">
                         <span class="hall-of-fame-year">{{ item.year }}</span>
                         <span class="hall-of-fame-team">{% if item.year == '2026' %}???{% else %}<span class="hall-of-fame-trophy" aria-hidden="true">🏆</span>{{ item.team }}{% endif %}</span>
                         <span class="hall-of-fame-winner">{% if item.year == '2026' %}???{% else %}{{ item.winner }}{% endif %}</span>

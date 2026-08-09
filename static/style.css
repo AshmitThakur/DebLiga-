@@ -3092,13 +3092,6 @@ footer a:hover {
 .result-heading { display: inline-grid; place-items: center; min-width: 24px; font-size: .9rem; line-height: 1; }
 .standings-pool tbody td:nth-child(2) a,
 .archive-table-wrap tbody td:nth-child(2) { white-space: nowrap; }
-.hall-of-fame-champion {
-    border-color: rgba(220,166,29,.55);
-    background: linear-gradient(100deg,var(--warning-soft),var(--bg-surface-secondary));
-    box-shadow: 0 8px 24px rgba(220,166,29,.13);
-}
-.hall-of-fame-champion .hall-of-fame-year,
-.hall-of-fame-champion .hall-of-fame-team { color: var(--dark-gold); font-weight: 900; }
 .edition-champion-badge {
     margin: 0 0 24px; padding: 15px 18px; display: inline-flex; flex-direction: column;
     border: 1px solid rgba(220,166,29,.45); border-left: 5px solid var(--gold);
@@ -3117,10 +3110,7 @@ footer a:hover {
     border-radius: var(--radius-sm); color: var(--dark-gold); background: rgba(220,166,29,.12);
     font-size: 1.08rem; font-weight: 900;
 }
-[data-theme=dark] .hall-of-fame-champion,
 [data-theme=dark] .archive-final-winner { background: linear-gradient(110deg,rgba(242,194,77,.13),var(--bg-surface)); }
-[data-theme=dark] .hall-of-fame-champion .hall-of-fame-year,
-[data-theme=dark] .hall-of-fame-champion .hall-of-fame-team,
 [data-theme=dark] .edition-champion-badge strong,
 [data-theme=dark] .archive-final-winner div > strong,
 [data-theme=dark] .archive-champion-line { color: var(--light-gold); }
@@ -3133,6 +3123,7 @@ footer a:hover {
 /* Completed Hall of Fame winners */
 .hall-of-fame-team { display: inline-flex; align-items: center; gap: 7px; }
 .hall-of-fame-trophy { display: inline-block; flex: 0 0 auto; font-size: .95em; line-height: 1; filter: drop-shadow(0 2px 3px rgba(220,166,29,.22)); }
+.homepage-feature-grid { display: none; }
 
 /* LADC light-blue accent polish for inner public pages */
 body:not([data-theme="dark"]) > nav + main .page-header {
