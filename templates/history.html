@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History | LADC Debate League</title>
+    <link rel="stylesheet" href="/static/style.css?v=6">
+</head>
+<body>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/schedule">Schedule</a>
+        <a href="/teams">Teams</a>
+        <a href="/standings">Standings</a>
+        <a href="/speaker-rankings">Speakers</a>
+        <a href="/history">History</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">
+            <span class="theme-toggle-icon">☀</span>
+            <span class="theme-toggle-label">Light</span>
+        </button>
+    </nav>
+
+    <main>
+
+        <header class="page-header">
+            <h1>Six Editions. One League.</h1>
+            <p>
+                LADC Debate League — established 2021. The League has returned each year to test argumentation, rebuttal and public speaking.
+            </p>
+        </header>
+
+        <section class="timeline-section">
+            <div class="section-heading compact-heading">
+                <div>
+                    <p class="section-label">League Timeline</p>
+                    <h2>From 2021 to 2026</h2>
+                </div>
+                <p>
+                    A chronological archive of the League's editions and champions. For detailed information about the current 6th Edition, follow the schedule and standings.
+                </p>
+            </div>
+
+            <div class="timeline-list">
+                <div class="vertical-timeline">
+                    {% for item in hall_of_fame %}
+                    <div class="timeline-item {% if item.year == '2026' %}active{% endif %}">
+                        <span class="timeline-year">{{ item.year }}</span>
+                        <h3>{{ item.team }}</h3>
+                        <p>Leader: {{ item.winner }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="legacy-section">
+            <div class="section-heading">
+                <div>
+                    <p class="section-label">Champions Archive</p>
+                    <h2>Past Winners</h2>
+                </div>
+                <p>
+                    A concise record of the League champions through each edition. 2026 is the current edition and the champion is to be decided.
+                </p>
+            </div>
+
+            <div class="legacy-copy-grid">
+                <div class="legacy-copy">
+                    <p>
+                        The LADC Debate League is a recurring collegiate debating competition focused on argumentation, rebuttal, public speaking and learning through repeated competition. It began in 2021 and has continued annually.
+                    </p>
+
+                    <p>
+                        The League emphasises clarity of thought, teamwork and the development of persuasive speaking. This page preserves the champions list and a short timeline of the League's editions.
+                    </p>
+
+                    <p>
+                        For the live 6th Edition, follow the tournament centre: <a href="/schedule">Follow the 6th Edition →</a>
+                    </p>
+                </div>
+
+                <div class="legacy-timeline">
+                    {% for item in hall_of_fame %}
+                    <div class="legacy-step">
+                        <span class="legacy-step-head">{{ item.year }}</span>
+                        <h3>{{ item.team }}</h3>
+                        <p>Leader: {{ item.winner }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <div>
+            <strong>LADC Debate League</strong>
+            <span>Literary and Debating Club, NIT Jalandhar</span>
+        </div>
+    </footer>
+
+</body>
+</html>

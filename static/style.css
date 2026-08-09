@@ -57,18 +57,24 @@
     --bg-surface: #ffffff;
     --bg-surface-secondary: #f4f8fc;
     --bg-surface-elevated: #f1f7fb;
+    --surface-muted: rgba(16, 24, 39, 0.08);
     --text-primary: #101827;
     --text-secondary: #18354a;
     --text-muted: #64748b;
     --nav-bg: #111c2e;
     --nav-text: #f8fbfd;
+    --nav-text-muted: rgba(248, 251, 253, 0.78);
     --hero-left-bg: linear-gradient(115deg, #dff4ff 0%, #bfeaff 57%, #93d8f7 100%);
     --hero-right-bg: #111c2e;
-    --hero-card-bg: rgba(255, 255, 255, 0.86);
+    --hero-left-text: #101827;
+    --hero-left-meta: #18354a;
+    --hero-right-text: #f8fbfd;
+    --hero-right-muted: rgba(248, 251, 253, 0.8);
+    --hero-card-bg: rgba(255, 255, 255, 0.92);
     --hero-card-border: rgba(16, 24, 39, 0.14);
     --hero-card-shadow: 0 18px 40px rgba(16, 24, 39, 0.16);
-    --hero-card-heading: #ffffff;
-    --hero-card-muted: #bdc8d6;
+    --hero-card-heading: #111827;
+    --hero-card-muted: #64748b;
     --about-bg: #dff4ff;
     --about-accent: #bde9fc;
     --about-number: rgba(16, 24, 39, 0.1);
@@ -99,9 +105,9 @@
     --light-gold: #ffe08f;
     --dark-gold: #c99512;
 
-    --black: #101827;
-    --soft-black: #182235;
-    --navy: #111c2e;
+    --black: #080f1c;
+    --soft-black: #0f1726;
+    --navy: #07131d;
 
     --white: #f7fbff;
     --off-white: #08101a;
@@ -130,13 +136,19 @@
     --bg-surface: #0f1726;
     --bg-surface-secondary: #111b2d;
     --bg-surface-elevated: #14253b;
+    --surface-muted: rgba(255, 255, 255, 0.12);
     --text-primary: #f5f8fc;
     --text-secondary: #dfe9f5;
     --text-muted: #93a3b7;
     --nav-bg: #0a111d;
     --nav-text: #f7fbff;
+    --nav-text-muted: rgba(247, 251, 255, 0.72);
     --hero-left-bg: linear-gradient(115deg, #111c2e 0%, #14253b 55%, #10263b 100%);
     --hero-right-bg: #060b12;
+    --hero-left-text: #f7fbff;
+    --hero-left-meta: #93a3b7;
+    --hero-right-text: #f7fbff;
+    --hero-right-muted: #9baec0;
     --hero-card-bg: #111a2d;
     --hero-card-border: rgba(255, 255, 255, 0.12);
     --hero-card-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
@@ -311,7 +323,7 @@ body > nav a:hover::after {
     align-items: center;
     gap: 15px;
 
-    color: var(--white);
+    color: var(--nav-text);
     text-decoration: none;
 }
 
@@ -489,7 +501,7 @@ body > nav a:hover::after {
 .hero-eyebrow {
     margin: 0;
 
-    color: rgba(255, 255, 255, 0.78);
+    color: var(--hero-left-meta);
 
     font-size: 0.85rem;
     font-weight: 800;
@@ -501,7 +513,7 @@ body > nav a:hover::after {
     max-width: 600px;
     margin: 0;
 
-    color: var(--text-primary);
+    color: var(--hero-left-text);
 
     font-size: clamp(4rem, 7vw, 7rem);
     line-height: 0.92;
@@ -517,7 +529,7 @@ body > nav a:hover::after {
     max-width: 580px;
     margin: 0;
 
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--hero-left-text);
 
     font-size: 1.05rem;
     line-height: 1.85;
@@ -526,7 +538,8 @@ body > nav a:hover::after {
 .hero-subtext {
     margin: 0;
 
-    color: rgba(255, 255, 255, 0.76);
+    color: var(--hero-left-text);
+    opacity: 0.8;
     font-size: 0.78rem;
     font-weight: 800;
     letter-spacing: 0.22em;
@@ -596,8 +609,8 @@ body > nav a:hover::after {
     margin-top: 18px;
     padding: 18px 22px;
     border-left: 3px solid var(--gold);
-    background-color: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.78);
+    background-color: rgba(220, 166, 29, 0.12);
+    color: var(--hero-left-text);
     line-height: 1.75;
 }
 
@@ -615,7 +628,7 @@ body > nav a:hover::after {
 
 .hall-of-fame-teaser p {
     margin: 0;
-    color: rgba(255, 255, 255, 0.78);
+    color: var(--hero-left-text);
     line-height: 1.7;
 }
 
@@ -671,6 +684,20 @@ body > nav a:hover::after {
     color: var(--button-secondary-hover-text);
     background-color: var(--button-secondary-hover-bg);
 
+    transform: translateY(-2px);
+}
+
+/* Improve contrast for secondary buttons inside the hero (light mode) */
+.hero-section .secondary-button {
+    color: var(--hero-left-text);
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.12);
+}
+
+.hero-section .secondary-button:hover {
+    color: var(--navy);
+    background-color: var(--gold);
+    border-color: var(--gold);
     transform: translateY(-2px);
 }
 

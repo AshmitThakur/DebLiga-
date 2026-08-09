@@ -66,6 +66,17 @@ templates = Jinja2Templates(
 )
 
 
+# Shared champions list (used by homepage and history archive)
+HALL_OF_FAME = [
+    {"year": "2021", "team": "Nirvana", "winner": "Shreya"},
+    {"year": "2022", "team": "The Mavens", "winner": "Chhawinder"},
+    {"year": "2023", "team": "The Raging Raccoons", "winner": "Preeti"},
+    {"year": "2024", "team": "Coffee Tea Spikers", "winner": "Adesh"},
+    {"year": "2025", "team": "Panel Pls Understand", "winner": "Sukhman"},
+    {"year": "2026", "team": "Current Edition", "winner": "TBD"},
+]
+
+
 # --------------------------------------------------
 # HOMEPAGE
 # --------------------------------------------------
@@ -77,14 +88,14 @@ templates = Jinja2Templates(
 def home(
     request: Request
 ):
-    hall_of_fame = [
-        {"year": "2021", "team": "Nirvana", "winner": "Shreya"},
-        {"year": "2022", "team": "The Mavens", "winner": "Chhawinder"},
-        {"year": "2023", "team": "The Raging Raccoons", "winner": "Preeti"},
-        {"year": "2024", "team": "Coffee Tea Spikers", "winner": "Adesh"},
-        {"year": "2025", "team": "Panel Pls Understand", "winner": "Sukhman"},
-        {"year": "2026", "team": "???", "winner": "???"},
-    ]
+    hall_of_fame = HALL_OF_FAME
+
+    latest_champion = None
+    # Prefer the most recent declared champion (exclude 2026/current edition)
+    for entry in reversed(hall_of_fame):
+        if entry.get("year") != "2026":
+            latest_champion = entry
+            break
 
     return templates.TemplateResponse(
         request=request,
@@ -94,6 +105,24 @@ def home(
             "edition": "6th Edition",
             "club_name": "Literary and Debating Club",
             "hall_of_fame": hall_of_fame,
+            "latest_champion": latest_champion,
+        },
+    )
+
+
+@app.get(
+    "/history",
+    response_class=HTMLResponse
+)
+def history_page(
+    request: Request
+):
+    return templates.TemplateResponse(
+        request=request,
+        name="history.html",
+        context={
+            "tournament_name": "LADC Debate League",
+            "hall_of_fame": HALL_OF_FAME,
         },
     )
 
@@ -1193,6 +1222,39 @@ def speaker_detail_page(
             "debates_played": len(history)
         }
     )
+
+
+@app.get(
+    "/about/ladc",
+    response_class=HTMLResponse
+)
+def about_ladc(
+    request: Request
+):
+    return templates.TemplateResponse(
+        request=request,
+        name="about_ladc.html",
+        context={
+            "request": request
+        }
+    )
+
+
+@app.get(
+    "/about/debate-league",
+    response_class=HTMLResponse
+)
+def about_debate_league(
+    request: Request
+):
+    return templates.TemplateResponse(
+        request=request,
+        name="about_debate_league.html",
+        context={
+            "request": request
+        }
+    )
+
 
 # ==================================================
 # EDIT TEAM / SPEAKER
