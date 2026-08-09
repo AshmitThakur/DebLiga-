@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,9 +21,10 @@
         </button>
     </nav>
 
-    <main>
+    <main class="history-page">
 
         <header class="page-header">
+            <p class="section-label">League History</p>
             <h1>Six Editions. One League.</h1>
             <p>
                 LADC Debate League — established 2021. The League has returned each year to test argumentation, rebuttal and public speaking.
@@ -33,65 +34,459 @@
         <section class="timeline-section">
             <div class="section-heading compact-heading">
                 <div>
-                    <p class="section-label">League Timeline</p>
+                    <p class="section-label">A Growing Tradition</p>
                     <h2>From 2021 to 2026</h2>
                 </div>
                 <p>
-                    A chronological archive of the League's editions and champions. For detailed information about the current 6th Edition, follow the schedule and standings.
+                    What began as a response to a quiet campus has become a recurring LADC tradition built around strategy, sharp argument and the excitement of competition.
                 </p>
-            </div>
-
-            <div class="timeline-list">
-                <div class="vertical-timeline">
-                    {% for item in hall_of_fame %}
-                    <div class="timeline-item {% if item.year == '2026' %}active{% endif %}">
-                        <span class="timeline-year">{{ item.year }}</span>
-                        <h3>{{ item.team }}</h3>
-                        <p>Leader: {{ item.winner }}</p>
-                    </div>
-                    {% endfor %}
-                </div>
             </div>
         </section>
 
-        <section class="legacy-section">
+
+
+        <section class="flow-section">
             <div class="section-heading">
                 <div>
-                    <p class="section-label">Champions Archive</p>
-                    <h2>Past Winners</h2>
+                    <p class="section-label">How Debate League Works</p>
+                    <h2>From first entry to the finals</h2>
                 </div>
                 <p>
-                    A concise record of the League champions through each edition. 2026 is the current edition and the champion is to be decided.
+                    The competition grows through a mix of strategy, teamwork and rounds of sharp argument.
                 </p>
             </div>
 
-            <div class="legacy-copy-grid">
-                <div class="legacy-copy">
-                    <p>
-                        The LADC Debate League is a recurring collegiate debating competition focused on argumentation, rebuttal, public speaking and learning through repeated competition. It began in 2021 and has continued annually.
-                    </p>
+            <div class="flow-grid">
+                <article class="flow-card">
+                    <span>01</span>
+                    <h3>Register</h3>
+                    <p>Participants enter the League and join the pool.</p>
+                </article>
+                <article class="flow-card">
+                    <span>02</span>
+                    <h3>Auction</h3>
+                    <p>Team leaders shape their squads through an auction, adding strategy before the first debate begins.</p>
+                </article>
+                <article class="flow-card">
+                    <span>03</span>
+                    <h3>Teams</h3>
+                    <p>Competitors stay tied to their teams across the League.</p>
+                </article>
+                <article class="flow-card">
+                    <span>04</span>
+                    <h3>Debate</h3>
+                    <p>Rounds follow the Asian Parliamentary Debate format.</p>
+                </article>
+                <article class="flow-card">
+                    <span>05</span>
+                    <h3>Rankings</h3>
+                    <p>Standings and individual performances evolve as the League progresses.</p>
+                </article>
+                <article class="flow-card">
+                    <span>06</span>
+                    <h3>Finals</h3>
+                    <p>The strongest teams battle for the League title.</p>
+                </article>
+            </div>
+        </section>
 
-                    <p>
-                        The League emphasises clarity of thought, teamwork and the development of persuasive speaking. This page preserves the champions list and a short timeline of the League's editions.
-                    </p>
 
-                    <p>
-                        For the live 6th Edition, follow the tournament centre: <a href="/schedule">Follow the 6th Edition →</a>
-                    </p>
+
+        <section class="split-section">
+            <div class="apd-card">
+                <p class="section-label">Asian Parliamentary Debate</p>
+                <h3>Two sides. One motion. A test of reasoning.</h3>
+                <p>
+                    Debate League follows the Asian Parliamentary Debate format.
+                    One side defends the motion as Government, while the other
+                    challenges it as Opposition.
+                </p>
+                <p>
+                    Success depends on clear structure, sharp analysis, strong
+                    rebuttals and teamwork under pressure.
+                </p>
+            </div>
+
+            <div class="auction-card">
+                <p class="section-label">Before the Arguments</p>
+                <h3>The League starts before the first motion.</h3>
+                <p>
+                    Captains → Player Pool → Auction → Squads → League.
+                    The auction adds a tactical edge before the first motion,
+                    turning preparation into part of the drama.
+                </p>
+            </div>
+        </section>
+
+
+
+        <section class="values-section">
+            <div class="section-heading">
+                <div>
+                    <p class="section-label">Why Debate League?</p>
+                    <h2>What participants gain</h2>
                 </div>
+            </div>
 
-                <div class="legacy-timeline">
+            <div class="values-grid">
+                <article class="value-card">Think Faster</article>
+                <article class="value-card">Argue Better</article>
+                <article class="value-card">Master Rebuttals</article>
+                <article class="value-card">Speak With Confidence</article>
+                <article class="value-card">Work as a Team</article>
+                <article class="value-card">Enter Competitive Debating</article>
+            </div>
+        </section>
+
+
+
+        <section class="about-section compact">
+            <div class="about-number">
+                07
+            </div>
+
+            <div class="about-content">
+                <p class="section-label">Behind the League</p>
+                <h2>Literary and Debating Club, NIT Jalandhar</h2>
+                <p>
+                    At LADC, NIT Jalandhar, debate is not treated as an extra
+                    activity. It is a culture of reading, argument, rebuttal and
+                    public speaking that has grown through student-led
+                    participation and repeated competitive seasons.
+                </p>
+                <p>
+                    Debate League is the club’s competitive expression of that
+                    culture: a space where beginners and experienced speakers
+                    meet the same motion, the same pressure and the same
+                    opportunity to improve.
+                </p>
+                <p><strong>Think. Express. Evolve.</strong></p>
+            </div>
+        </section>
+
+
+
+        <!-- ==================================================
+             ABOUT THE DEBATE LEAGUE
+             ================================================== -->
+
+        <section class="about-section">
+
+            <div class="about-number">
+                06
+            </div>
+
+
+            <div class="about-content">
+
+                <p class="section-label">
+                    About the Event
+                </p>
+
+
+                <h2>
+                    The sixth chapter of the LADC Debate League
+                </h2>
+
+
+                <p>
+
+                    The LADC Debate League is built around sustained
+                    competition rather than a single round. Teams compete
+                    through the league stage, build their position in the
+                    standings and fight for qualification into the
+                    knockouts.
+
+                </p>
+
+
+                <p>
+
+                    Across the tournament, speakers are challenged to
+                    develop stronger arguments, respond under pressure,
+                    work effectively with their teammates and improve
+                    through repeated competitive debating.
+
+                </p>
+
+
+                <p>
+
+                    <strong>DebLiga</strong> serves as the digital home of
+                    the tournament — maintaining schedules, results,
+                    standings, team records and speaker performances.
+
+                </p>
+
+            </div>
+
+        </section>
+
+        <section class="dashboard-section" id="hall-of-fame">
+            <div class="section-heading">
+                <div>
+                    <p class="section-label">Hall of Fame</p>
+                    <h2>Previous Debate League Winners</h2>
+                </div>
+                <p>
+                    A year-by-year record of each winning team and the team leader who guided them.
+                </p>
+            </div>
+
+            <div class="hall-of-fame-card">
+                <div class="hall-of-fame-list">
+                    <div class="hall-of-fame-columns" aria-hidden="true">
+                        <span>Year</span>
+                        <span>Winning Team</span>
+                        <span>Team Leader</span>
+                    </div>
                     {% for item in hall_of_fame %}
-                    <div class="legacy-step">
-                        <span class="legacy-step-head">{{ item.year }}</span>
-                        <h3>{{ item.team }}</h3>
-                        <p>Leader: {{ item.winner }}</p>
+                    <div class="hall-of-fame-item">
+                        <span class="hall-of-fame-year">{{ item.year }}</span>
+                        <span class="hall-of-fame-team">{% if item.year == '2026' %}???{% else %}{{ item.team }}{% endif %}</span>
+                        <span class="hall-of-fame-winner">{% if item.year == '2026' %}???{% else %}{{ item.winner }}{% endif %}</span>
                     </div>
                     {% endfor %}
                 </div>
             </div>
+        </section>
+
+        <!-- ==================================================
+             ABOUT LADC
+             ================================================== -->
+
+        <section class="club-story-section">
+
+            <div class="club-story">
+
+                <div class="club-story-intro">
+
+                    <div>
+
+                        <p class="section-label">
+                            Beyond the League
+                        </p>
+
+
+                        <h2>
+                            About LADC
+                        </h2>
+
+                    </div>
+
+
+                    <div class="club-story-copy">
+
+                        <p>
+
+                            The <strong>Literary and Debating Club
+                            (LADC), NIT Jalandhar</strong> is one of the
+                            oldest student clubs on campus, with a history
+                            stretching back more than two decades.
+
+                        </p>
+
+
+                        <p>
+
+                            Its alumni have gone on to careers in public
+                            service, policy and leadership, including paths
+                            linked to the Indian Foreign Service and other
+                            high-profile professional spaces.
+
+                        </p>
+
+
+                        <p>
+
+                            The Debate League is one part of that larger
+                            culture — giving both newer speakers and
+                            experienced debaters a place to learn, compete
+                            and grow.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Club Pillars -->
+
+                <div class="club-pillars">
+
+
+                    <article class="pillar-card">
+
+                        <span class="pillar-number">
+                            01
+                        </span>
+
+
+                        <h3>
+                            Debate
+                        </h3>
+
+
+                        <p>
+
+                            Structured argumentation, rebuttal and
+                            competitive speaking that reward clarity,
+                            reasoning and quick thinking.
+
+                        </p>
+
+                    </article>
+
+
+
+                    <article class="pillar-card">
+
+                        <span class="pillar-number">
+                            02
+                        </span>
+
+
+                        <h3>
+                            Public Speaking
+                        </h3>
+
+
+                        <p>
+
+                            A platform for students to become more
+                            confident speakers and communicate ideas with
+                            greater precision and impact.
+
+                        </p>
+
+                    </article>
+
+
+
+                    <article class="pillar-card">
+
+                        <span class="pillar-number">
+                            03
+                        </span>
+
+
+                        <h3>
+                            Community
+                        </h3>
+
+
+                        <p>
+
+                            A space where speakers learn from one another,
+                            exchange perspectives and grow through
+                            competition as well as collaboration.
+
+                        </p>
+
+                    </article>
+
+
+                </div>
+
+
+
+                <!-- Club Highlights -->
+
+                <div class="club-highlights">
+
+                    <div class="club-highlight">
+
+                        <strong>
+                            Think
+                        </strong>
+
+                        <span>
+                            Analyse ideas and perspectives critically.
+                        </span>
+
+                    </div>
+
+
+                    <div class="club-highlight">
+
+                        <strong>
+                            Speak
+                        </strong>
+
+                        <span>
+                            Build confidence and communicate with purpose.
+                        </span>
+
+                    </div>
+
+
+                    <div class="club-highlight">
+
+                        <strong>
+                            Debate
+                        </strong>
+
+                        <span>
+                            Argue, rebut and respond under pressure.
+                        </span>
+
+                    </div>
+
+
+                    <div class="club-highlight">
+
+                        <strong>
+                            Grow
+                        </strong>
+
+                        <span>
+                            Improve through practice, feedback and competition.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CTA -->
+
+                <div class="club-cta">
+
+                    <div>
+
+                        <h3>
+                            Follow the 6th Edition.
+                        </h3>
+
+
+                        <p>
+
+                            Track every team, speaker and result throughout
+                            the LADC Debate League 2026.
+
+                        </p>
+
+                    </div>
+
+
+                    <a
+                        href="/schedule"
+                        class="primary-button"
+                    >
+                        View the League
+                    </a>
+
+                </div>
+
+            </div>
 
         </section>
+
+
+    
 
     </main>
 
@@ -102,5 +497,10 @@
         </div>
     </footer>
 
+    <script src="/static/theme.js"></script>
 </body>
 </html>
+
+
+
+

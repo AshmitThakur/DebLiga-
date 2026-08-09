@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    DebLiga / LADC Debate League 2026
    Full Site Stylesheet
    Designed for the 6th Edition
@@ -1401,23 +1401,16 @@ main {
     letter-spacing: -0.05em;
 }
 
-.page-header > p {
-    position: relative;
-    z-index: 1;
+body:not([data-theme="dark"]) .page-header > p {
+        position: relative;
+        z-index: 1;
 
-    max-width: 720px;
+        max-width: 720px;
 
-    margin: 16px 0 0;
+        margin: 16px 0 0;
 
-    color: var(--deep-blue);
-
-    font-size: 1.02rem;
-    line-height: 1.7;
-}
-
-.page-header > p:first-child {
-    margin-top: 0;
-    margin-bottom: 16px;
+        color: #334155 !important;
+        opacity: 1 !important;
 }
 
 .page-header a {
@@ -2202,6 +2195,43 @@ td strong {
     border-left: 4px solid var(--gold);
 }
 
+[data-theme="dark"] main:has(.standings-pool) > .page-header p {
+    color: #dfe9f5;
+}
+
+[data-theme="dark"] .standings-pool h2 {
+    color: var(--light-gold);
+}
+
+[data-theme="dark"] .standings-pool .table-wrap table {
+    background-color: #111b2d;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .standings-pool .table-wrap tbody tr {
+    background-color: #0f1726;
+}
+
+[data-theme="dark"] .standings-pool .table-wrap tbody tr:nth-child(even) {
+    background-color: #131f35;
+}
+
+[data-theme="dark"] .standings-pool .table-wrap tbody tr:hover {
+    background-color: #14253b;
+}
+
+[data-theme="dark"] .standings-pool .table-wrap td {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .standings-pool .table-wrap td a {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .standings-pool .table-wrap tbody tr td[colspan] {
+    color: var(--text-secondary);
+}
+
 .standings-note {
     margin-top: 30px;
     padding: 16px 18px;
@@ -2304,14 +2334,10 @@ td strong {
     text-align: center;
 }
 
-main > p {
-    color: var(--text-muted);
+body:not([data-theme="dark"]) .table-wrap tbody tr td {
+    color: #475569 !important;
+    opacity: 1 !important;
 }
-
-
-/* =========================================================
-   15. FOOTER
-   ========================================================= */
 
 footer {
     min-height: 145px;
@@ -2415,7 +2441,17 @@ footer a:hover {
 @media (max-width: 980px) {
 
     .top-navigation {
-        display: none;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .top-navigation a,
+    .top-navigation .theme-toggle {
+        padding: 10px 8px;
+        font-size: 0.82rem;
+        white-space: nowrap;
     }
 
     .hero-section {
@@ -2468,74 +2504,107 @@ footer a:hover {
 @media (max-width: 720px) {
 
     body > nav {
-        position: relative;
+        position: sticky;
+        top: 0;
+        z-index: 50;
 
-        gap: 16px;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
 
-        padding: 8px 18px;
+        gap: 12px;
+
+        padding: 10px 12px;
+        justify-content: center;
     }
 
-    body > nav a {
-        padding: 12px 0;
-
-        font-size: 0.78rem;
+    body > nav a,
+    body > nav .theme-toggle {
+        padding: 8px 6px;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        flex: 0 0 auto;
     }
 
     body > nav a::after {
-        bottom: 6px;
+        bottom: 4px;
     }
 
     .navbar {
-        min-height: 82px;
+        min-height: 72px;
+        padding: 0 12px;
     }
 
     .logo-container {
-        width: 62px;
-        height: 62px;
+        width: 56px;
+        height: 56px;
     }
 
     .club-name strong {
-        font-size: 1.15rem;
+        font-size: 1.1rem;
     }
 
     .club-name span {
         display: none;
     }
 
+    .top-navigation {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .top-navigation a,
+    .top-navigation .theme-toggle {
+        padding: 8px 10px;
+        font-size: 0.78rem;
+    }
+
+    .top-navigation .theme-toggle {
+        order: 1;
+        margin-top: 6px;
+    }
+
+    .hero-section {
+        gap: 20px;
+    }
+
     .hero-content {
-        padding: 65px 25px;
+        padding: 54px 20px 20px;
     }
 
     .hero-content h1 {
-        font-size: clamp(3.6rem, 16vw, 5rem);
+        font-size: clamp(3rem, 13vw, 4.5rem);
     }
 
     .hero-description {
-        font-size: 1rem;
-    }
-
-    .event-statistics {
-        grid-template-columns: repeat(2, 1fr);
+        font-size: 0.96rem;
     }
 
     .hero-visual {
-        min-height: 400px;
+        min-height: 320px;
+        padding: 20px;
+    }
 
-        padding: 25px;
+    .hero-visual::after {
+        display: none;
+    }
+
+    .hero-visual::before {
+        display: none;
     }
 
     .visual-placeholder {
-        min-height: 340px;
-
-        padding: 30px;
+        min-height: 300px;
+        padding: 24px;
     }
 
     .visual-placeholder strong {
-        font-size: 2.1rem;
+        font-size: 1.9rem;
     }
 
     .dashboard-section {
-        padding: 70px 20px;
+        padding: 70px 18px;
     }
 
     .dashboard-grid {
@@ -2544,7 +2613,7 @@ footer a:hover {
 
     .dashboard-card {
         min-height: auto;
-        padding: 28px 22px;
+        padding: 24px 18px;
 
         grid-template-columns: 48px 1fr;
     }
@@ -2554,19 +2623,19 @@ footer a:hover {
     }
 
     .about-number {
-        min-height: 230px;
-        padding: 45px 25px;
+        min-height: 220px;
+        padding: 38px 20px;
     }
 
     .about-content {
-        padding: 60px 25px;
+        padding: 52px 20px;
 
         border-top: 8px solid var(--gold);
         border-left: 0;
     }
 
     .club-story-section {
-        padding: 70px 20px;
+        padding: 70px 18px;
     }
 
     .club-pillars {
@@ -2578,13 +2647,13 @@ footer a:hover {
     }
 
     main {
-        width: min(94%, var(--content-width));
+        width: min(96%, var(--content-width));
 
-        padding: 35px 0 65px;
+        padding: 28px 0 50px;
     }
 
     .page-header {
-        padding: 28px 24px;
+        padding: 24px 18px;
     }
 
     .page-header::after {
@@ -2592,15 +2661,15 @@ footer a:hover {
     }
 
     .page-header h1 {
-        font-size: 2.7rem;
+        font-size: 2.5rem;
     }
 
     .team-card {
-        padding: 24px;
+        padding: 20px;
     }
 
     .debate-card {
-        padding: 22px 18px;
+        padding: 18px 16px;
     }
 
     .matchup {
@@ -2613,14 +2682,31 @@ footer a:hover {
         text-align: center;
     }
 
+    .table-wrap {
+        margin: 0 -12px;
+        width: calc(100% + 24px);
+    }
+
+    .table-wrap table {
+        min-width: 700px;
+    }
+
     th,
     td {
-        padding: 13px 14px;
+        padding: 12px 14px;
     }
 
     footer {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .club-story-copy,
+    .legacy-copy,
+    .legacy-step p,
+    .about-content p,
+    .hero-description {
+        word-break: break-word;
     }
 }
 
@@ -2656,3 +2742,153 @@ footer a:hover {
         flex-direction: column;
     }
 }
+/* History page dark-theme contrast */
+[data-theme="dark"] .history-page .page-header,
+[data-theme="dark"] .history-page .timeline-section,
+[data-theme="dark"] .history-page .flow-section,
+[data-theme="dark"] .history-page .values-section,
+[data-theme="dark"] .history-page .dashboard-section,
+[data-theme="dark"] .history-page .club-story-section {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .history-page .section-heading h2,
+[data-theme="dark"] .history-page .about-content h2,
+[data-theme="dark"] .history-page .apd-card h3,
+[data-theme="dark"] .history-page .auction-card h3,
+[data-theme="dark"] .history-page .flow-card h3,
+[data-theme="dark"] .history-page .pillar-card h3,
+[data-theme="dark"] .history-page .club-cta h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .history-page p,
+[data-theme="dark"] .history-page .section-heading > p,
+[data-theme="dark"] .history-page .club-highlight span {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .history-page .flow-card,
+[data-theme="dark"] .history-page .apd-card,
+[data-theme="dark"] .history-page .auction-card,
+[data-theme="dark"] .history-page .value-card,
+[data-theme="dark"] .history-page .hall-of-fame-card,
+[data-theme="dark"] .history-page .pillar-card,
+[data-theme="dark"] .history-page .club-highlight {
+    color: var(--text-primary);
+    background: #111b2d;
+    border-color: rgba(242, 194, 77, 0.22);
+}
+
+[data-theme="dark"] .history-page .hall-of-fame-item {
+    color: var(--text-primary);
+    background: #0f1726;
+    border-color: rgba(255, 255, 255, 0.09);
+}
+
+[data-theme="dark"] .history-page .section-label,
+[data-theme="dark"] .history-page .flow-card > span,
+[data-theme="dark"] .history-page .pillar-number,
+[data-theme="dark"] .history-page .hall-of-fame-year,
+[data-theme="dark"] .history-page a {
+    color: var(--light-gold);
+}
+
+[data-theme="dark"] .history-page .about-content,
+[data-theme="dark"] .history-page .club-story,
+[data-theme="dark"] .history-page .club-cta {
+    background-color: #0f1726;
+}
+/* Compact current-edition summary on the homepage */
+.about-section.compact {
+    grid-template-columns: minmax(160px, 0.35fr) 1.65fr;
+    min-height: 0;
+}
+
+.about-section.compact .about-number {
+    min-height: 0;
+    padding: 44px max(4vw, 28px);
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-size: clamp(4.5rem, 7vw, 7rem);
+}
+
+.about-section.compact .about-content {
+    padding: 52px max(6vw, 36px);
+}
+
+[data-theme="dark"] .about-section.compact .about-number {
+    background-color: #14253b;
+}
+
+@media (max-width: 720px) {
+    .about-section.compact {
+        grid-template-columns: 1fr;
+    }
+
+    .about-section.compact .about-number {
+        min-height: 110px;
+        padding: 22px 20px;
+        justify-content: center;
+        font-size: 4.5rem;
+    }
+
+    .about-section.compact .about-content {
+        padding: 36px 20px;
+    }
+}
+.hall-of-fame-columns {
+    display: grid;
+    grid-template-columns: 90px 1.4fr 1fr;
+    gap: 12px;
+    padding: 0 18px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+@media (max-width: 720px) {
+    .hall-of-fame-columns {
+        grid-template-columns: 64px 1.2fr 1fr;
+        padding: 0 12px;
+        font-size: 0.65rem;
+    }
+}
+/* Keep numbered history stories visible beside their number panels */
+.history-page .about-section {
+    grid-template-columns: minmax(160px, 0.35fr) 1.65fr;
+    min-height: 0;
+}
+
+.history-page .about-number {
+    min-height: 0;
+    padding: 44px max(4vw, 28px);
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-size: clamp(4.5rem, 7vw, 7rem);
+}
+
+.history-page .about-content {
+    padding: 52px max(6vw, 36px);
+}
+
+@media (max-width: 720px) {
+    .history-page .about-section {
+        grid-template-columns: 1fr;
+    }
+
+    .history-page .about-number {
+        min-height: 100px;
+        padding: 20px;
+        font-size: 4.5rem;
+    }
+
+    .history-page .about-content {
+        padding: 36px 20px;
+    }
+}
+
