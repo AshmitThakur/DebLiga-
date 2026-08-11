@@ -11,11 +11,11 @@
 
     <title>{{ tournament_name }}</title>
 
-    <link rel="stylesheet" href="/static/style.css?v=8">
+    <link rel="stylesheet" href="/static/style.css?v=9">
 </head>
 
 
-<body>
+<body class="home-page">
 
     <!-- ==================================================
          HEADER / NAVBAR
@@ -124,7 +124,7 @@
 
                 <p class="hero-description">
 
-                    The 5th Edition of the LADC Debate League brings
+                    The 6th Edition of the LADC Debate League brings
                     together speakers from across the college debating
                     community for a league-style tournament built around
                     argument, rebuttal and competitive speaking.
@@ -160,42 +160,42 @@
 
 
             <div class="hero-visual">
-
-                <div class="visual-placeholder">
-
-                    <span>
-                        V / FIFTH EDITION
-                    </span>
-
-
-                    <strong>
-                        Five editions. Countless arguments. One League.
-                    </strong>
-
-
-                    <p>
-                        APD FORMAT · AUCTION-BASED · EST. 2021
-                    </p>
-
-                    <div class="hero-season-path" aria-label="Tournament journey">
-                        <div><small>01</small><b>Auctions</b><span>Build the squad</span></div>
-                        <div><small>02</small><b>League</b><span>Earn the points</span></div>
-                        <div><small>03</small><b>Knockouts</b><span>Take the crown</span></div>
+                <div class="hero-photo-collage">
+                    <figure class="hero-photo-main">
+                        <img src="/static/images/debate-room-podium.jpg" alt="Debate League participants gathered in a lecture hall around the podium" fetchpriority="high">
+                        <figcaption><span>Debate League in action</span><strong>NIT Jalandhar</strong></figcaption>
+                    </figure>
+                    <div class="hero-photo-stack">
+                        <figure><img src="/static/images/finalist-speaker-one.jpg" alt="Debate League finalist speaking from the podium"></figure>
+                        <figure><img src="/static/images/finalist-speaker-two.jpg" alt="Debate League finalist addressing the room"></figure>
                     </div>
-
-                    <a class="hero-history-link" href="/history">
-                        <span>Explore the league archive</span>
-                        <strong aria-hidden="true">→</strong>
-                    </a>
-
+                    <div class="hero-edition-card">
+                        <span>2026 Season</span>
+                        <strong>6th Edition</strong>
+                        <small>Think · Speak · Debate</small>
+                    </div>
                 </div>
-
             </div>
 
         </section>
 
-
-
+        <section class="home-about-section" aria-labelledby="home-about-title">
+            <div class="home-about-copy">
+                <p class="section-label">About the Tournament</p>
+                <h2 id="home-about-title">The sixth chapter of the LADC Debate League</h2>
+                <p>The LADC Debate League is a sustained college debating competition built around preparation, league play and progression—not a single isolated round.</p>
+                <p>Teams build their squads, compete across the season and fight for a place in the knockouts while every speaker develops through repeated, adjudicated debate.</p>
+                <div class="tournament-facts" aria-label="Tournament facts">
+                    <div><span>Format</span><strong>Asian Parliamentary</strong></div>
+                    <div><span>Season</span><strong>Auctions to Final</strong></div>
+                    <div><span>Organised by</span><strong>LADC, NITJ</strong></div>
+                </div>
+            </div>
+            <figure class="home-about-photo">
+                <img src="/static/images/debate-speaker-classroom.jpg" alt="A speaker presenting an argument during a classroom debate" loading="lazy">
+                <figcaption><strong>Ideas under pressure.</strong><span>Arguments, rebuttals and growth through competition.</span></figcaption>
+            </figure>
+        </section>
         <section class='auction-promo' aria-labelledby='auction-promo-title'>
             <div class='auction-promo-copy'>
                 <p class='section-label'>Debate League 2026</p>
@@ -425,46 +425,34 @@
              ABOUT THE DEBATE LEAGUE
              ================================================== -->
 
-        <section class="about-section compact">
-
-            <div class="about-number">
-                06
+        <section class="home-memories-section" aria-labelledby="memories-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-label">05 / Community and Legacy</p>
+                    <h2 id="memories-title">More than the motion</h2>
+                </div>
+                <p>Debate League is where new speakers find the room, experienced debaters raise the standard and a college debating community grows together.</p>
             </div>
 
+            <div class="home-memories-layout">
+                <figure class="memory-card memory-audience">
+                    <img src="/static/images/debate-audience.jpg" alt="A speaker addressing the Debate League audience from the front of the lecture hall" loading="lazy">
+                    <figcaption><span>In the room</span><strong>Every round is a chance to be heard.</strong></figcaption>
+                </figure>
 
-            <div class="about-content">
+                <article class="ladc-story-card">
+                    <p class="section-label">Behind the League</p>
+                    <h3>Literary and Debating Club, NIT Jalandhar</h3>
+                    <p>LADC sustains a campus culture of reading, argument, public speaking and student-led competition. Debate League is its season-long arena for putting those skills into practice.</p>
+                    <a href="/history">Explore the league story →</a>
+                </article>
 
-                <p class="section-label">
-                    Current Tournament
-                </p>
-
-
-                <h2>
-                    Follow the 5th Edition
-                </h2>
-
-
-                <p>
-                    The LADC Debate League 2026 is the current live edition of the tournament.
-                </p>
-
-
-                <p>
-                    Stay focused on the schedule, teams, standings and speaker rankings as the League continues.
-                </p>
-
-
-                <p>
-                    <a href="/history">More About LADC and Debate League →</a>
-                </p>
-
+                <figure class="memory-card memory-community">
+                    <img src="/static/images/ladc-community.jpg" alt="Debate League participants and organisers gathered for a group photograph" loading="lazy">
+                    <figcaption><span>The community</span><strong>Built by speakers, leaders and organisers.</strong></figcaption>
+                </figure>
             </div>
-
         </section>
-
-
-
-
         <section class="dashboard-section" id="hall-of-fame">
             <div class="section-heading">
                 <div>
@@ -519,7 +507,7 @@
 
         <p>
 
-            5th Edition · Tournament platform powered by
+            6th Edition · Tournament platform powered by
             <strong>DebLiga</strong>
 
         </p>
