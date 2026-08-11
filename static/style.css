@@ -3379,3 +3379,14 @@ img, video, svg { max-width:100%; }
 }
 .home-page main { padding-top:24px; padding-bottom:70px; }
 @media (max-width:720px) { .home-page main { padding-top:14px; padding-bottom:46px; } }
+
+/* LADC social links */
+.footer-social { display:flex; flex-direction:column; align-items:flex-end; gap:8px; }
+.footer-social > span { color:#dce7f2; font-size:.72rem; font-weight:900; letter-spacing:.1em; text-transform:uppercase; }
+.footer-social-links { display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-end; gap:8px; }
+.footer-social-links a { padding:7px 10px; border:1px solid rgba(255,255,255,.16); border-radius:999px; color:var(--gold); background:rgba(255,255,255,.05); font-size:.78rem; text-decoration:none; }
+.footer-social-links a:hover, .footer-social-links a:focus-visible { border-color:var(--gold); background:rgba(220,166,29,.12); text-decoration:none; }
+@media (max-width:720px) {
+  .footer-social { width:100%; align-items:flex-start; }
+  .footer-social-links { justify-content:flex-start; }
+}
