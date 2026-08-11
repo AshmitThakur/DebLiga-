@@ -1,35 +1,46 @@
 (function () {
     const storageKey = 'theme';
     const root = document.documentElement;
-    const toggle = document.querySelector('.theme-toggle');
-    const icon = document.querySelector('.theme-toggle-icon');
-    const label = document.querySelector('.theme-toggle-label');
+    const toggles = Array.from(document.querySelectorAll('.theme-toggle'));
     const sunIcon = `<svg viewBox='0 0 24 24' aria-hidden='true'><circle cx='12' cy='12' r='4'></circle><path d='M12 2v2m0 16v2M2 12h2m16 0h2M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2'></path></svg>`;
     const moonIcon = `<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20 15A8 8 0 0 1 9 4a8 8 0 1 0 11 11Z'></path></svg>`;
 
-    const applyTheme = function (theme) {
-        root.setAttribute('data-theme', theme);
-        if (toggle) {
-            const dark = theme === 'dark';
-            toggle.innerHTML = dark ? sunIcon : moonIcon;
+    function readSavedTheme() {
+        try { return localStorage.getItem(storageKey); }
+        catch (error) { return null; }
+    }
+
+    function saveTheme(theme) {
+        try { localStorage.setItem(storageKey, theme); }
+        catch (error) { /* Theme still applies for the current page. */ }
+    }
+
+    function applyTheme(theme) {
+        const dark = theme === 'dark';
+        root.setAttribute('data-theme', dark ? 'dark' : 'light');
+        root.style.colorScheme = dark ? 'dark' : 'light';
+        toggles.forEach(function (toggle) {
+            toggle.innerHTML = `<span class='theme-toggle-icon'>${dark ? sunIcon : moonIcon}</span><span class='theme-toggle-label'>${dark ? 'Light mode' : 'Dark mode'}</span>`;
             toggle.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+            toggle.setAttribute('aria-pressed', String(dark));
             toggle.title = toggle.getAttribute('aria-label');
-            return;
-            icon.textContent = theme === 'dark' ? '🌙' : '☀';
-            label.textContent = theme === 'dark' ? 'Dark' : 'Light';
-        }
-    };
-
-    const savedTheme = localStorage.getItem(storageKey);
-    applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
-
-    if (toggle) {
-        toggle.addEventListener('click', function () {
-            const nextTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            applyTheme(nextTheme);
-            localStorage.setItem(storageKey, nextTheme);
         });
     }
+
+    const savedTheme = readSavedTheme();
+    const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(savedTheme === 'dark' || (!savedTheme && systemDark) ? 'dark' : 'light');
+
+    toggles.forEach(function (toggle) {
+        toggle.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const nextTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            applyTheme(nextTheme);
+            saveTheme(nextTheme);
+        });
+    });
+
     const nav = document.querySelector('.top-navigation, body > nav');
     if (nav) {
         const menuIcon = `<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 7h16M4 12h16M4 17h16'></path></svg>`;
@@ -49,7 +60,10 @@
         overlay.onclick = function () { openMenu(false); };
         nav.onclick = function (event) { if (event.target.closest('a')) openMenu(false); };
         document.addEventListener('keydown', function (event) { if (event.key === 'Escape') openMenu(false); });
-        window.matchMedia('(min-width: 721px)').addEventListener('change', function (event) { if (event.matches) openMenu(false); });
+        const desktopQuery = window.matchMedia('(min-width: 721px)');
+        const closeOnDesktop = function (event) { if (event.matches) openMenu(false); };
+        if (desktopQuery.addEventListener) desktopQuery.addEventListener('change', closeOnDesktop);
+        else if (desktopQuery.addListener) desktopQuery.addListener(closeOnDesktop);
     }
     const teamEmojis = {
         'Panel Pls Understand': '\u{1F3A4}', 'Tappu Sena': '\u2694\uFE0F',

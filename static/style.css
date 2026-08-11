@@ -1,4 +1,4 @@
-﻿/* =========================================================
+/* =========================================================
    DebLiga / LADC Debate League 2026
    Full Site Stylesheet
    Designed for the 6th Edition
@@ -3248,4 +3248,26 @@ img, video, svg { max-width:100%; }
   .page-header h1 { font-size:clamp(1.8rem,10vw,2.35rem); }
   .table-wrap tbody tr { grid-template-columns:1fr; }
   .table-wrap tbody td, .table-wrap tbody td:nth-child(2) { grid-column:1; }
+}
+/* Hero depth and mobile-safe theme control */
+.hero-season-path { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:30px; }
+.hero-season-path div { min-width:0; padding:14px 12px; border:1px solid rgba(255,255,255,.12); border-radius:10px; background:rgba(255,255,255,.045); }
+.hero-season-path small, .hero-season-path b, .hero-season-path span { display:block; }
+.hero-season-path small { color:var(--gold); font-size:.65rem; font-weight:900; }
+.hero-season-path b { margin-top:7px; color:var(--white); font-size:.84rem; }
+.hero-season-path span { margin-top:4px; color:rgba(255,255,255,.58); font-size:.67rem; line-height:1.35; }
+.hero-history-link { display:flex; align-items:center; justify-content:space-between; gap:20px; margin-top:14px; padding:14px 2px; border-top:1px solid rgba(255,255,255,.13); color:var(--white); font-size:.82rem; font-weight:800; text-decoration:none; }
+.hero-history-link span { color:inherit; font-size:inherit; letter-spacing:.02em; text-transform:none; }
+.hero-history-link strong { margin:0; color:var(--gold); font-size:1.4rem; line-height:1; }
+.hero-history-link:hover { color:var(--gold); }
+.theme-toggle-icon { display:inline-grid; place-items:center; }
+.theme-toggle-icon svg { width:20px; height:20px; }
+@media (max-width:720px) {
+  body > nav .theme-toggle, .top-navigation .theme-toggle { width:100%; min-height:48px; height:auto; margin:16px 0 0; padding:10px 12px; display:flex; justify-content:flex-start; gap:10px; border-radius:10px; color:var(--nav-text); background:rgba(255,255,255,.08); touch-action:manipulation; }
+  body > nav .theme-toggle-label, .top-navigation .theme-toggle-label { display:inline; font-size:.82rem; font-weight:800; }
+  .hero-season-path { grid-template-columns:1fr; margin-top:22px; }
+  .hero-season-path div { display:grid; grid-template-columns:30px 1fr; column-gap:8px; padding:12px; }
+  .hero-season-path small { grid-row:1/3; align-self:center; }
+  .hero-season-path b, .hero-season-path span { margin-top:0; }
+  .hero-history-link { min-height:48px; }
 }
