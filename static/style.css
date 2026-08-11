@@ -3271,3 +3271,15 @@ img, video, svg { max-width:100%; }
   .hero-season-path b, .hero-season-path span { margin-top:0; }
   .hero-history-link { min-height:48px; }
 }
+
+/* Balanced homepage hero spacing on phones */
+@media (max-width:720px) {
+  .hero-content { padding:46px clamp(22px,6vw,30px) 34px; gap:17px; }
+  .hero-content h1 { font-size:clamp(2.8rem,11.5vw,4rem); line-height:.94; }
+  .hero-description { line-height:1.7; }
+  .hero-actions { margin-top:12px; }
+}
+@media (max-width:390px) {
+  .hero-content { padding:38px 22px 30px; }
+  .hero-content h1 { font-size:clamp(2.65rem,13vw,3.35rem); }
+}
