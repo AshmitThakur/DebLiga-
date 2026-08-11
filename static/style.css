@@ -3465,3 +3465,5 @@ footer { flex-wrap:wrap; }
   .hero-photo-pair .hero-secondary-photo { aspect-ratio:16/9; border-radius:12px; }
   .hero-photo-pair .hero-feature-photo { aspect-ratio:4/3; }
 }
+/* Remove auction promo pillar accent */
+.auction-promo { border-left:1px solid rgba(82,185,232,.3); }
