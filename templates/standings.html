@@ -48,23 +48,23 @@
                             </tr>
                         </thead>
 
-                        <tbody>
+                        <tbody class="ranking-rows">
                             {% set pool_rows = namespace(count=0) %}
 
                             {% for team in table %}
                                 {% if team.pool_id == pool_id %}
                                     {% set pool_rows.count = pool_rows.count + 1 %}
                                     <tr>
-                                        <td>{{ team.rank }}</td>
+                                        <td data-label="Rank"><span class="rank-badge">#{{ team.rank }}</span></td>
                                         <td>
                                             <a href="/teams/{{ team.team_id }}">
                                                 {{ team.team_name }}
                                             </a>
                                         </td>
-                                        <td>{{ team.played }}</td>
-                                        <td>{{ team.wins }}</td>
-                                        <td>{{ team.losses }}</td>
-                                        <td><strong>{{ team.points }}</strong></td>
+                                        <td data-label="Played">{{ team.played }}</td>
+                                        <td data-label="Wins">{{ team.wins }}</td>
+                                        <td data-label="Losses">{{ team.losses }}</td>
+                                        <td data-label="Points"><strong>{{ team.points }}</strong></td>
                                         <td>
                                             {{ "%.2f"|format(team.average_team_score) }}
                                         </td>

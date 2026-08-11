@@ -73,7 +73,7 @@ HALL_OF_FAME = [
     {"year": "2023", "team": "The Raging Raccoons", "winner": "Preeti"},
     {"year": "2024", "team": "Coffee Tea Spikers", "winner": "Adesh"},
     {"year": "2025", "team": "Panel Pls Understand", "winner": "Sukhman"},
-    {"year": "2026", "team": "Current Edition", "winner": "TBD"},
+    {"year": "2026", "team": "???", "winner": "???", "current": True},
 ]
 
 
@@ -102,7 +102,7 @@ def home(
         name="index.html",
         context={
             "tournament_name": "LADC Debate League 2026",
-            "edition": "6th Edition",
+            "edition": "5th Edition",
             "club_name": "Literary and Debating Club",
             "hall_of_fame": hall_of_fame,
             "latest_champion": latest_champion,

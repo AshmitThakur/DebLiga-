@@ -41,10 +41,10 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody class="ranking-rows">
                     {% for speaker in rankings %}
                         <tr>
-                            <td>{{ loop.index }}</td>
+                            <td data-label="Rank"><span class="rank-badge">#{{ loop.index }}</span></td>
                             <td>
                                 <a href="/speakers/{{ speaker.speaker_id }}">
                                     {{ speaker.speaker_name }}
@@ -59,8 +59,8 @@
                                     —
                                 {% endif %}
                             </td>
-                            <td>{{ speaker.debates }}</td>
-                            <td>{{ "%.2f"|format(speaker.total_score) }}</td>
+                            <td data-label="Debates">{{ speaker.debates }}</td>
+                            <td data-label="Total score">{{ "%.2f"|format(speaker.total_score) }}</td>
                             <td>
                                 <strong>
                                     {{ "%.2f"|format(speaker.average_score) }}
