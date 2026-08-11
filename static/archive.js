@@ -87,10 +87,10 @@
         }).join('');
         const teams = auction.teams.map(function (team) {
             const squad = team.squad.map(function (member) {
-                return `<li><span>${member[0]}</span><strong>₹${member[1].toLocaleString('en-IN')}</strong></li>`;
+                return `<li><span>${member[0]}</span><strong>${member[1].toLocaleString('en-IN')} points</strong></li>`;
             }).join('');
             const total = team.squad.reduce(function (sum, member) { return sum + member[1]; }, 0);
-            return `<article class='auction-team-card'><header><h4>${team.name}</h4><p>Leader <strong>${team.leader}</strong></p></header><div class='auction-player-labels'><span>Player</span><span>Winning bid</span></div><ul>${squad}</ul><footer><span>Total spent</span><strong>₹${total.toLocaleString('en-IN')}</strong><span>Remaining purse</span><strong>₹${Math.max(0, 50000 - total).toLocaleString('en-IN')}</strong></footer></article>`;
+            return `<article class='auction-team-card'><header><h4>${team.name}</h4><p>Leader <strong>${team.leader}</strong></p></header><div class='auction-player-labels'><span>Player</span><span>Winning bid</span></div><ul>${squad}</ul><footer><span>Total spent</span><strong>${total.toLocaleString('en-IN')} points</strong><span>Remaining purse</span><strong>${Math.max(0, 50000 - total).toLocaleString('en-IN')} points</strong></footer></article>`;
         }).join('');
         host.innerHTML = `<section class='top-purchases'><div class='auction-subheading'><p>Highest Bids</p><h3>Top 5 Purchases of Debate League Auctions 2025</h3></div><div class='top-purchases-grid'>${purchases}</div></section><section class='auction-snapshot'><div class='auction-subheading'><p>Team by Team</p><h3>Auction Snapshot</h3></div><div class='auction-team-grid'>${teams}</div></section><aside class='auction-matters'><div><p class='section-label'>Why the Auction matters</p><h3>The season starts at the bidding table.</h3></div><ul><li>Strategy starts before the first round</li><li>Every bid changes team balance</li><li>Captains shape their identities through the auction</li><li>Great purchases often define great campaigns</li></ul></aside>`;
     }
