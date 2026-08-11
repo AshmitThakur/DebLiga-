@@ -3390,3 +3390,9 @@ img, video, svg { max-width:100%; }
   .footer-social { width:100%; align-items:flex-start; }
   .footer-social-links { justify-content:flex-start; }
 }
+/* Understated builder credit */
+footer { flex-wrap:wrap; }
+.footer-credit { flex:0 0 100%; margin-top:18px; padding-top:14px; border-top:1px solid rgba(255,255,255,.1); color:#8493a5; font-size:.72rem; font-weight:500; letter-spacing:.01em; text-align:right; }
+@media (max-width:720px) {
+  .footer-credit { margin-top:10px; text-align:center; }
+}
