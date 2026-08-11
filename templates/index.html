@@ -11,7 +11,7 @@
 
     <title>{{ tournament_name }}</title>
 
-    <link rel="stylesheet" href="/static/style.css?v=11">
+    <link rel="stylesheet" href="/static/style.css?v=12">
 </head>
 
 
@@ -69,13 +69,12 @@
                     Standings
                 </a>
 
-                <a href="/speaker-rankings">
-                    Speakers
-                </a>
+                <a href="/speaker-rankings">Speaker Rankings</a>
 
                 <a href="/history">
                     History
                 </a>
+                <a href="/history#auctions-2025">Auctions</a>
 
                 <button
                     class="theme-toggle"
@@ -160,21 +159,13 @@
 
 
             <div class="hero-visual">
-                <div class="hero-photo-collage">
-                    <figure class="hero-photo-main">
-                        <img src="/static/images/debate-room-podium.jpg" alt="Debate League participants gathered in a lecture hall around the podium" fetchpriority="high">
-                        <figcaption><span>Debate League in action</span><strong>NIT Jalandhar</strong></figcaption>
-                    </figure>
-                    <div class="hero-photo-stack">
-                        <figure><img src="/static/images/finalist-speaker-one.jpg" alt="Debate League finalist speaking from the podium"></figure>
-                        <figure><img src="/static/images/finalist-speaker-two.jpg" alt="Debate League finalist addressing the room"></figure>
-                    </div>
-                    <div class="hero-edition-card">
-                        <span>2026 Season</span>
-                        <strong>6th Edition</strong>
-                        <small>Think · Speak · Debate</small>
-                    </div>
-                </div>
+                <figure class="hero-feature-photo">
+                    <img src="/static/images/debate-room-podium.jpg" alt="Debate League participants gathered in a lecture hall around the podium" fetchpriority="high">
+                    <figcaption>
+                        <div><span>Debate League in action</span><strong>2026 Season</strong></div>
+                        <small>6th Edition</small>
+                    </figcaption>
+                </figure>
             </div>
 
         </section>
@@ -214,232 +205,16 @@
              TOURNAMENT CENTRE
              ================================================== -->
 
-        <section class="dashboard-section homepage-feature-grid">
-
-            <div class="section-heading">
-
-                <div>
-
-                    <p class="section-label">
-                        Tournament Centre
-                    </p>
-
-
-                    <h2>
-                        Follow the league
-                    </h2>
-
-                </div>
-
-
-                <p>
-
-                    DebLiga brings the entire competition together in one
-                    place — fixtures, teams, standings, results and
-                    individual speaker performances.
-
-                </p>
-
-            </div>
-
-
-
-            <div class="dashboard-grid">
-
-
-                <!-- Schedule -->
-
-                <a
-                    href="/schedule"
-                    class="dashboard-card schedule-card"
-                >
-
-                    <div class="card-number">
-                        01
-                    </div>
-
-
-                    <div class="card-content">
-
-                        <span class="card-label">
-                            Fixtures
-                        </span>
-
-
-                        <h3>
-                            League Schedule
-                        </h3>
-
-
-                        <p>
-
-                            View round-wise debates, rooms, motions,
-                            completed results and upcoming fixtures from
-                            the pool stage through the final.
-
-                        </p>
-
-
-                        <span class="card-link">
-                            Open schedule →
-                        </span>
-
-                    </div>
-
-                </a>
-
-
-
-                <!-- Teams -->
-
-                <a
-                    href="/teams"
-                    class="dashboard-card teams-card"
-                >
-
-                    <div class="card-number">
-                        02
-                    </div>
-
-
-                    <div class="card-content">
-
-                        <span class="card-label">
-                            Participants
-                        </span>
-
-
-                        <h3>
-                            Teams and Speakers
-                        </h3>
-
-
-                        <p>
-
-                            Explore the teams in Pool A and Pool B,
-                            their speakers and individual debate histories.
-
-                        </p>
-
-
-                        <span class="card-link">
-                            Explore teams →
-                        </span>
-
-                    </div>
-
-                </a>
-
-
-
-                <!-- Standings -->
-
-                <a
-                    href="/standings"
-                    class="dashboard-card standings-card"
-                >
-
-                    <div class="card-number">
-                        03
-                    </div>
-
-
-                    <div class="card-content">
-
-                        <span class="card-label">
-                            Competition
-                        </span>
-
-
-                        <h3>
-                            Pool Standings
-                        </h3>
-
-
-                        <p>
-
-                            Track wins, losses, points, average team
-                            scores and the qualification race in both pools.
-
-                        </p>
-
-
-                        <span class="card-link">
-                            View standings →
-                        </span>
-
-                    </div>
-
-                </a>
-
-
-
-                <!-- Speaker Rankings -->
-
-                <a
-                    href="/speaker-rankings"
-                    class="dashboard-card speakers-card"
-                >
-
-                    <div class="card-number">
-                        04
-                    </div>
-
-
-                    <div class="card-content">
-
-                        <span class="card-label">
-                            Performance
-                        </span>
-
-
-                        <h3>
-                            Speaker Rankings
-                        </h3>
-
-
-                        <p>
-
-                            Compare individual speaker averages, total
-                            scores and debate-by-debate performances.
-
-                        </p>
-
-
-                        <span class="card-link">
-                            View rankings →
-                        </span>
-
-                    </div>
-
-                </a>
-
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ==================================================
-             ABOUT THE DEBATE LEAGUE
-             ================================================== -->
-
         <section class="home-memories-section" aria-labelledby="memories-title">
             <div class="section-heading">
                 <div>
-                    <p class="section-label">05 / Community and Legacy</p>
+                    <p class="section-label">Community and Legacy</p>
                     <h2 id="memories-title">More than the motion</h2>
                 </div>
                 <p>Debate League is where new speakers find the room, experienced debaters raise the standard and a college debating community grows together.</p>
             </div>
 
             <div class="home-memories-layout">
-                <figure class="memory-card memory-audience">
-                    <img src="/static/images/debate-audience.jpg" alt="A speaker addressing the Debate League audience from the front of the lecture hall" loading="lazy">
-                    <figcaption><span>In the room</span><strong>Every round is a chance to be heard.</strong></figcaption>
-                </figure>
-
                 <article class="ladc-story-card">
                     <p class="section-label">Behind the League</p>
                     <h3>Literary and Debating Club, NIT Jalandhar</h3>
@@ -453,6 +228,7 @@
                 </figure>
             </div>
         </section>
+
         <section class="dashboard-section" id="hall-of-fame">
             <div class="section-heading">
                 <div>
