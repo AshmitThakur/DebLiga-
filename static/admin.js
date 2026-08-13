@@ -5,10 +5,12 @@ const state = {
   rounds: [],
   debates: [],
   schedule: [],
+  auctionTeams: [],
 };
 
 const $ = (id) => document.getElementById(id);
 const messageBox = $("message");
+const escapeHtml = (value) => String(value).replace(/[&<>"']/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[character]);
 
 function showMessage(text, isError = false) {
   messageBox.textContent = text;
@@ -1998,5 +2000,21 @@ $("reset-knockouts")
 // ==================================================
 // START DASHBOARD
 // ==================================================
+
+function auctionPlayerRow(player = {}) {
+  const row = document.createElement("div"); row.className = "auction-player-input";
+  row.innerHTML = `<input class="auction-player-name" placeholder="Player name" value="${escapeHtml(player.name || "")}" required><input class="auction-player-price" type="number" min="0" step="1" placeholder="Price" value="${player.price ?? ""}" required><button type="button" class="remove-auction-player">Remove</button>`;
+  row.querySelector(".remove-auction-player").onclick = () => { row.remove(); updateAuctionTotal(); };
+  row.querySelector(".auction-player-price").oninput = updateAuctionTotal;
+  $("auction-player-fields").appendChild(row);
+}
+function updateAuctionTotal() { const total = [...document.querySelectorAll(".auction-player-price")].reduce((sum, input) => sum + (Number(input.value) || 0), 0); $("auction-live-total").textContent = `Total: ₹${total.toLocaleString("en-IN")} · Remaining: ₹${(50000-total).toLocaleString("en-IN")}`; $("auction-live-total").dataset.invalid = total > 50000 ? "true" : "false"; }
+function resetAuctionForm() { $("auction-team-form").reset(); $("auction-team-id").value = ""; $("auction-player-fields").innerHTML = ""; $("cancel-auction-edit").hidden = true; auctionPlayerRow(); updateAuctionTotal(); }
+async function loadAuctionTeams() { state.auctionTeams = await api("/api/admin/auctions/2026/teams"); $("auction-team-list").innerHTML = state.auctionTeams.map(t => `<article class="admin-list-item"><div><strong>${escapeHtml(t.team_name)}</strong><small>${escapeHtml(t.leader_name)} · ${t.players.length} players · ₹${t.total_spent.toLocaleString("en-IN")} spent</small></div><div><button type="button" onclick="editAuctionTeam(${t.id})">Edit</button><button type="button" onclick="deleteAuctionTeam(${t.id})">Delete</button></div></article>`).join("") || "<p>No 2026 auction teams added yet.</p>"; }
+function editAuctionTeam(id) { const t = state.auctionTeams.find(x => x.id === id); if (!t) return; $("auction-team-id").value=t.id; $("auction-team-name").value=t.team_name; $("auction-leader-name").value=t.leader_name; $("auction-accent").value=t.accent_color || "#d6a62e"; $("auction-player-fields").innerHTML=""; t.players.forEach(auctionPlayerRow); $("cancel-auction-edit").hidden=false; updateAuctionTotal(); $("auction-team-form").scrollIntoView({behavior:"smooth"}); }
+async function deleteAuctionTeam(id) { if (!confirm("Delete this auction team and its players?")) return; try { await api(`/api/admin/auctions/2026/teams/${id}`, {method:"DELETE"}); showMessage("Auction team deleted"); await loadAuctionTeams(); } catch(e) { showMessage(e.message,true); } }
+$("add-auction-player").onclick = () => auctionPlayerRow(); $("cancel-auction-edit").onclick=resetAuctionForm;
+$("auction-team-form").onsubmit = async event => { event.preventDefault(); const id=$("auction-team-id").value; const players=[...document.querySelectorAll(".auction-player-input")].map(row=>({name:row.querySelector(".auction-player-name").value.trim(),price:Number(row.querySelector(".auction-player-price").value)})); try { await api(id?`/api/admin/auctions/2026/teams/${id}`:"/api/admin/auctions/2026/teams",jsonOptions(id?"PUT":"POST",{team_name:$("auction-team-name").value.trim(),leader_name:$("auction-leader-name").value.trim(),accent_color:$("auction-accent").value,players})); showMessage(id?"Auction team updated":"Auction team added"); resetAuctionForm(); await loadAuctionTeams(); } catch(e) { showMessage(e.message,true); } };
+resetAuctionForm(); loadAuctionTeams().catch(e=>showMessage(e.message,true));
 
 loadAll();

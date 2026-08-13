@@ -1,7 +1,7 @@
 from typing import Optional
 
-from sqlalchemy import Float, ForeignKey, String
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import Float, ForeignKey, String, UniqueConstraint
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
@@ -167,3 +167,41 @@ class SpeakerPerformance(Base):
         Float,
         nullable=False
     )
+
+
+class Auction(Base):
+    __tablename__ = "auctions"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    year: Mapped[int] = mapped_column(nullable=False, unique=True)
+    purse: Mapped[int] = mapped_column(nullable=False, default=50000)
+    teams: Mapped[list["AuctionTeam"]] = relationship(
+        back_populates="auction", cascade="all, delete-orphan"
+    )
+
+
+class AuctionTeam(Base):
+    __tablename__ = "auction_teams"
+    __table_args__ = (UniqueConstraint("auction_id", "team_name"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    auction_id: Mapped[int] = mapped_column(ForeignKey("auctions.id"), nullable=False)
+    team_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    leader_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    accent_color: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    auction: Mapped["Auction"] = relationship(back_populates="teams")
+    players: Mapped[list["AuctionPlayer"]] = relationship(
+        back_populates="team", cascade="all, delete-orphan", order_by="AuctionPlayer.id"
+    )
+
+
+class AuctionPlayer(Base):
+    __tablename__ = "auction_players"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    auction_team_id: Mapped[int] = mapped_column(
+        ForeignKey("auction_teams.id"), nullable=False
+    )
+    player_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    price: Mapped[int] = mapped_column(nullable=False)
+    team: Mapped["AuctionTeam"] = relationship(back_populates="players")

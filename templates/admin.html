@@ -20,6 +20,7 @@
     <a href="/schedule">Schedule</a>
     <a href="/standings">Standings</a>
     <a href="/speaker-rankings">Speaker Rankings</a>
+    <a href="/auctions">Auctions</a>
     <button class="theme-toggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">
         <span class="theme-toggle-icon">☀</span>
         <span class="theme-toggle-label">Light</span>
@@ -49,6 +50,19 @@
         id="message"
         class="admin-message"
     ></div>
+
+    <section class="card auction-admin-card">
+        <h2>2026 Auction Teams</h2>
+        <p>Add up to eight teams. Totals and the remaining ₹50,000 purse are calculated automatically.</p>
+        <form id="auction-team-form">
+            <input id="auction-team-id" type="hidden">
+            <div class="auction-admin-fields"><input id="auction-team-name" placeholder="Team name" required><input id="auction-leader-name" placeholder="Team leader" required><input id="auction-accent" type="color" value="#d6a62e" aria-label="Team accent colour"></div>
+            <div id="auction-player-fields"></div>
+            <div class="auction-form-actions"><button id="add-auction-player" type="button">Add Player</button><button type="submit">Save Team</button><button id="cancel-auction-edit" type="button" hidden>Cancel Edit</button></div>
+            <p id="auction-live-total">Total: ₹0 · Remaining: ₹50,000</p>
+        </form>
+        <div id="auction-team-list"></div>
+    </section>
 
 
     <!-- ====================================== -->

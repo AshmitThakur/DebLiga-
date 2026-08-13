@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, Form, HTTPException, Request
+from fastapi import Body, Depends, FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -16,6 +16,9 @@ from models import (
     Speaker,
     SpeakerPerformance,
     Team,
+    Auction,
+    AuctionTeam,
+    AuctionPlayer,
 )
 
 from schemas import (
@@ -125,6 +128,120 @@ def history_page(
             "hall_of_fame": HALL_OF_FAME,
         },
     )
+
+
+def auction_team_json(team):
+    players = [{"id": p.id, "name": p.player_name, "price": p.price} for p in team.players]
+    total = sum(player["price"] for player in players)
+    return {
+        "id": team.id, "team_name": team.team_name, "leader_name": team.leader_name,
+        "accent_color": team.accent_color, "players": players, "total_spent": total,
+        "remaining_purse": team.auction.purse - total, "purse": team.auction.purse,
+    }
+
+
+@app.get("/auctions", response_class=HTMLResponse)
+def auctions_page(request: Request, year: int = 2026, db: Session = Depends(get_db)):
+    if year not in (2025, 2026):
+        raise HTTPException(status_code=404, detail="Auction year not found")
+    teams = []
+    purse = 50000
+    if year == 2026:
+        auction = db.query(Auction).filter(Auction.year == year).first()
+        if auction:
+            purse = auction.purse
+            teams = [auction_team_json(team) for team in auction.teams]
+    return templates.TemplateResponse(
+        request=request, name="auctions.html",
+        context={"year": year, "teams": teams, "purse": purse},
+    )
+
+
+def require_admin(request: Request):
+    if request.cookies.get("admin_access") != "allowed":
+        raise HTTPException(status_code=401, detail="Admin login required")
+
+
+@app.get("/api/admin/auctions/2026/teams")
+def get_auction_teams(request: Request, db: Session = Depends(get_db)):
+    require_admin(request)
+    auction = db.query(Auction).filter(Auction.year == 2026).first()
+    return [] if not auction else [auction_team_json(team) for team in auction.teams]
+
+
+def validate_auction_payload(data, purse):
+    team_name = str(data.get("team_name", "")).strip()
+    leader_name = str(data.get("leader_name", "")).strip()
+    players = data.get("players") or []
+    if not team_name or not leader_name:
+        raise HTTPException(422, "Team name and leader are required")
+    if not players:
+        raise HTTPException(422, "Add at least one player")
+    cleaned = []
+    for player in players:
+        name = str(player.get("name", "")).strip()
+        try:
+            price = int(player.get("price"))
+        except (TypeError, ValueError):
+            raise HTTPException(422, "Every player needs a valid price")
+        if not name or price < 0:
+            raise HTTPException(422, "Player names are required and prices cannot be negative")
+        cleaned.append((name, price))
+    if sum(price for _, price in cleaned) > purse:
+        raise HTTPException(422, f"Total spending cannot exceed ₹{purse:,}")
+    return team_name, leader_name, cleaned
+
+
+@app.post("/api/admin/auctions/2026/teams")
+def create_auction_team(request: Request, data: dict = Body(...), db: Session = Depends(get_db)):
+    require_admin(request)
+    auction = db.query(Auction).filter(Auction.year == 2026).first()
+    if not auction:
+        auction = Auction(year=2026, purse=50000)
+        db.add(auction); db.flush()
+    if len(auction.teams) >= 8:
+        raise HTTPException(422, "The 2026 auction is limited to 8 teams")
+    team_name, leader_name, players = validate_auction_payload(data, auction.purse)
+    if db.query(AuctionTeam).filter(
+        AuctionTeam.auction_id == auction.id, AuctionTeam.team_name == team_name
+    ).first():
+        raise HTTPException(422, "A 2026 auction team with this name already exists")
+    team = AuctionTeam(auction=auction, team_name=team_name, leader_name=leader_name,
+                       accent_color=data.get("accent_color") or None)
+    team.players = [AuctionPlayer(player_name=name, price=price) for name, price in players]
+    db.add(team); db.commit(); db.refresh(team)
+    return auction_team_json(team)
+
+
+@app.put("/api/admin/auctions/2026/teams/{team_id}")
+def update_auction_team(team_id: int, request: Request, data: dict = Body(...), db: Session = Depends(get_db)):
+    require_admin(request)
+    team = db.get(AuctionTeam, team_id)
+    if not team or team.auction.year != 2026:
+        raise HTTPException(404, "Auction team not found")
+    team_name, leader_name, players = validate_auction_payload(data, team.auction.purse)
+    if db.query(AuctionTeam).filter(
+        AuctionTeam.auction_id == team.auction_id,
+        AuctionTeam.team_name == team_name,
+        AuctionTeam.id != team.id,
+    ).first():
+        raise HTTPException(422, "A 2026 auction team with this name already exists")
+    team.team_name, team.leader_name = team_name, leader_name
+    team.accent_color = data.get("accent_color") or None
+    team.players.clear()
+    team.players.extend(AuctionPlayer(player_name=name, price=price) for name, price in players)
+    db.commit(); db.refresh(team)
+    return auction_team_json(team)
+
+
+@app.delete("/api/admin/auctions/2026/teams/{team_id}")
+def delete_auction_team(team_id: int, request: Request, db: Session = Depends(get_db)):
+    require_admin(request)
+    team = db.get(AuctionTeam, team_id)
+    if not team or team.auction.year != 2026:
+        raise HTTPException(404, "Auction team not found")
+    db.delete(team); db.commit()
+    return {"message": "Auction team deleted"}
 
 
 # ==================================================
