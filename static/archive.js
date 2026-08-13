@@ -1,10 +1,10 @@
 (function () {
     // Final official source of truth for Debate League 2025.
     const edition2025 = {
-        winner: { team: 'Panel Please Understand', leader: 'Sukhman' },
+        winner: { team: 'Panel Pls Understand', leader: 'Sukhman' },
         pools: {
             'Pool A': [
-                ['Panel Please Understand', 3, 2, 1],
+                ['Panel Pls Understand', 3, 2, 1],
                 ['Tannu Sena', 3, 2, 1],
                 ['The Nexus', 3, 1, 2],
                 ['Court of Reason', 3, 1, 2]
@@ -17,10 +17,10 @@
             ]
         },
         knockouts: [
-            { stage: 'Semifinal 1', winner: 'Panel Please Understand', loser: 'The Orators of Olympus' },
+            { stage: 'Semifinal 1', winner: 'Panel Pls Understand', loser: 'The Orators of Olympus' },
             { stage: 'Semifinal 2', winner: 'Tannu Sena', loser: 'Meow Meow' },
             { stage: 'Third-place', winner: 'The Orators of Olympus', loser: 'Meow Meow', result: 'Third Place' },
-            { stage: 'Final', winner: 'Panel Please Understand', loser: 'Tannu Sena', result: 'Champion' }
+            { stage: 'Final', winner: 'Panel Pls Understand', loser: 'Tannu Sena', result: 'Champion' }
         ],
         auction: {
             purse: 50000,
@@ -29,7 +29,7 @@
                 { name: 'Meow Meow', leader: 'Tanu', squad: [['Shriya', 18000], ['Barleen', 12000], ['Prabhleen', 10000], ['Saurabh', 10000]] },
                 { name: 'Phuss Phuss Gang', leader: 'Jiteshwar', squad: [['Tanveer', 19000], ['Vivek', 9000], ['Prabhnoor', 14000], ['Naman', 8000]] },
                 { name: 'The Nexus', leader: 'Ayan', squad: [['Nidhi', 7000], ['Ashmit', 29500], ['Jatin', 7000], ['Nandini', 6500]] },
-                { name: 'Panel Please Understand', leader: 'Sukhman', squad: [['Saniya', 30000], ['Ashmita', 8000], ['Jai', 6500], ['Lavin', 5500]] },
+                { name: 'Panel Pls Understand', leader: 'Sukhman', squad: [['Saniya', 30000], ['Ashmita', 8000], ['Jai', 6500], ['Lavin', 5500]] },
                 { name: 'Icarus', leader: 'Amrit', squad: [['Suhani', 13000], ['Ekam', 24000], ['Shivam', 6500], ['Aryan', 6500]] },
                 { name: 'The Orators of Olympus', leader: 'Harsh', squad: [['Agam', 11500], ['Aadesh', 11000], ['Pankhuri', 14000], ['Ravneet', 13500]] },
                 { name: 'Court of Reason', leader: 'Kamalpreet', squad: [['Samairah', 32500], ['Prisha', 6500], ['Swayam', 6000], ['Anjali', 5000]] }
@@ -38,7 +38,7 @@
     };
 
     const teamEmojis = {
-        'Panel Please Understand': '🎤',
+        'Panel Pls Understand': '🎤',
         'Tannu Sena': '⚔️',
         'The Nexus': '🔺',
         'Court of Reason': '⚖️',

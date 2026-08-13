@@ -81,7 +81,7 @@ HALL_OF_FAME = [
     {"year": "2022", "team": "The Mavens", "winner": "Chhawinder"},
     {"year": "2023", "team": "The Raging Raccoons", "winner": "Preeti"},
     {"year": "2024", "team": "Coffee Tea Spikers", "winner": "Adesh"},
-    {"year": "2025", "team": "Panel Please Understand", "winner": "Sukhman"},
+    {"year": "2025", "team": "Panel Pls Understand", "winner": "Sukhman"},
     {"year": "2026", "team": "???", "winner": "???", "current": True},
 ]
 
