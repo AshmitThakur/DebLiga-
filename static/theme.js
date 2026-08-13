@@ -66,7 +66,7 @@
         else if (desktopQuery.addListener) desktopQuery.addListener(closeOnDesktop);
     }
     const teamEmojis = {
-        'Panel Pls Understand': '\u{1F3A4}', 'Tannu Sena': '\u2694\uFE0F',
+        'Panel Pls Understand': '\u{1F3A4}', 'Tappu Sena': '\u2694\uFE0F',
         'The Nexus': '\u{1F53A}', 'Court of Reason': '\u2696\uFE0F',
         'The Orators of Olympus': '\u26A1', 'Meow Meow': '\u{1F431}',
         'Icarus': '\u{1FABD}', 'Phuss Phuss Gang': '\u{1F4A8}'

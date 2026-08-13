@@ -5,6 +5,18 @@ from sqlalchemy.orm import Session
 from models import Auction, AuctionPlayer, AuctionTeam
 
 
+TEAM_EMOJIS_2026 = {
+    "Broken Orators": "🎙️",
+    "Mechanised Yappers": "⚙️",
+    "Fifth Amendment": "📜",
+    "Akali Dinosaurs": "⚖️",
+    "Motion Granted": "🔨",
+    "Damsel Inflicting Stress": "🌪️",
+    "Goodfellas": "🕶️",
+    "Rhetoric Rebels": "🔥",
+}
+
+
 OFFICIAL_2026_AUCTION = (
     ("Broken Orators", "Akshat Agrawal", "#d6a62e", (
         ("Dhruv", 5000), ("Mohit", 25000), ("Akansh", 10000), ("Divsargun", 10000),

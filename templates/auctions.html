@@ -19,7 +19,7 @@
         <header class="page-header">
             <p class="section-label">{% if year == 2026 %}Current season · Auction complete{% else %}Auction archive{% endif %}</p>
             <h1>Debate League Auctions {{ year }}</h1>
-            <p>{% if year == 2026 %}The squads are set. Eight leaders have completed their ₹50,000 drafts for the 6th Edition.{% else %}The squads and winning bids from Debate League 2025.{% endif %}</p>
+            <p>{% if year == 2026 %}The squads are set. Eight leaders have completed their 50,000-point drafts for the 6th Edition.{% else %}The squads and winning bids from Debate League 2025.{% endif %}</p>
             <div class="auction-year-switcher" aria-label="Choose auction year">
                 <a class="{% if year == 2026 %}active{% endif %}" href="/auctions?year=2026"{% if year == 2026 %} aria-current="page"{% endif %}>2026</a>
                 <a class="{% if year == 2025 %}active{% endif %}" href="/auctions?year=2025"{% if year == 2025 %} aria-current="page"{% endif %}>2025</a>
@@ -28,22 +28,30 @@
 
         {% if year == 2026 %}
             <section aria-label="Official 2026 auction squads">
+                <section class="top-purchases">
+                    <div class="auction-subheading"><p>Highest Bids</p><h2>Top 5 Purchases — 2026</h2></div>
+                    <div class="top-purchases-grid">
+                        {% for purchase in top_purchases %}
+                            <article class="top-purchase-card"><span>{{ loop.index }}</span><div><strong>{{ purchase.name }}</strong><small>{{ "{:,}".format(purchase.price) }} pts · {{ purchase.team_name }}</small></div></article>
+                        {% endfor %}
+                    </div>
+                </section>
                 <div class="auction-team-grid auction-team-grid-2026">
                     {% for team in teams %}
                         <article class="auction-team-card"{% if team.accent_color %} style="--team-accent:{{ team.accent_color }}"{% endif %}>
                             <header>
-                                <h2>{{ team.team_name }}</h2>
+                                <h2>{% if team.display_emoji %}<span aria-hidden="true">{{ team.display_emoji }}</span> {% endif %}{{ team.team_name }}</h2>
                                 <p>Team leader <strong>{{ team.leader_name }}</strong></p>
                             </header>
                             <div class="auction-player-labels"><span>Player</span><span>Winning bid</span></div>
                             <ul>
                                 {% for player in team.players %}
-                                    <li><span>{{ player.name }}</span><strong>₹{{ "{:,}".format(player.price) }}</strong></li>
+                                    <li><span>{{ player.name }}</span><strong>{{ "{:,}".format(player.price) }} pts</strong></li>
                                 {% endfor %}
                             </ul>
                             <footer>
-                                <span>Total spent</span><strong>₹{{ "{:,}".format(team.total_spent) }}</strong>
-                                <span>Remaining purse</span><strong>₹{{ "{:,}".format(team.remaining_purse) }}</strong>
+                                <span>Total spent</span><strong>{{ "{:,}".format(team.total_spent) }} pts</strong>
+                                <span>Remaining purse</span><strong>{{ "{:,}".format(team.remaining_purse) }} pts</strong>
                             </footer>
                         </article>
                     {% endfor %}
@@ -58,7 +66,7 @@
             </section>
         {% endif %}
     </main>
-    {% if year == 2025 %}<script src="/static/archive.js?v=3"></script>{% endif %}
+    {% if year == 2025 %}<script src="/static/archive.js?v=4"></script>{% endif %}
     <script src="/static/theme.js?v=7"></script>
 </body>
 </html>

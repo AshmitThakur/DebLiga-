@@ -34,7 +34,7 @@ from schemas import (
     PoolUpdate,
     RoundUpdate,
 )
-from season_2026 import seed_official_2026_auction
+from season_2026 import TEAM_EMOJIS_2026, seed_official_2026_auction
 
 
 # --------------------------------------------------
@@ -146,7 +146,8 @@ def auction_team_json(team):
     total = sum(player["price"] for player in players)
     return {
         "id": team.id, "team_name": team.team_name, "leader_name": team.leader_name,
-        "accent_color": team.accent_color, "players": players, "total_spent": total,
+        "accent_color": team.accent_color, "display_emoji": TEAM_EMOJIS_2026.get(team.team_name),
+        "players": players, "total_spent": total,
         "remaining_purse": team.auction.purse - total, "purse": team.auction.purse,
     }
 
@@ -156,15 +157,25 @@ def auctions_page(request: Request, year: int = 2026, db: Session = Depends(get_
     if year not in (2025, 2026):
         raise HTTPException(status_code=404, detail="Auction year not found")
     teams = []
+    top_purchases = []
     purse = 50000
     if year == 2026:
         auction = db.query(Auction).filter(Auction.year == year).first()
         if auction:
             purse = auction.purse
             teams = [auction_team_json(team) for team in auction.teams]
+            top_purchases = sorted(
+                (
+                    {"name": player["name"], "price": player["price"], "team_name": team["team_name"]}
+                    for team in teams
+                    for player in team["players"]
+                ),
+                key=lambda purchase: purchase["price"],
+                reverse=True,
+            )[:5]
     return templates.TemplateResponse(
         request=request, name="auctions.html",
-        context={"year": year, "teams": teams, "purse": purse},
+        context={"year": year, "teams": teams, "purse": purse, "top_purchases": top_purchases},
     )
 
 
@@ -199,7 +210,7 @@ def validate_auction_payload(data, purse):
             raise HTTPException(422, "Player names are required and prices cannot be negative")
         cleaned.append((name, price))
     if sum(price for _, price in cleaned) > purse:
-        raise HTTPException(422, f"Total spending cannot exceed ₹{purse:,}")
+        raise HTTPException(422, f"Total spending cannot exceed {purse:,} pts")
     return team_name, leader_name, cleaned
 
 

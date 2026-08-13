@@ -5,7 +5,7 @@
         pools: {
             'Pool A': [
                 ['Panel Pls Understand', 3, 2, 1],
-                ['Tannu Sena', 3, 2, 1],
+                ['Tappu Sena', 3, 2, 1],
                 ['The Nexus', 3, 1, 2],
                 ['Court of Reason', 3, 1, 2]
             ],
@@ -18,18 +18,18 @@
         },
         knockouts: [
             { stage: 'Semifinal 1', winner: 'Panel Pls Understand', loser: 'The Orators of Olympus' },
-            { stage: 'Semifinal 2', winner: 'Tannu Sena', loser: 'Meow Meow' },
+            { stage: 'Semifinal 2', winner: 'Tappu Sena', loser: 'Meow Meow' },
             { stage: 'Third-place', winner: 'The Orators of Olympus', loser: 'Meow Meow', result: 'Third Place' },
-            { stage: 'Final', winner: 'Panel Pls Understand', loser: 'Tannu Sena', result: 'Champion' }
+            { stage: 'Final', winner: 'Panel Pls Understand', loser: 'Tappu Sena', result: 'Champion' }
         ],
         auction: {
             purse: 50000,
             teams: [
-                { name: 'Tannu Sena', leader: 'Anshuman', squad: [['Pratham', 11500], ['Aaryav', 5000], ['Pranjal', 19500], ['Aashima', 10500]] },
+                { name: 'Tappu Sena', leader: 'Anshuman', squad: [['Pratham', 11500], ['Aaryav', 5000], ['Pranjal', 19500], ['Aashima', 10500]] },
                 { name: 'Meow Meow', leader: 'Tanu', squad: [['Shriya', 18000], ['Barleen', 12000], ['Prabhleen', 10000], ['Saurabh', 10000]] },
                 { name: 'Phuss Phuss Gang', leader: 'Jiteshwar', squad: [['Tanveer', 19000], ['Vivek', 9000], ['Prabhnoor', 14000], ['Naman', 8000]] },
                 { name: 'The Nexus', leader: 'Ayan', squad: [['Nidhi', 7000], ['Ashmit', 29500], ['Jatin', 7000], ['Nandini', 6500]] },
-                { name: 'Panel Pls Understand', leader: 'Sukhman', squad: [['Saniya', 30000], ['Ashmita', 8000], ['Jai', 6500], ['Lavin', 5500]] },
+                { name: 'Panel Pls Understand', leader: 'Sukhman', squad: [['Saniya', 30000], ['Ashmita', 8000], ['Jai', 6500], ['Javin', 5500]] },
                 { name: 'Icarus', leader: 'Amrit', squad: [['Suhani', 13000], ['Ekam', 24000], ['Shivam', 6500], ['Aryan', 6500]] },
                 { name: 'The Orators of Olympus', leader: 'Harsh', squad: [['Agam', 11500], ['Aadesh', 11000], ['Pankhuri', 14000], ['Ravneet', 13500]] },
                 { name: 'Court of Reason', leader: 'Kamalpreet', squad: [['Samairah', 32500], ['Prisha', 6500], ['Swayam', 6000], ['Anjali', 5000]] }
@@ -39,7 +39,7 @@
 
     const teamEmojis = {
         'Panel Pls Understand': '🎤',
-        'Tannu Sena': '⚔️',
+        'Tappu Sena': '⚔️',
         'The Nexus': '🔺',
         'Court of Reason': '⚖️',
         'The Orators of Olympus': '⚡',
@@ -53,7 +53,7 @@
     }
 
     function currency(amount) {
-        return '₹' + amount.toLocaleString('en-IN');
+        return amount.toLocaleString('en-IN') + ' pts';
     }
 
     function poolCard(name, teams) {
@@ -113,7 +113,7 @@
             const total = team.squad.reduce(function (sum, member) {
                 return sum + member[1];
             }, 0);
-            return `<article class="auction-team-card"><header><h4>${team.name}</h4><p>Team leader <strong>${team.leader}</strong></p></header><div class="auction-player-labels"><span>Player</span><span>Winning bid</span></div><ul>${squad}</ul><footer><span>Total spent</span><strong>${currency(total)}</strong><span>Remaining purse</span><strong>${currency(auction.purse - total)}</strong></footer></article>`;
+            return `<article class="auction-team-card"><header><h4>${teamName(team.name)}</h4><p>Team leader <strong>${team.leader}</strong></p></header><div class="auction-player-labels"><span>Player</span><span>Winning bid</span></div><ul>${squad}</ul><footer><span>Total spent</span><strong>${currency(total)}</strong><span>Remaining purse</span><strong>${currency(auction.purse - total)}</strong></footer></article>`;
         }).join('');
 
         host.innerHTML = `<section class="top-purchases"><div class="auction-subheading"><p>Highest Bids</p><h3>Top 5 Purchases of Debate League Auctions 2025</h3></div><div class="top-purchases-grid">${purchases}</div></section><section class="auction-snapshot"><div class="auction-subheading"><p>Team by Team</p><h3>All eight 2025 auction squads</h3></div><div class="auction-team-grid">${teams}</div></section><aside class="auction-matters"><div><p class="section-label">Why the Auction matters</p><h3>The season starts at the bidding table.</h3></div><ul><li>Strategy starts before the first round</li><li>Every bid changes team balance</li><li>Captains shape their identities through the auction</li><li>Great purchases often define great campaigns</li></ul></aside>`;
