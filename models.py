@@ -176,7 +176,7 @@ class Auction(Base):
     year: Mapped[int] = mapped_column(nullable=False, unique=True)
     purse: Mapped[int] = mapped_column(nullable=False, default=50000)
     teams: Mapped[list["AuctionTeam"]] = relationship(
-        back_populates="auction", cascade="all, delete-orphan"
+        back_populates="auction", cascade="all, delete-orphan", order_by="AuctionTeam.id"
     )
 
 

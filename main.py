@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from database import engine, get_db
+from database import SessionLocal, engine, get_db
 
 from models import (
     Base,
@@ -34,6 +34,7 @@ from schemas import (
     PoolUpdate,
     RoundUpdate,
 )
+from season_2026 import seed_official_2026_auction
 
 
 # --------------------------------------------------
@@ -50,6 +51,11 @@ app = FastAPI(
 Base.metadata.create_all(
     bind=engine
 )
+
+# Insert only when the season record is absent. Admin edits remain authoritative
+# and are never reset on a later application restart.
+with SessionLocal() as seed_db:
+    seed_official_2026_auction(seed_db)
 
 
 # --------------------------------------------------
@@ -75,7 +81,7 @@ HALL_OF_FAME = [
     {"year": "2022", "team": "The Mavens", "winner": "Chhawinder"},
     {"year": "2023", "team": "The Raging Raccoons", "winner": "Preeti"},
     {"year": "2024", "team": "Coffee Tea Spikers", "winner": "Adesh"},
-    {"year": "2025", "team": "Panel Pls Understand", "winner": "Sukhman"},
+    {"year": "2025", "team": "Panel Please Understand", "winner": "Sukhman"},
     {"year": "2026", "team": "???", "winner": "???", "current": True},
 ]
 
@@ -89,7 +95,8 @@ HALL_OF_FAME = [
     response_class=HTMLResponse
 )
 def home(
-    request: Request
+    request: Request,
+    db: Session = Depends(get_db),
 ):
     hall_of_fame = HALL_OF_FAME
 
@@ -100,6 +107,9 @@ def home(
             latest_champion = entry
             break
 
+    auction = db.query(Auction).filter(Auction.year == 2026).first()
+    current_team_names = [team.team_name for team in auction.teams] if auction else []
+
     return templates.TemplateResponse(
         request=request,
         name="index.html",
@@ -109,6 +119,7 @@ def home(
             "club_name": "Literary and Debating Club",
             "hall_of_fame": hall_of_fame,
             "latest_champion": latest_champion,
+            "current_team_names": current_team_names,
         },
     )
 
@@ -886,25 +897,10 @@ def teams_page(
     db: Session = Depends(get_db)
 ):
 
-    teams = db.query(Team).all()
-    speakers = db.query(Speaker).all()
-
-    team_data = []
-
-    for team in teams:
-
-        team_speakers = [
-            speaker
-            for speaker in speakers
-            if speaker.team_id == team.id
-        ]
-
-        team_data.append({
-            "id": team.id,
-            "name": team.name,
-            "pool_id": team.pool_id,
-            "speakers": team_speakers
-        })
+    # Before the draw, auction records are the authoritative current squads.
+    # Competition Team rows can be created once the real pools are known.
+    auction = db.query(Auction).filter(Auction.year == 2026).first()
+    team_data = [auction_team_json(team) for team in auction.teams] if auction else []
 
     return templates.TemplateResponse(
         request=request,

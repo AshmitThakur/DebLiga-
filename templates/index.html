@@ -11,7 +11,7 @@
 
     <title>{{ tournament_name }}</title>
 
-    <link rel="stylesheet" href="/static/style.css?v=14">
+    <link rel="stylesheet" href="/static/style.css?v=15">
 </head>
 
 
@@ -193,15 +193,19 @@
                 <figcaption><strong>Ideas under pressure.</strong><span>Arguments, rebuttals and growth through competition.</span></figcaption>
             </figure>
         </section>
-        <section class='auction-promo' aria-labelledby='auction-promo-title'>
+        <section class='auction-promo auction-complete' aria-labelledby='auction-promo-title'>
             <div class='auction-promo-copy'>
-                <p class='section-label'>Debate League 2026</p>
-                <h2 id='auction-promo-title'>Debate League Auctions are coming soon.</h2>
-                <p>The auction returns soon — where captains build squads, strategy begins, and every pick can change the season.</p>
-                <p>All participants must complete <strong>Turn the Coat</strong> to confirm their Debate League registration. Register now and be part of the 2026 edition.</p>
-                <a class='primary-button auction-promo-cta' href='https://forms.gle/W75FgHXJ34Fw1GeJ9' target='_blank' rel='noopener noreferrer'>Register for Turn the Coat</a>
+                <p class='section-label'>Debate League Auctions 2026</p>
+                <h2 id='auction-promo-title'>The squads are set.</h2>
+                <p>Eight team leaders have completed their <strong>₹50,000 drafts</strong> for the 6th Edition of the LADC Debate League.</p>
+                {% if current_team_names %}
+                    <ul class="auction-promo-teams" aria-label="Official 2026 teams">
+                        {% for team_name in current_team_names %}<li>{{ team_name }}</li>{% endfor %}
+                    </ul>
+                {% endif %}
+                <a class='primary-button auction-promo-cta' href='/auctions'>View 2026 Auctions →</a>
             </div>
-            <div class='auction-promo-mark' aria-hidden='true'><span>AUCTION</span><strong>2026</strong><small>BUILD THE SQUAD</small></div>
+            <div class='auction-promo-mark' aria-hidden='true'><span>AUCTIONS</span><strong>2026</strong><small>COMPLETE · SQUADS CONFIRMED</small></div>
         </section>
 
         <!-- Detailed legacy/history moved to the dedicated History page. -->
@@ -305,7 +309,7 @@
         <p class="footer-credit">DebLiga built with 🩵 by Ashmit Thakur, Jai LADC!😼</p>
     </footer>
 
-    <script src="/static/theme.js?v=7"></script>
+    <script src="/static/theme.js?v=8"></script>
 
 </body>
 

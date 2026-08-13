@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teams | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=14">
+    <link rel="stylesheet" href="/static/style.css?v=15">
 </head>
 <body>
-
     <nav>
         <a href="/">Home</a>
         <a href="/schedule">Schedule</a>
@@ -15,55 +14,44 @@
         <a href="/standings">Standings</a>
         <a href="/speaker-rankings">Speaker Rankings</a>
         <a href="/history">History</a>
-                <a href="/auctions">Auctions</a>
+        <a href="/auctions">Auctions</a>
         <button class="theme-toggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">
             <span class="theme-toggle-icon">☀</span>
             <span class="theme-toggle-label">Light</span>
         </button>
     </nav>
 
-
     <main>
         <header class="page-header">
-            <h1>Teams</h1>
-            <p>Teams and speakers participating in the LADC Debate League 2026.</p>
+            <p class="section-label">6th Edition · Squads confirmed</p>
+            <h1>Debate League 2026 Teams</h1>
+            <p>The eight official auction squads. Pool assignments will appear after the draw is finalised.</p>
         </header>
 
-        <section class="team-grid">
+        <section class="team-grid current-team-grid" aria-label="Official 2026 teams">
             {% for team in teams %}
-                <article class="team-card">
-                    <h2>
-                        <a href="/teams/{{ team.id }}">
-                            {{ team.name }}
-                        </a>
-                    </h2>
-
-                    <p>Pool {{ team.pool_id }}</p>
-
-                    <h3>Speakers</h3>
-
-                    {% if team.speakers %}
-                        <ul>
-                            {% for speaker in team.speakers %}
-                                <li>
-                                    <a href="/speakers/{{ speaker.id }}">
-                                        {{ speaker.name }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p>No speakers added yet.</p>
-                    {% endif %}
-
-                    <p>
-                        <a href="/teams/{{ team.id }}">
-                            View team profile →
-                        </a>
-                    </p>
+                <article class="team-card current-team-card"{% if team.accent_color %} style="--team-accent:{{ team.accent_color }}"{% endif %}>
+                    <header>
+                        <h2>{{ team.team_name }}</h2>
+                        <p class="pool-pending">Pool assignment pending</p>
+                    </header>
+                    <div class="team-leader">
+                        <span>Team leader</span>
+                        <strong>{{ team.leader_name }}</strong>
+                    </div>
+                    <h3>Squad</h3>
+                    <ul class="squad-list">
+                        <li><span>{{ team.leader_name }}</span><strong>Leader</strong></li>
+                        {% for player in team.players %}
+                            <li><span>{{ player.name }}</span></li>
+                        {% endfor %}
+                    </ul>
                 </article>
             {% else %}
-                <p>No teams have been added yet.</p>
+                <div class="auction-empty">
+                    <h2>Teams will appear here</h2>
+                    <p>The current-season squads have not been entered yet.</p>
+                </div>
             {% endfor %}
         </section>
     </main>

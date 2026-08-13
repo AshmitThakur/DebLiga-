@@ -3472,3 +3472,205 @@ footer { flex-wrap:wrap; }
 .auctions-page{width:min(1480px,calc(100% - 40px));margin:0 auto;padding:42px 0 70px}.auction-year-switcher{display:inline-flex;gap:4px;margin-top:18px;padding:4px;border:1px solid var(--border);border-radius:999px;background:var(--bg-surface)}.auction-year-switcher a{padding:8px 18px;border-radius:999px;color:var(--text-secondary);font-weight:800;text-decoration:none}.auction-year-switcher a.active{color:var(--navy);background:var(--gold)}.auction-team-grid-2026{grid-template-columns:repeat(4,minmax(0,1fr))}.auction-team-grid-2026 .auction-team-card{border-top:4px solid var(--team-accent,var(--gold))}.auction-team-card h2{margin:0;color:var(--text-primary);font-size:1.15rem}.auction-team-card li span{min-width:0;overflow-wrap:anywhere}.auction-empty{padding:48px 24px;border:1px dashed var(--border);border-radius:var(--radius-md);text-align:center;background:var(--bg-surface)}.auction-empty h2{color:var(--text-primary)}.auction-admin-fields,.auction-player-input{display:grid;grid-template-columns:2fr 2fr auto;gap:10px;margin-bottom:10px}.auction-player-input{grid-template-columns:2fr 1fr auto}.auction-form-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}#auction-live-total{font-weight:800;color:var(--text-secondary)}#auction-live-total[data-invalid=true]{color:#c43d3d}.admin-list-item{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--border)}.admin-list-item small{display:block;margin-top:4px;color:var(--text-muted)}.admin-list-item>div:last-child{display:flex;gap:8px}
 @media(max-width:1100px){.auction-team-grid-2026{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.auctions-page{width:min(100% - 24px,1480px);padding-top:24px}.auction-team-grid-2026{grid-template-columns:1fr}.auction-admin-fields,.auction-player-input{grid-template-columns:1fr}.auction-player-input button{min-height:44px}.admin-list-item{align-items:flex-start;flex-direction:column}.admin-list-item>div:last-child{width:100%}.admin-list-item button{flex:1;min-height:44px}}
+
+
+/* 2026 confirmed squads and pre-schedule lifecycle */
+.auction-promo-teams {
+    margin: 22px 0 4px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    list-style: none;
+}
+.auction-promo-teams li {
+    min-width: 0;
+    padding: 9px 11px;
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: var(--radius-sm);
+    color: var(--hero-right-text);
+    background: rgba(255,255,255,.06);
+    font-size: .82rem;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.current-team-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+}
+.current-team-card {
+    min-width: 0;
+    overflow: hidden;
+    padding: 0;
+    border-top: 4px solid var(--team-accent, var(--gold));
+}
+.current-team-card > header,
+.current-team-card > .team-leader,
+.current-team-card > h3,
+.current-team-card > .squad-list {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.current-team-card > header {
+    margin: 0;
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface-elevated);
+}
+.current-team-card h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    overflow-wrap: anywhere;
+}
+.current-team-card .pool-pending {
+    margin: 7px 0 0;
+    color: var(--text-muted);
+    font-size: .78rem;
+    font-weight: 700;
+}
+.team-leader {
+    margin-top: 18px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    background: var(--bg-surface-secondary);
+}
+.team-leader span {
+    color: var(--text-muted);
+    font-size: .68rem;
+    font-weight: 900;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+.team-leader strong { color: var(--text-primary); }
+.current-team-card > h3 {
+    margin-top: 19px;
+    margin-bottom: 7px;
+    color: var(--text-primary);
+    font-size: .78rem;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+}
+.squad-list {
+    margin-top: 0;
+    margin-bottom: 18px;
+    padding: 0;
+    list-style: none;
+}
+.squad-list li {
+    min-width: 0;
+    padding: 9px 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+.squad-list li:last-child { border-bottom: 0; }
+.squad-list li span { min-width: 0; overflow-wrap: anywhere; }
+.squad-list li strong {
+    flex: 0 0 auto;
+    color: var(--dark-gold);
+    font-size: .72rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+[data-theme="dark"] .squad-list li strong { color: var(--light-gold); }
+
+.schedule-empty {
+    padding: clamp(28px, 6vw, 64px);
+    display: grid;
+    grid-template-columns: minmax(150px, .42fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(28px, 6vw, 72px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-sm);
+}
+.schedule-empty-mark {
+    min-height: 190px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--gold);
+    background: var(--navy);
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 900;
+    letter-spacing: -.06em;
+}
+.schedule-empty h2 {
+    margin: 5px 0 12px;
+    color: var(--text-primary);
+    font-size: clamp(2rem, 4vw, 3.25rem);
+}
+.schedule-empty p:not(.section-label) {
+    max-width: 700px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+.season-progress {
+    margin: 24px 0 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.season-progress span {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text-muted);
+    background: var(--bg-surface-secondary);
+    font-size: .8rem;
+    font-weight: 800;
+}
+.season-progress .complete { color: var(--text-primary); }
+.season-progress .complete strong { color: var(--dark-gold); }
+[data-theme="dark"] .season-progress .complete strong { color: var(--light-gold); }
+
+@media (max-width: 1100px) {
+    .current-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+    .auction-promo-teams { grid-template-columns: 1fr; }
+    .current-team-grid { grid-template-columns: 1fr; }
+    .schedule-empty { grid-template-columns: 1fr; padding: 24px 18px; }
+    .schedule-empty-mark { min-height: 120px; font-size: 3.5rem; }
+    .auction-team-card li { gap: 12px; }
+    .auction-team-card li strong { white-space: nowrap; }
+}
+
+
+/* Official 2025 auction layout on the dedicated Auctions page */
+.auctions-page .auction-history-section {
+    background: var(--bg-surface-secondary);
+}
+.auctions-page .auction-team-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.edition-champion-badge small {
+    margin-top: 3px;
+    color: var(--text-secondary);
+    font-weight: 700;
+}
+@media (max-width: 1100px) {
+    .auctions-page .auction-team-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (max-width: 600px) {
+    .auctions-page .auction-team-grid {
+        grid-template-columns: 1fr;
+    }
+    .auctions-page .auction-team-card li {
+        align-items: center;
+    }
+    .auctions-page .auction-team-card li strong {
+        white-space: nowrap;
+    }
+}

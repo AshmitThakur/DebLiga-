@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=14">
+    <link rel="stylesheet" href="/static/style.css?v=15">
 </head>
 <body>
-
     <nav>
         <a href="/">Home</a>
         <a href="/schedule">Schedule</a>
@@ -15,139 +14,91 @@
         <a href="/standings">Standings</a>
         <a href="/speaker-rankings">Speaker Rankings</a>
         <a href="/history">History</a>
-                <a href="/auctions">Auctions</a>
+        <a href="/auctions">Auctions</a>
         <button class="theme-toggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">
             <span class="theme-toggle-icon">☀</span>
             <span class="theme-toggle-label">Light</span>
         </button>
     </nav>
 
-
     <main>
         <header class="page-header">
+            <p class="section-label">Debate League 2026</p>
             <h1>Debate Schedule</h1>
-            <p>Pool stage, semifinals, third-place match and final.</p>
+            <p>Official fixtures, rooms and motions will appear here after the draw is finalised.</p>
         </header>
 
-        <section class="schedule-section">
-            <h2>Pool Stage</h2>
-
-            {% set pool_found = namespace(value=false) %}
-
-            {% for debate in schedule %}
-                {% if debate.stage == "pool" %}
-                    {% set pool_found.value = true %}
-
-                    <article class="debate-card">
-                        <div class="debate-meta">
-                            <strong>
-                                Round {{ debate.round.number if debate.round else "—" }}
-                            </strong>
-
-                            {% if debate.pool %}
-                                <span>{{ debate.pool.name }}</span>
+        {% if not schedule %}
+            <section class="schedule-empty" aria-labelledby="schedule-empty-title">
+                <div class="schedule-empty-mark" aria-hidden="true">2026</div>
+                <div>
+                    <p class="section-label">Current season</p>
+                    <h2 id="schedule-empty-title">Schedule coming soon</h2>
+                    <p>The squads are set. Fixtures for Debate League 2026 will appear here once the draw and schedule are finalised.</p>
+                    <div class="season-progress" aria-label="Tournament progress">
+                        <span class="complete">Auctions complete <strong>✓</strong></span>
+                        <span>Fixtures pending</span>
+                    </div>
+                    <a href="/auctions" class="text-link">View the 2026 squads →</a>
+                </div>
+            </section>
+        {% else %}
+            <section class="schedule-section">
+                <h2>Pool Stage</h2>
+                {% set pool_found = namespace(value=false) %}
+                {% for debate in schedule %}
+                    {% if debate.stage == "pool" %}
+                        {% set pool_found.value = true %}
+                        <article class="debate-card">
+                            <div class="debate-meta">
+                                <strong>Round {{ debate.round.number if debate.round else "—" }}</strong>
+                                {% if debate.pool %}<span>{{ debate.pool.name }}</span>{% endif %}
+                                {% if debate.room %}<span>Room: {{ debate.room }}</span>{% endif %}
+                                <span>Status: {{ debate.status }}</span>
+                            </div>
+                            {% if debate.round and debate.round.motion %}
+                                <p class="motion"><strong>Motion:</strong> {{ debate.round.motion }}</p>
                             {% endif %}
+                            <div class="matchup">
+                                <a href="/teams/{{ debate.team1.id }}">{{ debate.team1.name }}</a>
+                                <span>vs</span>
+                                <a href="/teams/{{ debate.team2.id }}">{{ debate.team2.name }}</a>
+                            </div>
+                            {% if debate.winner %}<p>Winner: <strong>{{ debate.winner.name }}</strong></p>{% endif %}
+                        </article>
+                    {% endif %}
+                {% endfor %}
+                {% if not pool_found.value %}<p>No pool-stage debates have been scheduled yet.</p>{% endif %}
+            </section>
 
-                            {% if debate.room %}
-                                <span>Room: {{ debate.room }}</span>
+            <section class="schedule-section knockout-section">
+                <h2>Knockout Stage</h2>
+                {% set knockout_found = namespace(value=false) %}
+                {% for debate in schedule %}
+                    {% if debate.stage != "pool" %}
+                        {% set knockout_found.value = true %}
+                        <article class="debate-card knockout-card">
+                            <div class="debate-meta">
+                                <strong>{{ debate.stage_name }}</strong>
+                                {% if debate.round %}<span>Round {{ debate.round.number }}</span>{% endif %}
+                                {% if debate.room %}<span>Room: {{ debate.room }}</span>{% endif %}
+                                <span>Status: {{ debate.status }}</span>
+                            </div>
+                            {% if debate.round and debate.round.motion %}
+                                <p class="motion"><strong>Motion:</strong> {{ debate.round.motion }}</p>
                             {% endif %}
-
-                            <span>Status: {{ debate.status }}</span>
-                        </div>
-
-                        {% if debate.round and debate.round.motion %}
-                            <p class="motion">
-                                <strong>Motion:</strong>
-                                {{ debate.round.motion }}
-                            </p>
-                        {% endif %}
-
-                        <div class="matchup">
-                            <a href="/teams/{{ debate.team1.id }}">
-                                {{ debate.team1.name }}
-                            </a>
-
-                            <span>vs</span>
-
-                            <a href="/teams/{{ debate.team2.id }}">
-                                {{ debate.team2.name }}
-                            </a>
-                        </div>
-
-                        {% if debate.winner %}
-                            <p>
-                                Winner:
-                                <strong>{{ debate.winner.name }}</strong>
-                            </p>
-                        {% endif %}
-                    </article>
-                {% endif %}
-            {% endfor %}
-
-            {% if not pool_found.value %}
-                <p>No pool-stage debates have been scheduled yet.</p>
-            {% endif %}
-        </section>
-
-        <section class="schedule-section knockout-section">
-            <h2>Knockout Stage</h2>
-
-            {% set knockout_found = namespace(value=false) %}
-
-            {% for debate in schedule %}
-                {% if debate.stage != "pool" %}
-                    {% set knockout_found.value = true %}
-
-                    <article class="debate-card knockout-card">
-                        <div class="debate-meta">
-                            <strong>{{ debate.stage_name }}</strong>
-
-                            {% if debate.round %}
-                                <span>Round {{ debate.round.number }}</span>
-                            {% endif %}
-
-                            {% if debate.room %}
-                                <span>Room: {{ debate.room }}</span>
-                            {% endif %}
-
-                            <span>Status: {{ debate.status }}</span>
-                        </div>
-
-                        {% if debate.round and debate.round.motion %}
-                            <p class="motion">
-                                <strong>Motion:</strong>
-                                {{ debate.round.motion }}
-                            </p>
-                        {% endif %}
-
-                        <div class="matchup">
-                            <a href="/teams/{{ debate.team1.id }}">
-                                {{ debate.team1.name }}
-                            </a>
-
-                            <span>vs</span>
-
-                            <a href="/teams/{{ debate.team2.id }}">
-                                {{ debate.team2.name }}
-                            </a>
-                        </div>
-
-                        {% if debate.winner %}
-                            <p>
-                                Winner:
-                                <strong>{{ debate.winner.name }}</strong>
-                            </p>
-                        {% endif %}
-                    </article>
-                {% endif %}
-            {% endfor %}
-
-            {% if not knockout_found.value %}
-                <p>
-                    Knockout fixtures will appear here after the pool stage is complete.
-                </p>
-            {% endif %}
-        </section>
+                            <div class="matchup">
+                                <a href="/teams/{{ debate.team1.id }}">{{ debate.team1.name }}</a>
+                                <span>vs</span>
+                                <a href="/teams/{{ debate.team2.id }}">{{ debate.team2.name }}</a>
+                            </div>
+                            {% if debate.winner %}<p>Winner: <strong>{{ debate.winner.name }}</strong></p>{% endif %}
+                        </article>
+                    {% endif %}
+                {% endfor %}
+                {% if not knockout_found.value %}<p>Knockout fixtures will appear here after the pool stage is complete.</p>{% endif %}
+            </section>
+        {% endif %}
     </main>
 
     <script src="/static/theme.js?v=7"></script>
