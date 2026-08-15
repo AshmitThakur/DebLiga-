@@ -34,7 +34,12 @@ from schemas import (
     PoolUpdate,
     RoundUpdate,
 )
-from season_2026 import TEAM_EMOJIS_2026, seed_official_2026_auction
+from season_2026 import (
+    OFFICIAL_POOLS_2026,
+    TEAM_EMOJIS_2026,
+    fixture_details,
+    sync_official_2026_tournament,
+)
 
 
 # --------------------------------------------------
@@ -52,10 +57,9 @@ Base.metadata.create_all(
     bind=engine
 )
 
-# Insert only when the season record is absent. Admin edits remain authoritative
-# and are never reset on a later application restart.
+# Reuse current rows while enforcing the published 2026 pools and group draw.
 with SessionLocal() as seed_db:
-    seed_official_2026_auction(seed_db)
+    sync_official_2026_tournament(seed_db)
 
 
 # --------------------------------------------------
@@ -108,7 +112,13 @@ def home(
             break
 
     auction = db.query(Auction).filter(Auction.year == 2026).first()
-    current_team_names = [team.team_name for team in auction.teams] if auction else []
+    auction_names = {team.team_name for team in auction.teams} if auction else set()
+    current_team_names = [
+        team_name
+        for pool_teams in OFFICIAL_POOLS_2026.values()
+        for team_name, _ in pool_teams
+        if team_name in auction_names
+    ]
 
     return templates.TemplateResponse(
         request=request,
@@ -210,7 +220,7 @@ def validate_auction_payload(data, purse):
             raise HTTPException(422, "Player names are required and prices cannot be negative")
         cleaned.append((name, price))
     if sum(price for _, price in cleaned) > purse:
-        raise HTTPException(422, f"Total spending cannot exceed {purse:,} pts")
+        raise HTTPException(422, f"Total spending cannot exceed {purse:,} points")
     return team_name, leader_name, cleaned
 
 
@@ -908,16 +918,28 @@ def teams_page(
     db: Session = Depends(get_db)
 ):
 
-    # Before the draw, auction records are the authoritative current squads.
-    # Competition Team rows can be created once the real pools are known.
     auction = db.query(Auction).filter(Auction.year == 2026).first()
-    team_data = [auction_team_json(team) for team in auction.teams] if auction else []
+    auction_teams = {
+        team.team_name: auction_team_json(team)
+        for team in auction.teams
+    } if auction else {}
+    team_pools = []
+    for pool_name, pool_teams in OFFICIAL_POOLS_2026.items():
+        teams_in_pool = []
+        for team_name, owner_label in pool_teams:
+            if team_name not in auction_teams:
+                continue
+            team_data = auction_teams[team_name]
+            team_data["owner_label"] = owner_label
+            team_data["pool_name"] = pool_name
+            teams_in_pool.append(team_data)
+        team_pools.append({"name": pool_name, "teams": teams_in_pool})
 
     return templates.TemplateResponse(
         request=request,
         name="teams.html",
         context={
-            "teams": team_data
+            "team_pools": team_pools
         }
     )
 
@@ -994,6 +1016,12 @@ def schedule_page(
                 team1.pool_id
             )
 
+        fixture = (
+            fixture_details(team1.name, team2.name)
+            if debate.stage == "pool" and team1 and team2
+            else None
+        )
+
         schedule.append({
             "id": debate.id,
             "round": round_obj,
@@ -1007,12 +1035,21 @@ def schedule_page(
                 debate.stage
             ),
             "pool": pool,
+            "fixture": fixture,
             "status": (
                 "Completed"
                 if winner
                 else "Pending"
             )
         })
+
+    schedule.sort(key=lambda item: (
+        0,
+        item["fixture"]["number"],
+    ) if item["fixture"] else (
+        1,
+        item["round"].number if item["round"] else item["id"],
+    ))
 
     return templates.TemplateResponse(
         request=request,
@@ -2738,9 +2775,18 @@ def schedule_api(
             if debate.winner_team_id
             else None
         )
+        fixture = (
+            fixture_details(team1.name, team2.name)
+            if debate.stage == "pool" and team1 and team2
+            else None
+        )
 
         schedule.append({
             "debate_id": debate.id,
+            "debate_number": fixture["number"] if fixture else None,
+            "date": fixture["date"].isoformat() if fixture else None,
+            "date_label": fixture["date_label"] if fixture else None,
+            "day": fixture["day"] if fixture else None,
             "stage": debate.stage,
             "stage_name": stage_names.get(
                 debate.stage,
@@ -2783,7 +2829,7 @@ def schedule_api(
                 debate["stage"],
                 99
             ),
-            debate["round_number"] or 99,
+            debate["debate_number"] or debate["round_number"] or 99,
             debate["debate_id"]
         )
     )

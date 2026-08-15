@@ -11,7 +11,7 @@
 
     <title>{{ tournament_name }}</title>
 
-    <link rel="stylesheet" href="/static/style.css?v=15">
+    <link rel="stylesheet" href="/static/style.css?v=16">
 </head>
 
 
@@ -182,10 +182,14 @@
                 <h2 id="home-about-title">The sixth chapter of the LADC Debate League</h2>
                 <p>The LADC Debate League is a sustained college debating competition built around preparation, league play and progression—not a single isolated round.</p>
                 <p>Teams build their squads, compete across the season and fight for a place in the knockouts while every speaker develops through repeated, adjudicated debate.</p>
+                <aside class="participation-highlight">
+                    <strong>All registered team members must participate in at least one league-stage debate.</strong>
+                </aside>
                 <div class="tournament-facts" aria-label="Tournament facts">
                     <div><span>Format</span><strong>Asian Parliamentary</strong></div>
                     <div><span>Season</span><strong>Auctions to Final</strong></div>
                     <div><span>Organised by</span><strong>LADC, NITJ</strong></div>
+                    <div><span>Prize</span><strong>Prizes worth ₹10,000</strong></div>
                 </div>
             </div>
             <figure class="home-about-photo">
@@ -197,7 +201,7 @@
             <div class='auction-promo-copy'>
                 <p class='section-label'>Debate League Auctions 2026</p>
                 <h2 id='auction-promo-title'>The squads are set.</h2>
-                <p>Eight team leaders have completed their <strong>₹50,000 drafts</strong> for the 6th Edition of the LADC Debate League.</p>
+                <p>Eight team leaders have completed their <strong>50,000-point drafts</strong> for the 6th Edition of the LADC Debate League. The auction uses virtual bidding points, not real currency.</p>
                 {% if current_team_names %}
                     <ul class="auction-promo-teams" aria-label="Official 2026 teams">
                         {% for team_name in current_team_names %}<li>{{ team_name }}</li>{% endfor %}

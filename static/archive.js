@@ -53,7 +53,7 @@
     }
 
     function currency(amount) {
-        return amount.toLocaleString('en-IN') + ' pts';
+        return amount.toLocaleString('en-IN') + ' points';
     }
 
     function poolCard(name, teams) {

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teams | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=15">
+    <link rel="stylesheet" href="/static/style.css?v=16">
 </head>
 <body>
     <nav>
@@ -23,37 +23,42 @@
 
     <main>
         <header class="page-header">
-            <p class="section-label">6th Edition · Squads confirmed</p>
+            <p class="section-label">6th Edition · Pools confirmed</p>
             <h1>Debate League 2026 Teams</h1>
-            <p>The eight official auction squads. Pool assignments will appear after the draw is finalised.</p>
+            <p>The eight official squads across Pool A and Pool B.</p>
         </header>
 
-        <section class="team-grid current-team-grid" aria-label="Official 2026 teams">
-            {% for team in teams %}
-                <article class="team-card current-team-card"{% if team.accent_color %} style="--team-accent:{{ team.accent_color }}"{% endif %}>
-                    <header>
-                        <h2>{{ team.team_name }}</h2>
-                        <p class="pool-pending">Pool assignment pending</p>
-                    </header>
-                    <div class="team-leader">
-                        <span>Team leader</span>
-                        <strong>{{ team.leader_name }}</strong>
-                    </div>
-                    <h3>Squad</h3>
-                    <ul class="squad-list">
-                        <li><span>{{ team.leader_name }}</span><strong>Leader</strong></li>
-                        {% for player in team.players %}
-                            <li><span>{{ player.name }}</span></li>
-                        {% endfor %}
-                    </ul>
-                </article>
-            {% else %}
-                <div class="auction-empty">
-                    <h2>Teams will appear here</h2>
-                    <p>The current-season squads have not been entered yet.</p>
+        {% for pool in team_pools %}
+            <section class="team-pool-section" aria-labelledby="{{ pool.name|lower|replace(' ', '-') }}-title">
+                <h2 id="{{ pool.name|lower|replace(' ', '-') }}-title">{{ pool.name }}</h2>
+                <div class="team-grid current-team-grid">
+                    {% for team in pool.teams %}
+                        <article class="team-card current-team-card"{% if team.accent_color %} style="--team-accent:{{ team.accent_color }}"{% endif %}>
+                            <header>
+                                <h2>{{ team.team_name }}</h2>
+                                <p class="pool-pending">{{ team.owner_label }}</p>
+                            </header>
+                            <div class="team-leader">
+                                <span>Team leader</span>
+                                <strong>{{ team.leader_name }}</strong>
+                            </div>
+                            <h3>Squad</h3>
+                            <ul class="squad-list">
+                                <li><span>{{ team.leader_name }}</span><strong>Leader</strong></li>
+                                {% for player in team.players %}
+                                    <li><span>{{ player.name }}</span></li>
+                                {% endfor %}
+                            </ul>
+                        </article>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        </section>
+            </section>
+        {% else %}
+            <div class="auction-empty">
+                <h2>Teams will appear here</h2>
+                <p>The current-season squads have not been entered yet.</p>
+            </div>
+        {% endfor %}
     </main>
 
     <script src="/static/theme.js?v=7"></script>

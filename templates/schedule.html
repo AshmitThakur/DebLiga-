@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=15">
+    <link rel="stylesheet" href="/static/style.css?v=16">
 </head>
 <body>
     <nav>
@@ -25,8 +25,18 @@
         <header class="page-header">
             <p class="section-label">Debate League 2026</p>
             <h1>Debate Schedule</h1>
-            <p>Official fixtures, rooms and motions will appear here after the draw is finalised.</p>
+            <p>Group stage · Monday, 17 August 2026 to Friday, 21 August 2026</p>
         </header>
+
+        <section class="group-stage-rules" aria-labelledby="participation-rule-title">
+            <div>
+                <p class="section-label">Group-stage rules</p>
+                <h2 id="participation-rule-title">Compulsory Participation Rule</h2>
+                <p><strong>Every registered member of a team must participate in at least one debate during the league/group stage.</strong></p>
+                <p>Teams may repeat speakers across their three league-stage matches. Some speakers may participate in all three matches while other members are rotated across the remaining speaking positions. By the end of the three league-stage debates, every registered member must have participated at least once; equal participation and an unchanged speaker combination are not required.</p>
+            </div>
+            <strong class="rule-highlight">All registered team members must participate in at least one league-stage debate.</strong>
+        </section>
 
         {% if not schedule %}
             <section class="schedule-empty" aria-labelledby="schedule-empty-title">
@@ -44,14 +54,22 @@
             </section>
         {% else %}
             <section class="schedule-section">
-                <h2>Pool Stage</h2>
+                <h2>Group Stage</h2>
                 {% set pool_found = namespace(value=false) %}
+                {% set current_day = namespace(value="") %}
                 {% for debate in schedule %}
                     {% if debate.stage == "pool" %}
                         {% set pool_found.value = true %}
+                        {% if debate.fixture and current_day.value != debate.fixture.date_label %}
+                            {% set current_day.value = debate.fixture.date_label %}
+                            <header class="schedule-day">
+                                <p>{{ debate.fixture.day }}</p>
+                                <h3>{{ debate.fixture.date_label }}</h3>
+                            </header>
+                        {% endif %}
                         <article class="debate-card">
                             <div class="debate-meta">
-                                <strong>Round {{ debate.round.number if debate.round else "—" }}</strong>
+                                <strong>Debate {{ debate.fixture.number if debate.fixture else debate.round.number }}</strong>
                                 {% if debate.pool %}<span>{{ debate.pool.name }}</span>{% endif %}
                                 {% if debate.room %}<span>Room: {{ debate.room }}</span>{% endif %}
                                 <span>Status: {{ debate.status }}</span>

@@ -590,9 +590,10 @@ function renderDebates() {
         <tr>
           <th>ID</th>
           <th>Stage</th>
-          <th>Round</th>
-          <th>Pool</th>
+          <th>Date</th>
           <th>Debate</th>
+          <th>Pool</th>
+          <th>Matchup</th>
           <th>Room</th>
           <th>Status</th>
           <th>Actions</th>
@@ -617,10 +618,14 @@ function renderDebates() {
 
                 <td>
                   ${
-                    item.round_number
-                      ? `Round ${item.round_number}`
+                    item.date_label
+                      ? `${item.day}, ${item.date_label}`
                       : "-"
                   }
+                </td>
+
+                <td>
+                  ${item.debate_number ? `Debate ${item.debate_number}` : (item.round_number ? `Round ${item.round_number}` : "-")}
                 </td>
 
                 <td>
@@ -2008,9 +2013,9 @@ function auctionPlayerRow(player = {}) {
   row.querySelector(".auction-player-price").oninput = updateAuctionTotal;
   $("auction-player-fields").appendChild(row);
 }
-function updateAuctionTotal() { const total = [...document.querySelectorAll(".auction-player-price")].reduce((sum, input) => sum + (Number(input.value) || 0), 0); $("auction-live-total").textContent = `Total: ${total.toLocaleString("en-IN")} pts · Remaining: ${(50000-total).toLocaleString("en-IN")} pts`; $("auction-live-total").dataset.invalid = total > 50000 ? "true" : "false"; }
+function updateAuctionTotal() { const total = [...document.querySelectorAll(".auction-player-price")].reduce((sum, input) => sum + (Number(input.value) || 0), 0); $("auction-live-total").textContent = `Total: ${total.toLocaleString("en-IN")} points · Remaining: ${(50000-total).toLocaleString("en-IN")} points`; $("auction-live-total").dataset.invalid = total > 50000 ? "true" : "false"; }
 function resetAuctionForm() { $("auction-team-form").reset(); $("auction-team-id").value = ""; $("auction-player-fields").innerHTML = ""; $("cancel-auction-edit").hidden = true; auctionPlayerRow(); updateAuctionTotal(); }
-async function loadAuctionTeams() { state.auctionTeams = await api("/api/admin/auctions/2026/teams"); $("auction-team-list").innerHTML = state.auctionTeams.map(t => `<article class="admin-list-item"><div><strong>${escapeHtml(t.team_name)}</strong><small>${escapeHtml(t.leader_name)} · ${t.players.length} players · ${t.total_spent.toLocaleString("en-IN")} pts spent</small></div><div><button type="button" onclick="editAuctionTeam(${t.id})">Edit</button><button type="button" onclick="deleteAuctionTeam(${t.id})">Delete</button></div></article>`).join("") || "<p>No 2026 auction teams added yet.</p>"; }
+async function loadAuctionTeams() { state.auctionTeams = await api("/api/admin/auctions/2026/teams"); $("auction-team-list").innerHTML = state.auctionTeams.map(t => `<article class="admin-list-item"><div><strong>${escapeHtml(t.team_name)}</strong><small>${escapeHtml(t.leader_name)} · ${t.players.length} players · ${t.total_spent.toLocaleString("en-IN")} points spent</small></div><div><button type="button" onclick="editAuctionTeam(${t.id})">Edit</button><button type="button" onclick="deleteAuctionTeam(${t.id})">Delete</button></div></article>`).join("") || "<p>No 2026 auction teams added yet.</p>"; }
 function editAuctionTeam(id) { const t = state.auctionTeams.find(x => x.id === id); if (!t) return; $("auction-team-id").value=t.id; $("auction-team-name").value=t.team_name; $("auction-leader-name").value=t.leader_name; $("auction-accent").value=t.accent_color || "#d6a62e"; $("auction-player-fields").innerHTML=""; t.players.forEach(auctionPlayerRow); $("cancel-auction-edit").hidden=false; updateAuctionTotal(); $("auction-team-form").scrollIntoView({behavior:"smooth"}); }
 async function deleteAuctionTeam(id) { if (!confirm("Delete this auction team and its players?")) return; try { await api(`/api/admin/auctions/2026/teams/${id}`, {method:"DELETE"}); showMessage("Auction team deleted"); await loadAuctionTeams(); } catch(e) { showMessage(e.message,true); } }
 $("add-auction-player").onclick = () => auctionPlayerRow(); $("cancel-auction-edit").onclick=resetAuctionForm;

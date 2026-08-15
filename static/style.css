@@ -3633,6 +3633,70 @@ footer { flex-wrap:wrap; }
 .season-progress .complete strong { color: var(--dark-gold); }
 [data-theme="dark"] .season-progress .complete strong { color: var(--light-gold); }
 
+.participation-highlight {
+    margin-top: 22px;
+    padding: 14px 16px;
+    border-left: 4px solid var(--gold);
+    color: var(--text-primary);
+    background: var(--warning-soft);
+}
+.tournament-facts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.team-pool-section { margin: 0 0 46px; }
+.team-pool-section > h2,
+.schedule-day {
+    margin: 0 0 18px;
+    padding: 13px 16px;
+    border-left: 4px solid var(--gold);
+    color: var(--text-primary);
+    background: linear-gradient(90deg, var(--bg-surface-elevated), transparent);
+}
+.team-pool-section > h2 { font-size: 1.35rem; }
+
+.group-stage-rules {
+    margin: 0 0 42px;
+    padding: clamp(22px, 4vw, 34px);
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(230px, .7fr);
+    gap: clamp(22px, 4vw, 42px);
+    align-items: center;
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--gold);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-sm);
+}
+.group-stage-rules h2 {
+    margin: 5px 0 13px;
+    color: var(--text-primary);
+    font-size: clamp(1.5rem, 3vw, 2.15rem);
+}
+.group-stage-rules p:not(.section-label) {
+    color: var(--text-secondary);
+    line-height: 1.65;
+}
+.group-stage-rules p strong { color: var(--text-primary); }
+.rule-highlight {
+    padding: 20px;
+    border: 1px solid rgba(220, 166, 29, .38);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    background: var(--warning-soft);
+    line-height: 1.55;
+}
+.schedule-day { margin-top: 32px; }
+.schedule-day p {
+    margin: 0 0 2px;
+    color: var(--dark-gold);
+    font-size: .72rem;
+    font-weight: 900;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+.schedule-day h3 { margin: 0; color: var(--text-primary); font-size: 1.2rem; }
+[data-theme="dark"] .participation-highlight,
+[data-theme="dark"] .rule-highlight { background: rgba(220, 166, 29, .1); }
+
 @media (max-width: 1100px) {
     .current-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -3643,6 +3707,9 @@ footer { flex-wrap:wrap; }
     .schedule-empty-mark { min-height: 120px; font-size: 3.5rem; }
     .auction-team-card li { gap: 12px; }
     .auction-team-card li strong { white-space: nowrap; }
+    .tournament-facts { grid-template-columns: 1fr; }
+    .group-stage-rules { grid-template-columns: 1fr; padding: 22px 18px; }
+    .schedule-day { margin-top: 26px; }
 }
 
 
