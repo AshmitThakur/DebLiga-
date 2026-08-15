@@ -175,6 +175,7 @@ def fixture_details(team1_name: str, team2_name: str):
                 "date": fixture_date,
                 "day": fixture_date.strftime("%A"),
                 "date_label": fixture_date.strftime("%d %B %Y").lstrip("0"),
+                "short_date_label": fixture_date.strftime("%a, %d %b").replace(", 0", ", "),
                 "pool": pool,
             }
     return None
@@ -287,6 +288,45 @@ def _sync_pools_and_teams(db: Session):
     return teams, official_names
 
 
+def _merge_speaker_aliases(
+    db: Session,
+    team: Team,
+    canonical_name: str,
+    aliases: set[str],
+) -> Speaker | None:
+    """Merge misspelled speaker rows without losing linked performances."""
+    matches = db.query(Speaker).filter(
+        Speaker.team_id == team.id,
+        Speaker.name.in_({canonical_name, *aliases}),
+    ).order_by(Speaker.id).all()
+    if not matches:
+        return None
+
+    canonical = next(
+        (speaker for speaker in matches if speaker.name == canonical_name),
+        matches[0],
+    )
+    canonical.name = canonical_name
+
+    for duplicate in matches:
+        if duplicate.id == canonical.id:
+            continue
+        for performance in db.query(SpeakerPerformance).filter(
+            SpeakerPerformance.speaker_id == duplicate.id
+        ).all():
+            existing = db.query(SpeakerPerformance).filter(
+                SpeakerPerformance.speaker_id == canonical.id,
+                SpeakerPerformance.debate_id == performance.debate_id,
+            ).first()
+            if existing:
+                db.delete(performance)
+            else:
+                performance.speaker_id = canonical.id
+        db.delete(duplicate)
+    db.flush()
+    return canonical
+
+
 def _sync_registered_speakers(db: Session, teams) -> None:
     auction = db.query(Auction).filter(Auction.year == 2026).first()
     auction_by_name = {team.team_name: team for team in auction.teams} if auction else {}
@@ -294,6 +334,13 @@ def _sync_registered_speakers(db: Session, teams) -> None:
         auction_team = auction_by_name.get(team_name)
         if not auction_team:
             continue
+        if team_name == "Akali Dinosaurs":
+            _merge_speaker_aliases(
+                db,
+                team,
+                canonical_name="Guransh",
+                aliases={"Gurnash", "Guransh Singh"},
+            )
         renamed_speaker = {
             "Broken Orators": "Mohit Sharma",
             "Fifth Amendment": "Mohit Verma",

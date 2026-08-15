@@ -1027,6 +1027,8 @@ def schedule_page(
             "round": round_obj,
             "team1": team1,
             "team2": team2,
+            "team1_emoji": TEAM_EMOJIS_2026.get(team1.name) if team1 else None,
+            "team2_emoji": TEAM_EMOJIS_2026.get(team2.name) if team2 else None,
             "room": debate.room,
             "winner": winner,
             "stage": debate.stage,
@@ -1236,16 +1238,64 @@ def team_detail_page(
         else:
             result = "Lost"
 
+        fixture = (
+            fixture_details(team.name, opponent.name)
+            if debate.stage == "pool" and opponent
+            else None
+        )
+        debate_number = (
+            fixture["number"]
+            if fixture
+            else round_obj.number if round_obj else None
+        )
+
         history.append({
             "debate": debate,
             "round": round_obj,
             "opponent": opponent,
+            "opponent_emoji": (
+                TEAM_EMOJIS_2026.get(opponent.name)
+                if opponent
+                else None
+            ),
+            "stage_name": (
+                "Group Stage"
+                if debate.stage == "pool"
+                else debate.stage.replace("_", " ").title()
+            ),
+            "fixture": fixture,
+            "debate_number": debate_number,
+            "scheduled_time": (
+                fixture.get("time_label")
+                if fixture
+                else None
+            ),
+            "scheduled_time_sort": (
+                str(
+                    fixture.get("time_sort")
+                    or fixture.get("time")
+                    or "99:99"
+                )
+                if fixture
+                else "99:99"
+            ),
+            "venue": debate.room,
             "result": result,
             "team_average_score":
                 team_average,
             "opponent_average_score":
                 opponent_average
         })
+
+    history.sort(key=lambda item: (
+        (
+            item["fixture"]["date"].isoformat()
+            if item["fixture"]
+            else "9999-12-31"
+        ),
+        item["scheduled_time_sort"],
+        item["debate_number"] or 9999,
+    ))
 
     wins = sum(
         1
@@ -2805,11 +2855,13 @@ def schedule_api(
             "pool": pool_name,
             "team1": {
                 "id": team1.id,
-                "name": team1.name
+                "name": team1.name,
+                "emoji": TEAM_EMOJIS_2026.get(team1.name),
             } if team1 else None,
             "team2": {
                 "id": team2.id,
-                "name": team2.name
+                "name": team2.name,
+                "emoji": TEAM_EMOJIS_2026.get(team2.name),
             } if team2 else None,
             "room": debate.room,
             "winner": {

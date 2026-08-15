@@ -4,10 +4,19 @@ from collections import Counter
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from models import AuctionTeam, Base, Debate, Pool, Speaker, Team
+from models import (
+    AuctionTeam,
+    Base,
+    Debate,
+    Pool,
+    Speaker,
+    SpeakerPerformance,
+    Team,
+)
 from season_2026 import (
     OFFICIAL_GROUP_STAGE_2026,
     OFFICIAL_POOLS_2026,
+    TEAM_EMOJIS_2026,
     fixture_details,
     sync_official_2026_tournament,
     validate_official_group_stage,
@@ -29,6 +38,13 @@ class OfficialTournamentDataTests(unittest.TestCase):
     def test_canonical_fixture_validation(self):
         validate_official_group_stage()
         self.assertEqual(len(OFFICIAL_GROUP_STAGE_2026), 12)
+        official_names = {
+            name
+            for pool_teams in OFFICIAL_POOLS_2026.values()
+            for name, _ in pool_teams
+        }
+        self.assertEqual(set(TEAM_EMOJIS_2026), official_names)
+        self.assertTrue(all(TEAM_EMOJIS_2026.values()))
 
     def test_database_sync_is_complete_and_idempotent(self):
         pools = {pool.id: pool.name for pool in self.db.query(Pool).all()}
@@ -104,6 +120,46 @@ class OfficialTournamentDataTests(unittest.TestCase):
             }
             self.assertIn(full_name, names)
             self.assertNotIn("Mohit", names)
+
+    def test_guransh_duplicate_merge_preserves_performances(self):
+        team = self.db.query(Team).filter(Team.name == "Akali Dinosaurs").one()
+        canonical = self.db.query(Speaker).filter(
+            Speaker.team_id == team.id,
+            Speaker.name == "Guransh",
+        ).one()
+        duplicate = Speaker(name="Gurnash", team_id=team.id)
+        self.db.add(duplicate)
+        self.db.flush()
+        debates = self.db.query(Debate).filter(
+            (Debate.team1_id == team.id) | (Debate.team2_id == team.id)
+        ).order_by(Debate.id).limit(2).all()
+        self.db.add_all([
+            SpeakerPerformance(
+                debate_id=debates[0].id,
+                speaker_id=canonical.id,
+                role="Prime Minister",
+                score=75,
+            ),
+            SpeakerPerformance(
+                debate_id=debates[1].id,
+                speaker_id=duplicate.id,
+                role="Deputy Prime Minister",
+                score=77,
+            ),
+        ])
+        self.db.commit()
+
+        sync_official_2026_tournament(self.db)
+
+        speakers = self.db.query(Speaker).filter(Speaker.team_id == team.id).all()
+        self.assertEqual(len(speakers), 5)
+        self.assertEqual(sum(speaker.name == "Guransh" for speaker in speakers), 1)
+        self.assertNotIn("Gurnash", {speaker.name for speaker in speakers})
+        performances = self.db.query(SpeakerPerformance).filter(
+            SpeakerPerformance.speaker_id == canonical.id
+        ).all()
+        self.assertEqual(len(performances), 2)
+        self.assertEqual({performance.score for performance in performances}, {75, 77})
 
 
 if __name__ == "__main__":

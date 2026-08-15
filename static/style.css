@@ -2060,6 +2060,11 @@ tbody tr:hover {
 
 .matchup a {
     padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .55em;
+    min-width: 0;
 
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
@@ -2850,6 +2855,20 @@ footer a:hover {
     text-transform: uppercase;
 }
 
+.matchup .team-emoji,
+.current-team-card .team-emoji {
+    flex: 0 0 auto;
+    font-size: .82em;
+    line-height: 1;
+    filter: saturate(.82);
+}
+
+.matchup .team-name,
+.current-team-card .team-name {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
 @media (max-width: 720px) {
     .hall-of-fame-columns {
         grid-template-columns: 64px 1.2fr 1fr;
@@ -3520,6 +3539,9 @@ footer { flex-wrap:wrap; }
 }
 .current-team-card h2 {
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: .5em;
     font-size: 1.15rem;
     overflow-wrap: anywhere;
 }
@@ -3697,6 +3719,73 @@ footer { flex-wrap:wrap; }
 [data-theme="dark"] .participation-highlight,
 [data-theme="dark"] .rule-highlight { background: rgba(220, 166, 29, .1); }
 
+/* Schedule-only dark contrast: retain the existing hierarchy and accents. */
+[data-theme="dark"] .schedule-page .schedule-section > h2,
+[data-theme="dark"] .schedule-page .schedule-day h3 {
+    color: #f5f8fc;
+}
+[data-theme="dark"] .schedule-page .schedule-day {
+    border-color: #f2c24d;
+    background: linear-gradient(90deg, #14253b, transparent);
+}
+[data-theme="dark"] .schedule-page .schedule-day p {
+    color: #ffe08f;
+}
+[data-theme="dark"] .schedule-page .debate-card {
+    border-color: #3f5871;
+    border-left-color: #4cb8e8;
+    background: #111c2e;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .42);
+}
+[data-theme="dark"] .schedule-page .debate-card:hover {
+    border-left-color: #f2c24d;
+}
+[data-theme="dark"] .schedule-page .matchup a {
+    border-color: #506b86;
+    color: #f7fbff;
+    background: #192a40;
+}
+[data-theme="dark"] .schedule-page .matchup a:hover {
+    border-color: #f2c24d;
+    color: #ffffff;
+    background: #20344d;
+}
+[data-theme="dark"] .schedule-page .matchup .versus {
+    color: #ffe08f;
+}
+[data-theme="dark"] .schedule-page .debate-meta strong,
+[data-theme="dark"] .schedule-page .debate-meta span {
+    border: 1px solid transparent;
+}
+[data-theme="dark"] .schedule-page .debate-meta .debate-badge {
+    border-color: #8f7124;
+    color: #fff0b8;
+    background: #4d3b11;
+}
+[data-theme="dark"] .schedule-page .debate-meta .pool-badge,
+[data-theme="dark"] .schedule-page .debate-meta .room-badge {
+    border-color: #39799b;
+    color: #e3f7ff;
+    background: #153d55;
+}
+[data-theme="dark"] .schedule-page .debate-meta .status-badge {
+    border-color: #3b785b;
+    color: #ddf9e9;
+    background: #183a2b;
+}
+[data-theme="dark"] .schedule-page .motion {
+    border-color: #465f78;
+    color: #dfe9f5;
+    background: #16263a;
+}
+[data-theme="dark"] .schedule-page .motion strong {
+    color: #f7fbff;
+}
+[data-theme="dark"] .schedule-page .schedule-section > p,
+[data-theme="dark"] .schedule-page .debate-card > p {
+    color: #dfe9f5;
+}
+
 @media (max-width: 1100px) {
     .current-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -3710,6 +3799,140 @@ footer { flex-wrap:wrap; }
     .tournament-facts { grid-template-columns: 1fr; }
     .group-stage-rules { grid-template-columns: 1fr; padding: 22px 18px; }
     .schedule-day { margin-top: 26px; }
+}
+
+/* Team detail schedule/history: canonical fixtures with persistent results. */
+.team-history-table .fixture-date-cell time,
+.team-history-table .fixture-time-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+}
+.team-history-table .fixture-date-cell strong,
+.team-history-table .fixture-time-cell strong {
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+.team-history-table small {
+    display: block;
+    color: var(--text-muted);
+    font-size: .72rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+.team-history-table .fixture-opponent-cell a {
+    display: inline-flex;
+    align-items: center;
+    gap: .5em;
+    min-width: 0;
+}
+.team-history-table .fixture-opponent-cell .team-emoji {
+    flex: 0 0 auto;
+    font-size: .88em;
+    filter: saturate(.82);
+}
+.team-history-table .fixture-opponent-cell a span:last-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.fixture-result {
+    display: inline-flex;
+    padding: 6px 10px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    color: var(--text-primary);
+    background: var(--bg-surface-elevated);
+    font-size: .75rem;
+    font-weight: 900;
+}
+.fixture-result.result-won {
+    border-color: rgba(23, 114, 69, .3);
+    color: var(--success);
+    background: var(--success-soft);
+}
+.fixture-result.result-lost {
+    border-color: rgba(180, 35, 24, .26);
+    color: var(--danger);
+    background: var(--danger-soft);
+}
+.fixture-tba { color: var(--text-muted); font-weight: 700; }
+
+[data-theme="dark"] .team-detail-page .team-history-wrap {
+    border-color: #3f5871;
+    background: #111c2e;
+}
+[data-theme="dark"] .team-detail-page .team-history-table {
+    background: #111c2e;
+}
+[data-theme="dark"] .team-detail-page .team-history-table tbody tr {
+    background: #101b2d;
+}
+[data-theme="dark"] .team-detail-page .team-history-table tbody tr:nth-child(even) {
+    background: #142238;
+}
+[data-theme="dark"] .team-detail-page .team-history-table tbody tr:hover {
+    background: #192a40;
+}
+[data-theme="dark"] .team-detail-page .team-history-table td {
+    border-color: #334b63;
+    color: #dfe9f5;
+}
+[data-theme="dark"] .team-detail-page .team-history-table td a,
+[data-theme="dark"] .team-detail-page .team-history-table .fixture-date-cell strong,
+[data-theme="dark"] .team-detail-page .team-history-table .fixture-time-cell strong {
+    color: #f7fbff;
+}
+[data-theme="dark"] .team-detail-page .team-history-table small,
+[data-theme="dark"] .team-detail-page .fixture-tba {
+    color: #afc0d2;
+}
+[data-theme="dark"] .team-detail-page .fixture-result.result-pending {
+    border-color: #39799b;
+    color: #e3f7ff;
+    background: #153d55;
+}
+[data-theme="dark"] .team-detail-page .fixture-result.result-won {
+    border-color: #3b785b;
+    color: #ddf9e9;
+    background: #183a2b;
+}
+[data-theme="dark"] .team-detail-page .fixture-result.result-lost {
+    border-color: #934b48;
+    color: #ffe1de;
+    background: #482321;
+}
+
+@media (max-width: 720px) {
+    .team-history-wrap {
+        margin: 0;
+        width: 100%;
+    }
+    .team-history-wrap .team-history-table {
+        min-width: 0;
+    }
+    .team-history-table tbody tr {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 14px;
+    }
+    .team-history-table tbody .fixture-date-cell {
+        grid-column: 1 / -1;
+        order: -3;
+        align-items: flex-start;
+        text-align: left;
+    }
+    .team-history-table tbody .fixture-opponent-cell {
+        grid-column: 1 / -1;
+        order: -2;
+        justify-content: flex-start;
+        text-align: left;
+        font-size: 1rem;
+    }
+    .team-history-table tbody .fixture-time-cell {
+        order: -1;
+        align-items: flex-start;
+        text-align: left;
+    }
 }
 
 

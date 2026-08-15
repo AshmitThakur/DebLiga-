@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ team.name }} | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=14">
+    <link rel="stylesheet" href="/static/style.css?v=18">
 </head>
-<body>
+<body class="team-detail-page">
 
     <nav>
         <a href="/">Home</a>
@@ -59,14 +59,15 @@
         </section>
 
         <section>
-            <h2>Debate History</h2>
+            <h2>Schedule &amp; Debate History</h2>
 
-            <div class="table-wrap">
-                <table>
+            <div class="table-wrap team-history-wrap">
+                <table class="team-history-table">
                     <thead>
                         <tr>
                             <th>Stage</th>
-                            <th>Round</th>
+                            <th>Date</th>
+                            <th>Time</th>
                             <th>Opponent</th>
                             <th>Result</th>
                             <th>Team Avg</th>
@@ -76,31 +77,44 @@
 
                     <tbody>
                         {% for item in history %}
-                            <tr>
-                                <td>
-                                    {{ item.debate.stage|replace("_", " ")|title }}
+                            <tr class="fixture-row result-{{ item.result|lower }}">
+                                <td data-label="Stage">
+                                    {{ item.stage_name }}
                                 </td>
-                                <td>
-                                    {{ item.round.number if item.round else "—" }}
-                                </td>
-                                <td>
-                                    {% if item.opponent %}
-                                        <a href="/teams/{{ item.opponent.id }}">
-                                            {{ item.opponent.name }}
-                                        </a>
+                                <td class="fixture-date-cell" data-label="Date">
+                                    {% if item.fixture %}
+                                        <time datetime="{{ item.fixture.date.isoformat() }}" title="{{ item.fixture.day }}, {{ item.fixture.date_label }}">
+                                            <strong>{{ item.fixture.short_date_label }}</strong>
+                                            {% if item.debate_number %}<small>Debate {{ item.debate_number }}</small>{% endif %}
+                                        </time>
                                     {% else %}
-                                        —
+                                        <span class="fixture-tba">TBA</span>
+                                        {% if item.debate_number %}<small>Debate {{ item.debate_number }}</small>{% endif %}
                                     {% endif %}
                                 </td>
-                                <td>{{ item.result }}</td>
-                                <td>
+                                <td class="fixture-time-cell" data-label="Time">
+                                    <strong>{{ item.scheduled_time or "TBA" }}</strong>
+                                    {% if item.venue %}<small>{{ item.venue }}</small>{% endif %}
+                                </td>
+                                <td class="fixture-opponent-cell" data-label="Opponent">
+                                    {% if item.opponent %}
+                                        <a href="/teams/{{ item.opponent.id }}">
+                                            {% if item.opponent_emoji %}<span class="team-emoji" aria-hidden="true">{{ item.opponent_emoji }}</span>{% endif %}
+                                            <span>{{ item.opponent.name }}</span>
+                                        </a>
+                                    {% else %}
+                                        <span class="fixture-tba">TBA</span>
+                                    {% endif %}
+                                </td>
+                                <td data-label="Result"><span class="fixture-result result-{{ item.result|lower }}">{{ item.result }}</span></td>
+                                <td data-label="Team Avg">
                                     {% if item.team_average_score is not none %}
                                         {{ "%.2f"|format(item.team_average_score) }}
                                     {% else %}
                                         —
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td data-label="Opponent Avg">
                                     {% if item.opponent_average_score is not none %}
                                         {{ "%.2f"|format(item.opponent_average_score) }}
                                     {% else %}
@@ -110,7 +124,7 @@
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="6">
+                                <td colspan="7">
                                     No debates recorded for this team yet.
                                 </td>
                             </tr>

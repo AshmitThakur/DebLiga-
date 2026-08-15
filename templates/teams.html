@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teams | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=16">
+    <link rel="stylesheet" href="/static/style.css?v=17">
 </head>
 <body>
     <nav>
@@ -35,7 +35,7 @@
                     {% for team in pool.teams %}
                         <article class="team-card current-team-card"{% if team.accent_color %} style="--team-accent:{{ team.accent_color }}"{% endif %}>
                             <header>
-                                <h2>{{ team.team_name }}</h2>
+                                <h2>{% if team.display_emoji %}<span class="team-emoji" aria-hidden="true">{{ team.display_emoji }}</span>{% endif %}<span class="team-name">{{ team.team_name }}</span></h2>
                                 <p class="pool-pending">{{ team.owner_label }}</p>
                             </header>
                             <div class="team-leader">
