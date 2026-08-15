@@ -4,7 +4,7 @@ from collections import Counter
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from models import Base, Debate, Pool, Team
+from models import AuctionTeam, Base, Debate, Pool, Speaker, Team
 from season_2026 import (
     OFFICIAL_GROUP_STAGE_2026,
     OFFICIAL_POOLS_2026,
@@ -68,6 +68,42 @@ class OfficialTournamentDataTests(unittest.TestCase):
                 for name, _ in pool_teams
             },
         )
+
+    def test_goodfellas_revised_auction_bids(self):
+        team = self.db.query(AuctionTeam).filter(
+            AuctionTeam.team_name == "Goodfellas"
+        ).one()
+        prices = {player.player_name: player.price for player in team.players}
+        self.assertEqual(prices["Manroop Singh"], 25500)
+        self.assertEqual(prices["Vallari"], 6000)
+        self.assertEqual(sum(prices.values()), 44000)
+        self.assertEqual(team.auction.purse - sum(prices.values()), 6000)
+
+    def test_mohit_names_are_unambiguous(self):
+        teams = {
+            team.team_name: {player.player_name for player in team.players}
+            for team in self.db.query(AuctionTeam).all()
+        }
+        self.assertIn("Mohit Sharma", teams["Broken Orators"])
+        self.assertIn("Mohit Verma", teams["Fifth Amendment"])
+        self.assertNotIn("Mohit", teams["Broken Orators"])
+        self.assertNotIn("Mohit", teams["Fifth Amendment"])
+        competition_teams = {
+            team.name: team.id
+            for team in self.db.query(Team).all()
+        }
+        for team_name, full_name in (
+            ("Broken Orators", "Mohit Sharma"),
+            ("Fifth Amendment", "Mohit Verma"),
+        ):
+            names = {
+                speaker.name
+                for speaker in self.db.query(Speaker).filter(
+                    Speaker.team_id == competition_teams[team_name]
+                )
+            }
+            self.assertIn(full_name, names)
+            self.assertNotIn("Mohit", names)
 
 
 if __name__ == "__main__":

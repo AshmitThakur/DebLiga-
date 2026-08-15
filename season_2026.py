@@ -33,22 +33,22 @@ TEAM_EMOJIS_2026 = {
 
 OFFICIAL_2026_AUCTION = (
     ("Broken Orators", "Akshat Agrawal", "#d6a62e", (
-        ("Dhruv", 5000), ("Mohit", 25000), ("Akansh", 10000), ("Divsargun", 10000),
+        ("Dhruv", 5000), ("Mohit Sharma", 25000), ("Akansh", 10000), ("Divsargun", 10000),
     )),
     ("Mechanised Yappers", "Ketan Kumar", "#4cb8e8", (
         ("Manav", 5000), ("Lakshit Chaudhary", 30500), ("Shayan", 5000), ("Bhavya Issarani", 9500),
     )),
     ("Goodfellas", "Rahul Batra", "#e08a45", (
-        ("Priyanka", 7500), ("Manroop Singh", 29500), ("Pranay", 5000), ("Vallari", 8000),
+        ("Priyanka", 7500), ("Manroop Singh", 25500), ("Pranay", 5000), ("Vallari", 6000),
     )),
     ("Rhetoric Rebels", "Priyanshi", "#4b91a7", (
         ("Prachi", 5000), ("Ramneet", 10000), ("Ashmita", 18500), ("Naman", 16500),
     )),
-    ("Akali Dinosaurs", "Gurnash", "#dc725f", (
+    ("Akali Dinosaurs", "Guransh", "#dc725f", (
         ("Harasees", 35000), ("Vikramjit", 5000), ("Sahil", 5000), ("Beerdavinder", 5000),
     )),
     ("Fifth Amendment", "Satyam", "#9b7bc2", (
-        ("Hridya", 21500), ("Rahul", 8000), ("Mohit", 15500), ("Ankit", 5000),
+        ("Hridya", 21500), ("Rahul", 8000), ("Mohit Verma", 15500), ("Ankit", 5000),
     )),
     ("Damsel Inflicting Distress", "Rachel", "#df8ab4", (
         ("Mudit", 6000), ("Prabhleen", 20000), ("Soumya", 6000), ("Saksham", 18000),
@@ -67,7 +67,7 @@ OFFICIAL_POOLS_2026 = {
         ("Rhetoric Rebels", "Priyanshi's Team"),
     ),
     "Pool B": (
-        ("Akali Dinosaurs", "Gurnash's Team"),
+        ("Akali Dinosaurs", "Guransh's Team"),
         ("Fifth Amendment", "Satyam's Team"),
         ("Damsel Inflicting Distress", "Rachel's Team"),
         ("Motion Granted", "Tvishaa's Team"),
@@ -215,8 +215,21 @@ def _normalise_auction_teams(db: Session) -> None:
             db.delete(team)
             continue
         team.team_name = canonical_name
-        if canonical_name == "Akali Dinosaurs" and team.leader_name == "Guransh Singh":
-            team.leader_name = "Gurnash"
+        if canonical_name == "Akali Dinosaurs":
+            team.leader_name = "Guransh"
+        if canonical_name == "Broken Orators":
+            for player in team.players:
+                if player.player_name == "Mohit":
+                    player.player_name = "Mohit Sharma"
+        if canonical_name == "Fifth Amendment":
+            for player in team.players:
+                if player.player_name == "Mohit":
+                    player.player_name = "Mohit Verma"
+        if canonical_name == "Goodfellas":
+            revised_bids = {"Manroop Singh": 25500, "Vallari": 6000}
+            for player in team.players:
+                if player.player_name in revised_bids:
+                    player.price = revised_bids[player.player_name]
 
 
 def _delete_debate(db: Session, debate: Debate) -> None:
@@ -281,6 +294,14 @@ def _sync_registered_speakers(db: Session, teams) -> None:
         auction_team = auction_by_name.get(team_name)
         if not auction_team:
             continue
+        renamed_speaker = {
+            "Broken Orators": "Mohit Sharma",
+            "Fifth Amendment": "Mohit Verma",
+        }.get(team_name)
+        if renamed_speaker:
+            for speaker in db.query(Speaker).filter(Speaker.team_id == team.id).all():
+                if speaker.name == "Mohit":
+                    speaker.name = renamed_speaker
         registered_names = [auction_team.leader_name]
         registered_names.extend(player.player_name for player in auction_team.players)
         existing_names = {
