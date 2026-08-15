@@ -11,7 +11,7 @@
 
     <title>{{ tournament_name }}</title>
 
-    <link rel="stylesheet" href="/static/style.css?v=16">
+    <link rel="stylesheet" href="/static/style.css?v=19">
 </head>
 
 
@@ -204,7 +204,7 @@
                 <p>Eight team leaders have completed their <strong>50,000-point drafts</strong> for the 6th Edition of the LADC Debate League. The auction uses virtual bidding points, not real currency.</p>
                 {% if current_team_names %}
                     <ul class="auction-promo-teams" aria-label="Official 2026 teams">
-                        {% for team_name in current_team_names %}<li>{{ team_name }}</li>{% endfor %}
+                        {% for team_name in current_team_names %}<li><span class="team-name-lock">{% if team_emoji(team_name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(team_name) }}</span>{% endif %}<span class="team-name">{{ team_name }}</span></span></li>{% endfor %}
                     </ul>
                 {% endif %}
                 <a class='primary-button auction-promo-cta' href='/auctions'>View 2026 Auctions →</a>

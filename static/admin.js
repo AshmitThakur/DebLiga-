@@ -49,9 +49,24 @@ function poolName(poolId) {
 }
 
 function teamName(teamId) {
-  return (
-    state.teams.find((t) => t.id === teamId)?.name
-    || `Team ${teamId}`
+  const team = state.teams.find((t) => t.id === teamId);
+  return team
+    ? `${team.emoji ? `${team.emoji} ` : ""}${team.name}`
+    : `Team ${teamId}`;
+}
+
+function teamHtml(team, fallback = "?") {
+  if (!team) return escapeHtml(fallback);
+  const emoji = team.emoji
+    ? `<span class="team-emoji" aria-hidden="true">${escapeHtml(team.emoji)}</span>`
+    : "";
+  return `<span class="team-name-lock">${emoji}<span class="team-name">${escapeHtml(team.name)}</span></span>`;
+}
+
+function teamHtmlById(teamId) {
+  return teamHtml(
+    state.teams.find((team) => team.id === teamId),
+    `Team ${teamId}`
   );
 }
 
@@ -182,7 +197,7 @@ function populateForms() {
       state.teams,
       (team) => team.id,
       (team) =>
-        `${team.name} (${poolName(team.pool_id)})`
+        `${teamName(team.id)} (${poolName(team.pool_id)})`
     );
   });
 
@@ -375,7 +390,7 @@ function renderTeams() {
                     href="/teams/${team.id}"
                     target="_blank"
                   >
-                    ${team.name}
+                    ${teamHtml(team)}
                   </a>
                 </td>
 
@@ -460,7 +475,7 @@ function renderSpeakers() {
                 </td>
 
                 <td>
-                  ${teamName(speaker.team_id)}
+                  ${teamHtmlById(speaker.team_id)}
                 </td>
 
                 <td>
@@ -633,9 +648,9 @@ function renderDebates() {
                 </td>
 
                 <td>
-                  ${item.team1?.name || "?"}
+                  ${teamHtml(item.team1)}
                   vs
-                  ${item.team2?.name || "?"}
+                  ${teamHtml(item.team2)}
                 </td>
 
                 <td>
@@ -645,7 +660,7 @@ function renderDebates() {
                 <td>
                   ${
                     item.winner
-                      ? `Winner: ${item.winner.name}`
+                      ? `Winner: ${teamHtml(item.winner)}`
                       : "Pending"
                   }
                 </td>
@@ -726,15 +741,15 @@ function renderKnockouts() {
             </strong>
 
             <p>
-              ${item.team1?.name || "TBD"}
+              ${teamHtml(item.team1, "TBD")}
               vs
-              ${item.team2?.name || "TBD"}
+              ${teamHtml(item.team2, "TBD")}
             </p>
 
             <p>
               ${
                 item.winner
-                  ? `Winner: ${item.winner.name}`
+                  ? `Winner: ${teamHtml(item.winner)}`
                   : "Result Pending"
               }
             </p>
@@ -1215,7 +1230,7 @@ async function editSpeaker(speakerId) {
     state.teams
       .map(
         (team) =>
-          `${team.id} = ${team.name}`
+          `${team.id} = ${teamName(team.id)}`
       )
       .join("\n");
 
@@ -1423,7 +1438,7 @@ async function editDebate(debateId) {
     state.teams
       .map(
         (team) =>
-          `${team.id} = ${team.name}`
+          `${team.id} = ${teamName(team.id)}`
       )
       .join("\n");
 
@@ -1651,7 +1666,7 @@ async function loadResultForm(debateId) {
           team.id;
 
         option.textContent =
-          team.name;
+          teamName(team.id);
 
         $("result-winner")
           .appendChild(option);
@@ -1720,7 +1735,7 @@ async function loadResultForm(debateId) {
 
                   —
 
-                  ${teamName(speaker.team_id)}
+                  ${teamHtmlById(speaker.team_id)}
                 </p>
 
                 <input
@@ -2015,7 +2030,7 @@ function auctionPlayerRow(player = {}) {
 }
 function updateAuctionTotal() { const total = [...document.querySelectorAll(".auction-player-price")].reduce((sum, input) => sum + (Number(input.value) || 0), 0); $("auction-live-total").textContent = `Total: ${total.toLocaleString("en-IN")} points · Remaining: ${(50000-total).toLocaleString("en-IN")} points`; $("auction-live-total").dataset.invalid = total > 50000 ? "true" : "false"; }
 function resetAuctionForm() { $("auction-team-form").reset(); $("auction-team-id").value = ""; $("auction-player-fields").innerHTML = ""; $("cancel-auction-edit").hidden = true; auctionPlayerRow(); updateAuctionTotal(); }
-async function loadAuctionTeams() { state.auctionTeams = await api("/api/admin/auctions/2026/teams"); $("auction-team-list").innerHTML = state.auctionTeams.map(t => `<article class="admin-list-item"><div><strong>${escapeHtml(t.team_name)}</strong><small>${escapeHtml(t.leader_name)} · ${t.players.length} players · ${t.total_spent.toLocaleString("en-IN")} points spent</small></div><div><button type="button" onclick="editAuctionTeam(${t.id})">Edit</button><button type="button" onclick="deleteAuctionTeam(${t.id})">Delete</button></div></article>`).join("") || "<p>No 2026 auction teams added yet.</p>"; }
+async function loadAuctionTeams() { state.auctionTeams = await api("/api/admin/auctions/2026/teams"); $("auction-team-list").innerHTML = state.auctionTeams.map(t => `<article class="admin-list-item"><div><strong>${teamHtml({name:t.team_name,emoji:t.display_emoji},t.team_name)}</strong><small>${escapeHtml(t.leader_name)} · ${t.players.length} players · ${t.total_spent.toLocaleString("en-IN")} points spent</small></div><div><button type="button" onclick="editAuctionTeam(${t.id})">Edit</button><button type="button" onclick="deleteAuctionTeam(${t.id})">Delete</button></div></article>`).join("") || "<p>No 2026 auction teams added yet.</p>"; }
 function editAuctionTeam(id) { const t = state.auctionTeams.find(x => x.id === id); if (!t) return; $("auction-team-id").value=t.id; $("auction-team-name").value=t.team_name; $("auction-leader-name").value=t.leader_name; $("auction-accent").value=t.accent_color || "#d6a62e"; $("auction-player-fields").innerHTML=""; t.players.forEach(auctionPlayerRow); $("cancel-auction-edit").hidden=false; updateAuctionTotal(); $("auction-team-form").scrollIntoView({behavior:"smooth"}); }
 async function deleteAuctionTeam(id) { if (!confirm("Delete this auction team and its players?")) return; try { await api(`/api/admin/auctions/2026/teams/${id}`, {method:"DELETE"}); showMessage("Auction team deleted"); await loadAuctionTeams(); } catch(e) { showMessage(e.message,true); } }
 $("add-auction-player").onclick = () => auctionPlayerRow(); $("cancel-auction-edit").onclick=resetAuctionForm;

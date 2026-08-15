@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Standings | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=14">
+    <link rel="stylesheet" href="/static/style.css?v=19">
 </head>
 <body>
 
@@ -57,9 +57,10 @@
                                     {% set pool_rows.count = pool_rows.count + 1 %}
                                     <tr>
                                         <td data-label="Rank"><span class="rank-badge">#{{ team.rank }}</span></td>
-                                        <td>
-                                            <a href="/teams/{{ team.team_id }}">
-                                                {{ team.team_name }}
+                                        <td data-label="Team">
+                                            <a class="team-name-lock" href="/teams/{{ team.team_id }}">
+                                                {% if team_emoji(team.team_name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(team.team_name) }}</span>{% endif %}
+                                                <span class="team-name">{{ team.team_name }}</span>
                                             </a>
                                         </td>
                                         <td data-label="Played">{{ team.played }}</td>

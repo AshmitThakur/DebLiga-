@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speaker Rankings | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=14">
+    <link rel="stylesheet" href="/static/style.css?v=19">
 </head>
 <body>
 
@@ -51,10 +51,11 @@
                                     {{ speaker.speaker_name }}
                                 </a>
                             </td>
-                            <td>
+                            <td data-label="Team">
                                 {% if teams.get(speaker.team_id) %}
-                                    <a href="/teams/{{ speaker.team_id }}">
-                                        {{ teams[speaker.team_id].name }}
+                                    <a class="team-name-lock" href="/teams/{{ speaker.team_id }}">
+                                        {% if team_emoji(teams[speaker.team_id].name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(teams[speaker.team_id].name) }}</span>{% endif %}
+                                        <span class="team-name">{{ teams[speaker.team_id].name }}</span>
                                     </a>
                                 {% else %}
                                     —

@@ -30,6 +30,9 @@ TEAM_EMOJIS_2026 = {
     "Rhetoric Rebels": "🔥",
 }
 
+GROUP_STAGE_TIME_2026 = "6:30 PM"
+GROUP_STAGE_TIME_SORT_2026 = "18:30"
+
 
 OFFICIAL_2026_AUCTION = (
     ("Broken Orators", "Akshat Agrawal", "#d6a62e", (
@@ -176,6 +179,8 @@ def fixture_details(team1_name: str, team2_name: str):
                 "day": fixture_date.strftime("%A"),
                 "date_label": fixture_date.strftime("%d %B %Y").lstrip("0"),
                 "short_date_label": fixture_date.strftime("%a, %d %b").replace(", 0", ", "),
+                "time_label": GROUP_STAGE_TIME_2026,
+                "time_sort": GROUP_STAGE_TIME_SORT_2026,
                 "pool": pool,
             }
     return None

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ speaker.name }} | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=14">
+    <link rel="stylesheet" href="/static/style.css?v=19">
 </head>
 <body>
 
@@ -27,8 +27,10 @@
         <header class="page-header">
             {% if team %}
                 <p>
-                    <a href="/teams/{{ team.id }}">
-                        ← {{ team.name }}
+                    <a class="team-name-lock" href="/teams/{{ team.id }}">
+                        <span aria-hidden="true">←</span>
+                        {% if team_emoji(team.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(team.name) }}</span>{% endif %}
+                        <span class="team-name">{{ team.name }}</span>
                     </a>
                 </p>
             {% endif %}
@@ -38,8 +40,9 @@
             {% if team %}
                 <p>
                     Team:
-                    <a href="/teams/{{ team.id }}">
-                        {{ team.name }}
+                    <a class="team-name-lock" href="/teams/{{ team.id }}">
+                        {% if team_emoji(team.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(team.name) }}</span>{% endif %}
+                        <span class="team-name">{{ team.name }}</span>
                     </a>
                 </p>
             {% endif %}
@@ -92,8 +95,9 @@
                                 </td>
                                 <td>
                                     {% if item.opponent %}
-                                        <a href="/teams/{{ item.opponent.id }}">
-                                            {{ item.opponent.name }}
+                                        <a class="team-name-lock" href="/teams/{{ item.opponent.id }}">
+                                            {% if team_emoji(item.opponent.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(item.opponent.name) }}</span>{% endif %}
+                                            <span class="team-name">{{ item.opponent.name }}</span>
                                         </a>
                                     {% else %}
                                         —

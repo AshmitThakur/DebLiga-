@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Debate League Auctions {{ year }}</title>
-    <link rel="stylesheet" href="/static/style.css?v=16">
+    <link rel="stylesheet" href="/static/style.css?v=19">
 </head>
 <body>
     <nav>
@@ -32,7 +32,7 @@
                     <div class="auction-subheading"><p>Highest Bids</p><h2>Top 5 Purchases — 2026</h2></div>
                     <div class="top-purchases-grid">
                         {% for purchase in top_purchases %}
-                            <article class="top-purchase-card"><span>{{ loop.index }}</span><div><strong>{{ purchase.name }}</strong><small>{{ "{:,}".format(purchase.price) }} points · {{ purchase.team_name }}</small></div></article>
+                            <article class="top-purchase-card"><span>{{ loop.index }}</span><div><strong>{{ purchase.name }}</strong><small>{{ "{:,}".format(purchase.price) }} points · <span class="team-name-lock">{% if team_emoji(purchase.team_name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(purchase.team_name) }}</span>{% endif %}<span class="team-name">{{ purchase.team_name }}</span></span></small></div></article>
                         {% endfor %}
                     </div>
                 </section>
@@ -40,7 +40,7 @@
                     {% for team in teams %}
                         <article class="auction-team-card"{% if team.accent_color %} style="--team-accent:{{ team.accent_color }}"{% endif %}>
                             <header>
-                                <h2>{% if team.display_emoji %}<span aria-hidden="true">{{ team.display_emoji }}</span> {% endif %}{{ team.team_name }}</h2>
+                                <h2 class="team-name-lock">{% if team_emoji(team.team_name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(team.team_name) }}</span>{% endif %}<span class="team-name">{{ team.team_name }}</span></h2>
                                 <p>Team leader <strong>{{ team.leader_name }}</strong></p>
                             </header>
                             <div class="auction-player-labels"><span>Player</span><span>Winning bid</span></div>

@@ -77,6 +77,7 @@ app.mount(
 templates = Jinja2Templates(
     directory=BASE_DIR / "templates"
 )
+templates.env.globals["team_emoji"] = TEAM_EMOJIS_2026.get
 
 
 # Shared champions list (used by homepage and history archive)
@@ -351,7 +352,8 @@ def create_team(
     return {
         "id": team.id,
         "name": team.name,
-        "pool_id": team.pool_id
+        "pool_id": team.pool_id,
+        "emoji": TEAM_EMOJIS_2026.get(team.name),
     }
 
 
@@ -368,7 +370,8 @@ def get_teams(
         {
             "id": team.id,
             "name": team.name,
-            "pool_id": team.pool_id
+            "pool_id": team.pool_id,
+            "emoji": TEAM_EMOJIS_2026.get(team.name),
         }
         for team in teams
     ]
@@ -1027,8 +1030,6 @@ def schedule_page(
             "round": round_obj,
             "team1": team1,
             "team2": team2,
-            "team1_emoji": TEAM_EMOJIS_2026.get(team1.name) if team1 else None,
-            "team2_emoji": TEAM_EMOJIS_2026.get(team2.name) if team2 else None,
             "room": debate.room,
             "winner": winner,
             "stage": debate.stage,
@@ -1253,11 +1254,6 @@ def team_detail_page(
             "debate": debate,
             "round": round_obj,
             "opponent": opponent,
-            "opponent_emoji": (
-                TEAM_EMOJIS_2026.get(opponent.name)
-                if opponent
-                else None
-            ),
             "stage_name": (
                 "Group Stage"
                 if debate.stage == "pool"
@@ -1503,7 +1499,8 @@ def update_team(
     return {
         "id": team.id,
         "name": team.name,
-        "pool_id": team.pool_id
+        "pool_id": team.pool_id,
+        "emoji": TEAM_EMOJIS_2026.get(team.name),
     }
 
 
@@ -1779,6 +1776,7 @@ def calculate_pool_standings(
         table.append({
             "team_id": team.id,
             "team_name": team.name,
+            "team_emoji": TEAM_EMOJIS_2026.get(team.name),
             "pool_id": team.pool_id,
             "played": played,
             "wins": wins,
@@ -2837,6 +2835,7 @@ def schedule_api(
             "date": fixture["date"].isoformat() if fixture else None,
             "date_label": fixture["date_label"] if fixture else None,
             "day": fixture["day"] if fixture else None,
+            "time": fixture["time_label"] if fixture else None,
             "stage": debate.stage,
             "stage_name": stage_names.get(
                 debate.stage,
@@ -2866,7 +2865,8 @@ def schedule_api(
             "room": debate.room,
             "winner": {
                 "id": winner.id,
-                "name": winner.name
+                "name": winner.name,
+                "emoji": TEAM_EMOJIS_2026.get(winner.name),
             } if winner else None,
             "status": (
                 "Completed"

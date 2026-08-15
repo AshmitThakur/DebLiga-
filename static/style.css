@@ -3763,6 +3763,7 @@ footer { flex-wrap:wrap; }
     background: #4d3b11;
 }
 [data-theme="dark"] .schedule-page .debate-meta .pool-badge,
+[data-theme="dark"] .schedule-page .debate-meta .time-badge,
 [data-theme="dark"] .schedule-page .debate-meta .room-badge {
     border-color: #39799b;
     color: #e3f7ff;
@@ -3802,6 +3803,24 @@ footer { flex-wrap:wrap; }
 }
 
 /* Team detail schedule/history: canonical fixtures with persistent results. */
+.team-name-lock {
+    display: inline-flex;
+    align-items: center;
+    gap: .45em;
+    min-width: 0;
+    max-width: 100%;
+    vertical-align: middle;
+}
+.team-name-lock .team-emoji {
+    flex: 0 0 auto;
+    font-size: .84em;
+    line-height: 1;
+    filter: saturate(.82);
+}
+.team-name-lock .team-name {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
 .team-history-table .fixture-date-cell time,
 .team-history-table .fixture-time-cell {
     display: flex;

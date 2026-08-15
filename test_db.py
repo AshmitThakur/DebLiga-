@@ -14,6 +14,7 @@ from models import (
     Team,
 )
 from season_2026 import (
+    GROUP_STAGE_TIME_2026,
     OFFICIAL_GROUP_STAGE_2026,
     OFFICIAL_POOLS_2026,
     TEAM_EMOJIS_2026,
@@ -63,6 +64,8 @@ class OfficialTournamentDataTests(unittest.TestCase):
             team2 = teams[debate.team2_id]
             details = fixture_details(team1.name, team2.name)
             self.assertIsNotNone(details)
+            self.assertEqual(details["time_label"], GROUP_STAGE_TIME_2026)
+            self.assertEqual(details["time_sort"], "18:30")
             self.assertEqual(team1.pool_id, team2.pool_id)
             daily_counts[details["date"]] += 1
             pool_counts[pools[team1.pool_id]] += 1

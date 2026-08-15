@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ team.name }} | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=18">
+    <link rel="stylesheet" href="/static/style.css?v=19">
 </head>
 <body class="team-detail-page">
 
@@ -27,7 +27,7 @@
         <header class="page-header">
             <p><a href="/teams">← Back to teams</a></p>
 
-            <h1>{{ team.name }}</h1>
+            <h1 class="team-name-lock">{% if team_emoji(team.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(team.name) }}</span>{% endif %}<span class="team-name">{{ team.name }}</span></h1>
 
             {% if pool %}
                 <p>{{ pool.name }}</p>
@@ -98,9 +98,9 @@
                                 </td>
                                 <td class="fixture-opponent-cell" data-label="Opponent">
                                     {% if item.opponent %}
-                                        <a href="/teams/{{ item.opponent.id }}">
-                                            {% if item.opponent_emoji %}<span class="team-emoji" aria-hidden="true">{{ item.opponent_emoji }}</span>{% endif %}
-                                            <span>{{ item.opponent.name }}</span>
+                                        <a class="team-name-lock" href="/teams/{{ item.opponent.id }}">
+                                            {% if team_emoji(item.opponent.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(item.opponent.name) }}</span>{% endif %}
+                                            <span class="team-name">{{ item.opponent.name }}</span>
                                         </a>
                                     {% else %}
                                         <span class="fixture-tba">TBA</span>
