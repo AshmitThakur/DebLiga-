@@ -69,6 +69,7 @@
                             <th>Date</th>
                             <th>Time</th>
                             <th>Opponent</th>
+                            <th>Side</th>
                             <th>Result</th>
                             <th>Team Avg</th>
                             <th>Opponent Avg</th>
@@ -106,6 +107,7 @@
                                         <span class="fixture-tba">TBA</span>
                                     {% endif %}
                                 </td>
+                                <td data-label="Side">{{ item.side or "—" }}</td>
                                 <td data-label="Result"><span class="fixture-result result-{{ item.result|lower }}">{{ item.result }}</span></td>
                                 <td data-label="Team Avg">
                                     {% if item.team_average_score is not none %}
@@ -124,7 +126,7 @@
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="7">
+                                <td colspan="8">
                                     No debates recorded for this team yet.
                                 </td>
                             </tr>

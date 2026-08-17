@@ -79,11 +79,19 @@
                                 <p class="motion"><strong>Motion:</strong> {{ debate.round.motion }}</p>
                             {% endif %}
                             <div class="matchup">
-                                <a class="team-name-lock" href="/teams/{{ debate.team1.id }}">{% if team_emoji(debate.team1.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.team1.name) }}</span>{% endif %}<span class="team-name">{{ debate.team1.name }}</span></a>
+                                <a class="team-name-lock" href="/teams/{{ debate.team1.id }}">{% if team_emoji(debate.team1.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.team1.name) }}</span>{% endif %}<span class="team-name">{{ debate.team1.name }}</span>{% if debate.team1_side %}<small>({{ debate.team1_side }})</small>{% endif %}</a>
                                 <span class="versus">vs</span>
-                                <a class="team-name-lock" href="/teams/{{ debate.team2.id }}">{% if team_emoji(debate.team2.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.team2.name) }}</span>{% endif %}<span class="team-name">{{ debate.team2.name }}</span></a>
+                                <a class="team-name-lock" href="/teams/{{ debate.team2.id }}">{% if team_emoji(debate.team2.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.team2.name) }}</span>{% endif %}<span class="team-name">{{ debate.team2.name }}</span>{% if debate.team2_side %}<small>({{ debate.team2_side }})</small>{% endif %}</a>
                             </div>
                             {% if debate.winner %}<p>Winner: <strong class="team-name-lock">{% if team_emoji(debate.winner.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.winner.name) }}</span>{% endif %}<span class="team-name">{{ debate.winner.name }}</span></strong></p>{% endif %}
+                            {% if debate.team1_average_score is not none and debate.team2_average_score is not none %}
+                                <p>
+                                    Team averages:
+                                    <strong>{{ debate.team1.name }} {{ "%.2f"|format(debate.team1_average_score) }}</strong>
+                                    ·
+                                    <strong>{{ debate.team2.name }} {{ "%.2f"|format(debate.team2_average_score) }}</strong>
+                                </p>
+                            {% endif %}
                         </article>
                     {% endif %}
                 {% endfor %}

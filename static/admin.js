@@ -649,8 +649,10 @@ function renderDebates() {
 
                 <td>
                   ${teamHtml(item.team1)}
+                  ${item.team1?.side ? `(${escapeHtml(item.team1.side)})` : ""}
                   vs
                   ${teamHtml(item.team2)}
+                  ${item.team2?.side ? `(${escapeHtml(item.team2.side)})` : ""}
                 </td>
 
                 <td>
@@ -660,7 +662,12 @@ function renderDebates() {
                 <td>
                   ${
                     item.winner
-                      ? `Winner: ${teamHtml(item.winner)}`
+                      ? `Winner: ${teamHtml(item.winner)}${
+                          item.team1?.average_score != null
+                          && item.team2?.average_score != null
+                            ? `<br>Avg: ${Number(item.team1.average_score).toFixed(2)} - ${Number(item.team2.average_score).toFixed(2)}`
+                            : ""
+                        }`
                       : "Pending"
                   }
                 </td>

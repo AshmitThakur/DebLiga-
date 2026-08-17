@@ -94,6 +94,46 @@ OFFICIAL_GROUP_STAGE_2026 = (
 )
 
 
+# Speaker names here deliberately match the existing registered Speaker rows.
+# The submitted lineup names "Sahil Pawar", "Akshat", and "Rahul" resolve to
+# the already registered Sahil, Akshat Agrawal, and Rahul Batra respectively.
+OFFICIAL_DAY_1_RESULTS_2026 = (
+    {
+        "fixture_number": 1,
+        "government_team": "Akali Dinosaurs",
+        "opposition_team": "Damsel Inflicting Distress",
+        "winner_team": "Damsel Inflicting Distress",
+        "performances": (
+            ("Akali Dinosaurs", "Sahil", "Prime Minister", 71.0),
+            ("Akali Dinosaurs", "Harasees", "Deputy Prime Minister", 73.0),
+            ("Akali Dinosaurs", "Guransh", "Government Whip", 74.0),
+            ("Damsel Inflicting Distress", "Rachel", "Leader of Opposition", 73.0),
+            ("Damsel Inflicting Distress", "Mudit", "Deputy Leader of Opposition", 73.5),
+            ("Damsel Inflicting Distress", "Prabhleen", "Opposition Whip", 74.5),
+        ),
+    },
+    {
+        "fixture_number": 2,
+        "government_team": "Broken Orators",
+        "opposition_team": "Goodfellas",
+        "winner_team": "Broken Orators",
+        "performances": (
+            ("Broken Orators", "Akshat Agrawal", "Prime Minister", 73.0),
+            ("Broken Orators", "Dhruv", "Deputy Prime Minister", 72.0),
+            ("Broken Orators", "Mohit Sharma", "Government Whip", 74.0),
+            ("Goodfellas", "Priyanka", "Leader of Opposition", 72.5),
+            ("Goodfellas", "Rahul Batra", "Deputy Leader of Opposition", 71.5),
+            ("Goodfellas", "Manroop Singh", "Opposition Whip", 72.5),
+        ),
+    },
+)
+
+OFFICIAL_DAY_1_RESULTS_BY_FIXTURE_2026 = {
+    result["fixture_number"]: result
+    for result in OFFICIAL_DAY_1_RESULTS_2026
+}
+
+
 TEAM_NAME_ALIASES_2026 = {
     "Damsel Inflicting Stress": "Damsel Inflicting Distress",
 }
@@ -173,6 +213,13 @@ def fixture_details(team1_name: str, team2_name: str):
     pairing = frozenset((team1_name, team2_name))
     for number, fixture_date, pool, team1, team2 in OFFICIAL_GROUP_STAGE_2026:
         if pairing == frozenset((team1, team2)):
+            official_result = OFFICIAL_DAY_1_RESULTS_BY_FIXTURE_2026.get(number)
+            sides = {}
+            if official_result:
+                sides = {
+                    official_result["government_team"]: "Government",
+                    official_result["opposition_team"]: "Opposition",
+                }
             return {
                 "number": number,
                 "date": fixture_date,
@@ -182,6 +229,16 @@ def fixture_details(team1_name: str, team2_name: str):
                 "time_label": GROUP_STAGE_TIME_2026,
                 "time_sort": GROUP_STAGE_TIME_SORT_2026,
                 "pool": pool,
+                "team1_side": sides.get(team1_name),
+                "team2_side": sides.get(team2_name),
+                "government_team": (
+                    official_result["government_team"]
+                    if official_result else None
+                ),
+                "opposition_team": (
+                    official_result["opposition_team"]
+                    if official_result else None
+                ),
             }
     return None
 
@@ -365,7 +422,7 @@ def _sync_registered_speakers(db: Session, teams) -> None:
                 db.add(Speaker(name=speaker_name, team_id=team.id))
 
 
-def _sync_group_stage(db: Session, teams) -> None:
+def _sync_group_stage(db: Session, teams):
     official_pairs = {
         frozenset((team1, team2)): number
         for number, _, _, team1, team2 in OFFICIAL_GROUP_STAGE_2026
@@ -384,6 +441,7 @@ def _sync_group_stage(db: Session, teams) -> None:
     for round_obj in db.query(Round).order_by(Round.id).all():
         rounds_by_number.setdefault(round_obj.number, round_obj)
 
+    debates_by_number = {}
     for number, _, _, team1_name, team2_name in OFFICIAL_GROUP_STAGE_2026:
         round_obj = rounds_by_number.get(number)
         if not round_obj:
@@ -402,6 +460,56 @@ def _sync_group_stage(db: Session, teams) -> None:
         debate.team2_id = teams[team2_name].id
         if debate.winner_team_id not in (debate.team1_id, debate.team2_id):
             debate.winner_team_id = None
+        debates_by_number[number] = debate
+
+    db.flush()
+    return debates_by_number
+
+
+def _sync_official_day_1_results(db: Session, teams, debates_by_number) -> None:
+    """Reconcile published results without creating speakers or duplicate scores."""
+    for result in OFFICIAL_DAY_1_RESULTS_2026:
+        debate = debates_by_number[result["fixture_number"]]
+        debate.winner_team_id = teams[result["winner_team"]].id
+
+        expected = {}
+        for team_name, speaker_name, role, score in result["performances"]:
+            team = teams[team_name]
+            speaker = db.query(Speaker).filter(
+                Speaker.team_id == team.id,
+                Speaker.name == speaker_name,
+            ).one_or_none()
+            if speaker is None:
+                raise RuntimeError(
+                    f"Registered speaker {speaker_name!r} is missing from {team_name!r}"
+                )
+            expected[speaker.id] = (role, score)
+
+        existing_by_speaker = {}
+        for performance in db.query(SpeakerPerformance).filter(
+            SpeakerPerformance.debate_id == debate.id
+        ).order_by(SpeakerPerformance.id).all():
+            if (
+                performance.speaker_id not in expected
+                or performance.speaker_id in existing_by_speaker
+            ):
+                db.delete(performance)
+                continue
+            existing_by_speaker[performance.speaker_id] = performance
+
+        for speaker_id, (role, score) in expected.items():
+            performance = existing_by_speaker.get(speaker_id)
+            if performance is None:
+                performance = SpeakerPerformance(
+                    debate_id=debate.id,
+                    speaker_id=speaker_id,
+                    role=role,
+                    score=score,
+                )
+                db.add(performance)
+            else:
+                performance.role = role
+                performance.score = score
 
 
 def _remove_unreferenced_placeholder_teams(db: Session, official_names) -> None:
@@ -433,7 +541,8 @@ def sync_official_2026_tournament(db: Session) -> None:
     _normalise_auction_teams(db)
     teams, official_names = _sync_pools_and_teams(db)
     _sync_registered_speakers(db, teams)
-    _sync_group_stage(db, teams)
+    debates_by_number = _sync_group_stage(db, teams)
+    _sync_official_day_1_results(db, teams, debates_by_number)
     _remove_unreferenced_placeholder_teams(db, official_names)
     db.commit()
 

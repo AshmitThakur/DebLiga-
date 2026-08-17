@@ -908,6 +908,29 @@ def standings(
     return table
 
 
+def debate_team_averages(db: Session, debate: Debate):
+    """Calculate each team's average directly from canonical performances."""
+    scores_by_team = {}
+    rows = db.query(
+        SpeakerPerformance,
+        Speaker.team_id,
+    ).join(
+        Speaker,
+        Speaker.id == SpeakerPerformance.speaker_id,
+    ).filter(
+        SpeakerPerformance.debate_id == debate.id
+    ).all()
+
+    for performance, team_id in rows:
+        scores_by_team.setdefault(team_id, []).append(performance.score)
+
+    return {
+        team_id: round(sum(scores) / len(scores), 2)
+        for team_id, scores in scores_by_team.items()
+        if scores
+    }
+
+
 # ==================================================
 # PUBLIC WEBSITE PAGES
 # ==================================================
@@ -1024,6 +1047,7 @@ def schedule_page(
             if debate.stage == "pool" and team1 and team2
             else None
         )
+        team_averages = debate_team_averages(db, debate)
 
         schedule.append({
             "id": debate.id,
@@ -1039,6 +1063,10 @@ def schedule_page(
             ),
             "pool": pool,
             "fixture": fixture,
+            "team1_side": fixture.get("team1_side") if fixture else None,
+            "team2_side": fixture.get("team2_side") if fixture else None,
+            "team1_average_score": team_averages.get(debate.team1_id),
+            "team2_average_score": team_averages.get(debate.team2_id),
             "status": (
                 "Completed"
                 if winner
@@ -1260,6 +1288,7 @@ def team_detail_page(
                 else debate.stage.replace("_", " ").title()
             ),
             "fixture": fixture,
+            "side": fixture.get("team1_side") if fixture else None,
             "debate_number": debate_number,
             "scheduled_time": (
                 fixture.get("time_label")
@@ -1378,6 +1407,11 @@ def speaker_detail_page(
             Team,
             opponent_id
         )
+        fixture = (
+            fixture_details(team.name, opponent.name)
+            if debate.stage == "pool" and opponent
+            else None
+        )
 
         if debate.winner_team_id is None:
             result = "Pending"
@@ -1394,6 +1428,7 @@ def speaker_detail_page(
             "score": performance.score,
             "debate": debate,
             "opponent": opponent,
+            "side": fixture.get("team1_side") if fixture else None,
             "result": result
         })
 
@@ -2171,10 +2206,44 @@ def get_debate_result(
     ).filter(
         SpeakerPerformance.debate_id == debate.id
     ).all()
+    team1 = db.get(Team, debate.team1_id)
+    team2 = db.get(Team, debate.team2_id)
+    fixture = (
+        fixture_details(team1.name, team2.name)
+        if debate.stage == "pool" and team1 and team2
+        else None
+    )
+    team_averages = debate_team_averages(db, debate)
 
     return {
         "debate_id": debate.id,
         "winner_team_id": debate.winner_team_id,
+        "government_team_id": (
+            next(
+                (
+                    team.id
+                    for team in (team1, team2)
+                    if team and fixture
+                    and team.name == fixture.get("government_team")
+                ),
+                None,
+            )
+        ),
+        "opposition_team_id": (
+            next(
+                (
+                    team.id
+                    for team in (team1, team2)
+                    if team and fixture
+                    and team.name == fixture.get("opposition_team")
+                ),
+                None,
+            )
+        ),
+        "team_averages": {
+            str(team_id): average
+            for team_id, average in team_averages.items()
+        },
         "performances": [
             {
                 "speaker_id": performance.speaker_id,
@@ -2828,6 +2897,7 @@ def schedule_api(
             if debate.stage == "pool" and team1 and team2
             else None
         )
+        team_averages = debate_team_averages(db, debate)
 
         schedule.append({
             "debate_id": debate.id,
@@ -2856,11 +2926,15 @@ def schedule_api(
                 "id": team1.id,
                 "name": team1.name,
                 "emoji": TEAM_EMOJIS_2026.get(team1.name),
+                "side": fixture.get("team1_side") if fixture else None,
+                "average_score": team_averages.get(team1.id),
             } if team1 else None,
             "team2": {
                 "id": team2.id,
                 "name": team2.name,
                 "emoji": TEAM_EMOJIS_2026.get(team2.name),
+                "side": fixture.get("team2_side") if fixture else None,
+                "average_score": team_averages.get(team2.id),
             } if team2 else None,
             "room": debate.room,
             "winner": {

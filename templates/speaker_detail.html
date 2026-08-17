@@ -78,6 +78,7 @@
                             <th>Stage</th>
                             <th>Round</th>
                             <th>Opponent</th>
+                            <th>Side</th>
                             <th>Result</th>
                             <th>Role</th>
                             <th>Score</th>
@@ -103,13 +104,14 @@
                                         —
                                     {% endif %}
                                 </td>
+                                <td>{{ item.side or "—" }}</td>
                                 <td>{{ item.result }}</td>
                                 <td>{{ item.role }}</td>
                                 <td>{{ "%.2f"|format(item.score) }}</td>
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="6">
+                                <td colspan="7">
                                     No speaker performances recorded yet.
                                 </td>
                             </tr>
