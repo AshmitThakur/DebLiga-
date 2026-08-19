@@ -70,6 +70,29 @@ function teamHtmlById(teamId) {
   );
 }
 
+function resultTeamHtml(team, winner, side = null, fallback = "?") {
+  const base = teamHtml(team, fallback);
+  const sideLabel = side
+    ? `<small>(${escapeHtml(side)})</small>`
+    : "";
+
+  if (!team || !winner) {
+    return `${base}${sideLabel}`;
+  }
+
+  const won = team.id === winner.id;
+  const outcome = won ? "winner" : "loser";
+  const badge = won ? "Winner" : "Lost";
+
+  return `
+    <span class="admin-result-team admin-result-team-${outcome}">
+      ${base}
+      ${sideLabel}
+      <small class="admin-outcome-badge">${badge}</small>
+    </span>
+  `;
+}
+
 function roundName(roundId) {
   const round = state.rounds.find(
     (r) => r.id === roundId
@@ -648,11 +671,9 @@ function renderDebates() {
                 </td>
 
                 <td>
-                  ${teamHtml(item.team1)}
-                  ${item.team1?.side ? `(${escapeHtml(item.team1.side)})` : ""}
+                  ${resultTeamHtml(item.team1, item.winner, item.team1?.side)}
                   vs
-                  ${teamHtml(item.team2)}
-                  ${item.team2?.side ? `(${escapeHtml(item.team2.side)})` : ""}
+                  ${resultTeamHtml(item.team2, item.winner, item.team2?.side)}
                 </td>
 
                 <td>
@@ -666,6 +687,16 @@ function renderDebates() {
                           item.team1?.average_score != null
                           && item.team2?.average_score != null
                             ? `<br>Avg: ${Number(item.team1.average_score).toFixed(2)} - ${Number(item.team2.average_score).toFixed(2)}`
+                            : ""
+                        }${
+                          item.team1?.reply_score != null
+                          && item.team2?.reply_score != null
+                            ? `<br>Reply: ${Number(item.team1.reply_score).toFixed(2)} - ${Number(item.team2.reply_score).toFixed(2)}`
+                            : ""
+                        }${
+                          item.team1?.total_score != null
+                          && item.team2?.total_score != null
+                            ? `<br>Total: ${Number(item.team1.total_score).toFixed(2)} - ${Number(item.team2.total_score).toFixed(2)}`
                             : ""
                         }`
                       : "Pending"
@@ -748,9 +779,9 @@ function renderKnockouts() {
             </strong>
 
             <p>
-              ${teamHtml(item.team1, "TBD")}
+              ${resultTeamHtml(item.team1, item.winner, item.team1?.side, "TBD")}
               vs
-              ${teamHtml(item.team2, "TBD")}
+              ${resultTeamHtml(item.team2, item.winner, item.team2?.side, "TBD")}
             </p>
 
             <p>
@@ -1595,9 +1626,12 @@ $("result-debate").addEventListener(
 
     if (!debateId) {
       $("result-winner").innerHTML = "";
+      $("government-reply-score").value = "";
+      $("opposition-reply-score").value = "";
 
       $("result-speakers").innerHTML =
         "Select a debate first.";
+      $("result-swing-performances").innerHTML = "";
 
       return;
     }
@@ -1631,6 +1665,40 @@ async function selectResultDebate(debateId) {
 // ==================================================
 // LOAD EXISTING RESULT
 // ==================================================
+
+function addSwingPerformanceRow(performance = {}) {
+  const debateId = Number($("result-debate").value);
+  const debate = state.debates.find((item) => item.id === debateId);
+  if (!debate) {
+    showMessage("Select a debate before adding a Swing performance", true);
+    return;
+  }
+
+  const speakers = state.speakers.filter(
+    (speaker) => speaker.team_id === debate.team1_id || speaker.team_id === debate.team2_id
+  );
+  const row = document.createElement("div");
+  row.className = "swing-performance-row";
+  row.innerHTML = `
+    <select class="swing-speaker" aria-label="Swing speaker" required>
+      ${speakers.map((speaker) => `
+        <option value="${speaker.id}" ${speaker.id === performance.speaker_id ? "selected" : ""}>
+          ${escapeHtml(speaker.name)} — ${escapeHtml(teamName(speaker.team_id))}
+        </option>
+      `).join("")}
+    </select>
+    <input class="swing-role" type="text" placeholder="Role" value="${escapeHtml(performance.role || "")}" required>
+    <input class="swing-score" type="number" step="0.01" placeholder="Score" value="${performance.score ?? ""}" required>
+    <button class="remove-swing-performance" type="button">Remove</button>
+  `;
+  row.querySelector(".remove-swing-performance").addEventListener("click", () => row.remove());
+  $("result-swing-performances").appendChild(row);
+}
+
+$("add-swing-performance").addEventListener(
+  "click",
+  () => addSwingPerformanceRow()
+);
 
 async function loadResultForm(debateId) {
   try {
@@ -1694,9 +1762,28 @@ async function loadResultForm(debateId) {
         );
     }
 
+    const governmentTeam = state.teams.find(
+      (team) => team.id === current.government_team_id
+    );
+    const oppositionTeam = state.teams.find(
+      (team) => team.id === current.opposition_team_id
+    );
+    $("government-reply-label").textContent = governmentTeam
+      ? `Government Reply — ${governmentTeam.name}`
+      : "Government Reply";
+    $("opposition-reply-label").textContent = oppositionTeam
+      ? `Opposition Reply — ${oppositionTeam.name}`
+      : "Opposition Reply";
+    $("government-reply-score").value =
+      current.government_reply_score ?? "";
+    $("opposition-reply-score").value =
+      current.opposition_reply_score ?? "";
+
     const performanceMap =
       new Map(
-        current.performances.map(
+        current.performances.filter(
+          (performance) => !performance.is_swing
+        ).map(
           (performance) => [
             performance.speaker_id,
             performance,
@@ -1711,6 +1798,7 @@ async function loadResultForm(debateId) {
           ||
           speaker.team_id === debate.team2_id
       );
+    $("result-swing-performances").innerHTML = "";
 
     if (!speakers.length) {
       $("result-speakers").innerHTML = `
@@ -1767,6 +1855,10 @@ async function loadResultForm(debateId) {
           }
         )
         .join("");
+
+    current.performances
+      .filter((performance) => performance.is_swing)
+      .forEach((performance) => addSwingPerformanceRow(performance));
   } catch (error) {
     showMessage(
       error.message,
@@ -1841,9 +1933,25 @@ $("result-form").addEventListener(
               Number(
                 scoreInput.value
               ),
+            is_swing: false,
           });
         }
       );
+
+    document
+      .querySelectorAll(".swing-performance-row")
+      .forEach((row) => {
+        const scoreInput = row.querySelector(".swing-score");
+        if (scoreInput.value === "") {
+          return;
+        }
+        performances.push({
+          speaker_id: Number(row.querySelector(".swing-speaker").value),
+          role: row.querySelector(".swing-role").value.trim() || "Speaker",
+          score: Number(scoreInput.value),
+          is_swing: true,
+        });
+      });
 
     try {
       await api(
@@ -1853,6 +1961,16 @@ $("result-form").addEventListener(
           {
             winner_team_id:
               winnerTeamId,
+
+            government_reply_score:
+              $("government-reply-score").value === ""
+                ? null
+                : Number($("government-reply-score").value),
+
+            opposition_reply_score:
+              $("opposition-reply-score").value === ""
+                ? null
+                : Number($("opposition-reply-score").value),
 
             performances,
           }

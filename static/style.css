@@ -2843,6 +2843,77 @@ footer a:hover {
         padding: 36px 20px;
     }
 }
+
+.debate-score-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+}
+.debate-score-side {
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+}
+.debate-score-side h4 { margin: 0 0 8px; }
+.debate-score-side h4 small { color: var(--text-muted); }
+.debate-score-side dl { margin: 0; }
+.debate-score-side dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+}
+.debate-score-side dt small { color: var(--text-muted); }
+.swing-label {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: #f0b429;
+    color: #382500;
+    font-size: .68rem;
+    font-weight: 900;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+.debate-score-side dd { margin: 0; font-weight: 800; }
+.debate-score-side .reply-score { color: var(--navy); font-weight: 800; }
+.debate-score-side .total-score { border-bottom: 0; font-weight: 900; }
+.result-replies {
+    display: grid;
+    grid-template-columns: minmax(180px, auto) minmax(120px, 1fr);
+    align-items: center;
+    gap: 10px 14px;
+    margin: 18px 0;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-soft);
+}
+.result-replies label { font-weight: 800; }
+.result-swing-editor {
+    margin: 18px 0;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-soft);
+}
+.result-swing-editor h3 { margin-top: 0; }
+.swing-performance-row {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) minmax(160px, 1fr) 110px auto;
+    gap: 10px;
+    margin: 10px 0;
+    align-items: center;
+}
+@media (max-width: 720px) {
+    .debate-score-grid { grid-template-columns: 1fr; }
+    .result-replies { grid-template-columns: 1fr; }
+    .swing-performance-row { grid-template-columns: 1fr; }
+}
 .hall-of-fame-columns {
     display: grid;
     grid-template-columns: 90px 1.4fr 1fr;
@@ -3487,6 +3558,104 @@ footer { flex-wrap:wrap; }
 /* Remove auction promo pillar accent */
 .auction-promo { border-left:1px solid rgba(82,185,232,.3); }
 
+/* Completed debate outcomes */
+.matchup a.matchup-team-winner {
+    border-color: rgba(23, 114, 69, .38);
+    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--success-soft), var(--bg-surface) 88%);
+    box-shadow: inset 4px 0 0 var(--success);
+}
+.matchup a.matchup-team {
+    flex-wrap: wrap;
+    row-gap: 7px;
+}
+.matchup a.matchup-team-loser {
+    border-color: rgba(180, 35, 24, .32);
+    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--danger-soft), var(--bg-surface) 88%);
+    box-shadow: inset 4px 0 0 var(--danger);
+}
+.matchup a.matchup-team-winner:hover {
+    border-color: var(--success);
+    color: var(--text-primary);
+    background: var(--success-soft);
+}
+.matchup a.matchup-team-loser:hover {
+    border-color: var(--danger);
+    color: var(--text-primary);
+    background: var(--danger-soft);
+}
+.matchup .matchup-team small {
+    color: var(--text-muted);
+    font-size: .66rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+.matchup .matchup-outcome-badge {
+    flex: 0 0 auto;
+    padding: 4px 7px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    font-size: .58rem;
+    line-height: 1;
+    letter-spacing: .07em;
+}
+.matchup .matchup-team-winner .matchup-outcome-badge {
+    color: var(--success);
+    background: var(--success-soft);
+}
+.matchup .matchup-team-loser .matchup-outcome-badge {
+    color: var(--danger);
+    background: var(--danger-soft);
+}
+
+.standings-pool .standings-wins {
+    color: var(--success);
+    font-weight: 900;
+}
+.standings-pool .standings-losses {
+    color: var(--danger);
+    font-weight: 900;
+}
+[data-theme="dark"] .standings-pool .table-wrap .standings-wins {
+    color: var(--success);
+}
+[data-theme="dark"] .standings-pool .table-wrap .standings-losses {
+    color: var(--danger);
+}
+
+.admin-result-team {
+    padding: 4px 7px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+}
+.admin-result-team-winner {
+    border-color: rgba(23, 114, 69, .32);
+    background: var(--success-soft);
+}
+.admin-result-team-loser {
+    border-color: rgba(180, 35, 24, .28);
+    background: var(--danger-soft);
+}
+.admin-outcome-badge {
+    color: var(--text-secondary);
+    font-size: .66rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+.admin-result-team-winner .admin-outcome-badge { color: var(--success); }
+.admin-result-team-loser .admin-outcome-badge { color: var(--danger); }
+
+@media (max-width: 720px) {
+    .matchup a.matchup-team-winner,
+    .matchup a.matchup-team-loser {
+        min-height: 54px;
+    }
+}
+
 /* Dedicated auctions page and admin */
 .auctions-page{width:min(1480px,calc(100% - 40px));margin:0 auto;padding:42px 0 70px}.auction-year-switcher{display:inline-flex;gap:4px;margin-top:18px;padding:4px;border:1px solid var(--border);border-radius:999px;background:var(--bg-surface)}.auction-year-switcher a{padding:8px 18px;border-radius:999px;color:var(--text-secondary);font-weight:800;text-decoration:none}.auction-year-switcher a.active{color:var(--navy);background:var(--gold)}.auction-team-grid-2026{grid-template-columns:repeat(4,minmax(0,1fr))}.auction-team-grid-2026 .auction-team-card{border-top:4px solid var(--team-accent,var(--gold))}.auction-team-card h2{margin:0;color:var(--text-primary);font-size:1.15rem}.auction-team-card li span{min-width:0;overflow-wrap:anywhere}.auction-empty{padding:48px 24px;border:1px dashed var(--border);border-radius:var(--radius-md);text-align:center;background:var(--bg-surface)}.auction-empty h2{color:var(--text-primary)}.auction-admin-fields,.auction-player-input{display:grid;grid-template-columns:2fr 2fr auto;gap:10px;margin-bottom:10px}.auction-player-input{grid-template-columns:2fr 1fr auto}.auction-form-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}#auction-live-total{font-weight:800;color:var(--text-secondary)}#auction-live-total[data-invalid=true]{color:#c43d3d}.admin-list-item{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--border)}.admin-list-item small{display:block;margin-top:4px;color:var(--text-muted)}.admin-list-item>div:last-child{display:flex;gap:8px}
 @media(max-width:1100px){.auction-team-grid-2026{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -3981,5 +4150,29 @@ footer { flex-wrap:wrap; }
     }
     .auctions-page .auction-team-card li strong {
         white-space: nowrap;
+    }
+}
+
+/* Keep completed team-history rows authoritative over stripe/theme rules. */
+.team-detail-page .team-history-table tbody tr.result-won {
+    background: linear-gradient(90deg, var(--success-soft), var(--bg-surface) 38%);
+    box-shadow: inset 4px 0 0 var(--success);
+}
+.team-detail-page .team-history-table tbody tr.result-lost {
+    background: linear-gradient(90deg, var(--danger-soft), var(--bg-surface) 38%);
+    box-shadow: inset 4px 0 0 var(--danger);
+}
+[data-theme="dark"] .team-detail-page .team-history-table tbody tr.result-won {
+    background: linear-gradient(90deg, var(--success-soft), #101b2d 42%);
+}
+[data-theme="dark"] .team-detail-page .team-history-table tbody tr.result-lost {
+    background: linear-gradient(90deg, var(--danger-soft), #101b2d 42%);
+}
+@media (max-width: 720px) {
+    .team-detail-page .team-history-table tbody tr.result-won {
+        border-color: rgba(23, 114, 69, .38);
+    }
+    .team-detail-page .team-history-table tbody tr.result-lost {
+        border-color: rgba(180, 35, 24, .34);
     }
 }

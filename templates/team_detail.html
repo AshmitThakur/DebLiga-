@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ team.name }} | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=19">
+    <link rel="stylesheet" href="/static/style.css?v=21">
 </head>
 <body class="team-detail-page">
 
@@ -73,6 +73,8 @@
                             <th>Result</th>
                             <th>Team Avg</th>
                             <th>Opponent Avg</th>
+                            <th>Reply</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
 
@@ -123,10 +125,24 @@
                                         —
                                     {% endif %}
                                 </td>
+                                <td data-label="Reply">
+                                    {% if item.team_reply_score is not none %}
+                                        {{ "%g"|format(item.team_reply_score) }}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                                <td data-label="Total">
+                                    {% if item.team_total_score is not none %}
+                                        {{ "%g"|format(item.team_total_score) }}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="8">
+                                <td colspan="10">
                                     No debates recorded for this team yet.
                                 </td>
                             </tr>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=19">
+    <link rel="stylesheet" href="/static/style.css?v=22">
 </head>
 <body class="schedule-page">
     <nav>
@@ -79,9 +79,9 @@
                                 <p class="motion"><strong>Motion:</strong> {{ debate.round.motion }}</p>
                             {% endif %}
                             <div class="matchup">
-                                <a class="team-name-lock" href="/teams/{{ debate.team1.id }}">{% if team_emoji(debate.team1.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.team1.name) }}</span>{% endif %}<span class="team-name">{{ debate.team1.name }}</span>{% if debate.team1_side %}<small>({{ debate.team1_side }})</small>{% endif %}</a>
+                                <a class="team-name-lock matchup-team{% if debate.winner %} {% if debate.winner.id == debate.team1.id %}matchup-team-winner{% else %}matchup-team-loser{% endif %}{% endif %}" href="/teams/{{ debate.team1.id }}">{% if team_emoji(debate.team1.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.team1.name) }}</span>{% endif %}<span class="team-name">{{ debate.team1.name }}</span>{% if debate.team1_side %}<small>({{ debate.team1_side }})</small>{% endif %}{% if debate.winner %}<span class="matchup-outcome-badge">{{ "Winner" if debate.winner.id == debate.team1.id else "Lost" }}</span>{% endif %}</a>
                                 <span class="versus">vs</span>
-                                <a class="team-name-lock" href="/teams/{{ debate.team2.id }}">{% if team_emoji(debate.team2.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.team2.name) }}</span>{% endif %}<span class="team-name">{{ debate.team2.name }}</span>{% if debate.team2_side %}<small>({{ debate.team2_side }})</small>{% endif %}</a>
+                                <a class="team-name-lock matchup-team{% if debate.winner %} {% if debate.winner.id == debate.team2.id %}matchup-team-winner{% else %}matchup-team-loser{% endif %}{% endif %}" href="/teams/{{ debate.team2.id }}">{% if team_emoji(debate.team2.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.team2.name) }}</span>{% endif %}<span class="team-name">{{ debate.team2.name }}</span>{% if debate.team2_side %}<small>({{ debate.team2_side }})</small>{% endif %}{% if debate.winner %}<span class="matchup-outcome-badge">{{ "Winner" if debate.winner.id == debate.team2.id else "Lost" }}</span>{% endif %}</a>
                             </div>
                             {% if debate.winner %}<p>Winner: <strong class="team-name-lock">{% if team_emoji(debate.winner.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.winner.name) }}</span>{% endif %}<span class="team-name">{{ debate.winner.name }}</span></strong></p>{% endif %}
                             {% if debate.team1_average_score is not none and debate.team2_average_score is not none %}
@@ -91,6 +91,26 @@
                                     ·
                                     <strong>{{ debate.team2.name }} {{ "%.2f"|format(debate.team2_average_score) }}</strong>
                                 </p>
+                            {% endif %}
+                            {% if debate.winner %}
+                                <div class="debate-score-grid" aria-label="Detailed debate scores">
+                                    {% for result_team, result_data in [(debate.team1, debate.team1_result), (debate.team2, debate.team2_result)] %}
+                                        <section class="debate-score-side">
+                                            <h4>{{ result_team.name }}{% if result_data.reply_score is not none %} <small>{{ debate.team1_side if result_team.id == debate.team1.id else debate.team2_side }}</small>{% endif %}</h4>
+                                            <dl>
+                                                {% for performance in result_data.performances %}
+                                                    <div><dt>{{ performance.role }} <small>({{ performance.speaker_name }})</small>{% if performance.is_swing %} <span class="swing-label">Swing</span>{% endif %}</dt><dd>{{ "%g"|format(performance.score) }}</dd></div>
+                                                {% endfor %}
+                                                {% if result_data.reply_score is not none %}
+                                                    <div class="reply-score"><dt>Reply</dt><dd>{{ "%g"|format(result_data.reply_score) }}</dd></div>
+                                                {% endif %}
+                                                {% if result_data.total_score is not none %}
+                                                    <div class="total-score"><dt>Total debate points</dt><dd>{{ "%g"|format(result_data.total_score) }}</dd></div>
+                                                {% endif %}
+                                            </dl>
+                                        </section>
+                                    {% endfor %}
+                                </div>
                             {% endif %}
                         </article>
                     {% endif %}
@@ -115,9 +135,9 @@
                                 <p class="motion"><strong>Motion:</strong> {{ debate.round.motion }}</p>
                             {% endif %}
                             <div class="matchup">
-                                <a class="team-name-lock" href="/teams/{{ debate.team1.id }}">{% if team_emoji(debate.team1.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.team1.name) }}</span>{% endif %}<span class="team-name">{{ debate.team1.name }}</span></a>
+                                <a class="team-name-lock matchup-team{% if debate.winner %} {% if debate.winner.id == debate.team1.id %}matchup-team-winner{% else %}matchup-team-loser{% endif %}{% endif %}" href="/teams/{{ debate.team1.id }}">{% if team_emoji(debate.team1.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.team1.name) }}</span>{% endif %}<span class="team-name">{{ debate.team1.name }}</span>{% if debate.winner %}<span class="matchup-outcome-badge">{{ "Winner" if debate.winner.id == debate.team1.id else "Lost" }}</span>{% endif %}</a>
                                 <span class="versus">vs</span>
-                                <a class="team-name-lock" href="/teams/{{ debate.team2.id }}">{% if team_emoji(debate.team2.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.team2.name) }}</span>{% endif %}<span class="team-name">{{ debate.team2.name }}</span></a>
+                                <a class="team-name-lock matchup-team{% if debate.winner %} {% if debate.winner.id == debate.team2.id %}matchup-team-winner{% else %}matchup-team-loser{% endif %}{% endif %}" href="/teams/{{ debate.team2.id }}">{% if team_emoji(debate.team2.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.team2.name) }}</span>{% endif %}<span class="team-name">{{ debate.team2.name }}</span>{% if debate.winner %}<span class="matchup-outcome-badge">{{ "Winner" if debate.winner.id == debate.team2.id else "Lost" }}</span>{% endif %}</a>
                             </div>
                             {% if debate.winner %}<p>Winner: <strong class="team-name-lock">{% if team_emoji(debate.winner.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(debate.winner.name) }}</span>{% endif %}<span class="team-name">{{ debate.winner.name }}</span></strong></p>{% endif %}
                         </article>

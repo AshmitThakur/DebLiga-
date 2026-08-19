@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import Float, ForeignKey, String, UniqueConstraint
+from sqlalchemy import Boolean, Float, ForeignKey, String, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -125,16 +125,19 @@ class Debate(Base):
         ForeignKey("teams.id"),
         nullable=True
     )
+    government_reply_score: Mapped[Optional[float]] = mapped_column(
+        Float,
+        nullable=True,
+    )
+    opposition_reply_score: Mapped[Optional[float]] = mapped_column(
+        Float,
+        nullable=True,
+    )
     stage: Mapped[str] = mapped_column(
-    String(30),
-    nullable=False,
-    default="pool"
-)
-    stage: Mapped[str] = mapped_column(
-    String(30),
-    nullable=False,
-    default="pool"
-)
+        String(30),
+        nullable=False,
+        default="pool"
+    )
 
 
 # --------------------
@@ -166,6 +169,12 @@ class SpeakerPerformance(Base):
     score: Mapped[float] = mapped_column(
         Float,
         nullable=False
+    )
+
+    is_swing: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
     )
 
 

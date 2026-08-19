@@ -9,7 +9,7 @@
 
     <link
         rel="stylesheet"
-        href="/static/style.css?v=19"
+        href="/static/style.css?v=22"
     >
 </head>
 
@@ -308,6 +308,25 @@
                 Select a debate first.
             </div>
 
+            <div class="result-swing-editor">
+                <h3>Swing Performances</h3>
+                <p>Add only extra speeches that count for the team result but not individual speaker statistics.</p>
+                <div id="result-swing-performances"></div>
+                <button id="add-swing-performance" type="button">Add Swing Performance</button>
+            </div>
+
+            <div class="result-replies">
+                <label for="government-reply-score" id="government-reply-label">
+                    Government Reply
+                </label>
+                <input id="government-reply-score" type="number" step="0.01" placeholder="Reply score">
+
+                <label for="opposition-reply-score" id="opposition-reply-label">
+                    Opposition Reply
+                </label>
+                <input id="opposition-reply-score" type="number" step="0.01" placeholder="Reply score">
+            </div>
+
             <button type="submit">
                 Save / Update Result
             </button>
@@ -359,7 +378,7 @@
 
 
 <script src="/static/theme.js?v=7"></script>
-<script src="/static/admin.js?v=4"></script>
+<script src="/static/admin.js?v=7"></script>
 
 {% include "_cloudflare_analytics.html" %}
 </body>

@@ -25,7 +25,7 @@ TEAM_EMOJIS_2026 = {
     "Fifth Amendment": "📜",
     "Akali Dinosaurs": "⚖️",
     "Motion Granted": "🔨",
-    "Damsel Inflicting Distress": "🌪️",
+    "Damsel Inflicting Stress": "🌪️",
     "Goodfellas": "🕶️",
     "Rhetoric Rebels": "🔥",
 }
@@ -53,7 +53,7 @@ OFFICIAL_2026_AUCTION = (
     ("Fifth Amendment", "Satyam", "#9b7bc2", (
         ("Hridya", 21500), ("Rahul", 8000), ("Mohit Verma", 15500), ("Ankit", 5000),
     )),
-    ("Damsel Inflicting Distress", "Rachel", "#df8ab4", (
+    ("Damsel Inflicting Stress", "Rachel", "#df8ab4", (
         ("Mudit", 6000), ("Prabhleen", 20000), ("Soumya", 6000), ("Saksham", 18000),
     )),
     ("Motion Granted", "Tvishaa Patnaik", "#58a879", (
@@ -72,14 +72,14 @@ OFFICIAL_POOLS_2026 = {
     "Pool B": (
         ("Akali Dinosaurs", "Guransh's Team"),
         ("Fifth Amendment", "Satyam's Team"),
-        ("Damsel Inflicting Distress", "Rachel's Team"),
+        ("Damsel Inflicting Stress", "Rachel's Team"),
         ("Motion Granted", "Tvishaa's Team"),
     ),
 }
 
 
 OFFICIAL_GROUP_STAGE_2026 = (
-    (1, date(2026, 8, 17), "Pool B", "Damsel Inflicting Distress", "Akali Dinosaurs"),
+    (1, date(2026, 8, 17), "Pool B", "Damsel Inflicting Stress", "Akali Dinosaurs"),
     (2, date(2026, 8, 17), "Pool A", "Goodfellas", "Broken Orators"),
     (3, date(2026, 8, 18), "Pool A", "Mechanised Yappers", "Rhetoric Rebels"),
     (4, date(2026, 8, 18), "Pool B", "Fifth Amendment", "Motion Granted"),
@@ -87,29 +87,31 @@ OFFICIAL_GROUP_STAGE_2026 = (
     (6, date(2026, 8, 19), "Pool B", "Akali Dinosaurs", "Fifth Amendment"),
     (7, date(2026, 8, 20), "Pool A", "Goodfellas", "Rhetoric Rebels"),
     (8, date(2026, 8, 20), "Pool B", "Akali Dinosaurs", "Motion Granted"),
-    (9, date(2026, 8, 20), "Pool B", "Damsel Inflicting Distress", "Fifth Amendment"),
+    (9, date(2026, 8, 20), "Pool B", "Damsel Inflicting Stress", "Fifth Amendment"),
     (10, date(2026, 8, 21), "Pool A", "Broken Orators", "Rhetoric Rebels"),
     (11, date(2026, 8, 21), "Pool A", "Goodfellas", "Mechanised Yappers"),
-    (12, date(2026, 8, 21), "Pool B", "Damsel Inflicting Distress", "Motion Granted"),
+    (12, date(2026, 8, 21), "Pool B", "Damsel Inflicting Stress", "Motion Granted"),
 )
 
 
 # Speaker names here deliberately match the existing registered Speaker rows.
 # The submitted lineup names "Sahil Pawar", "Akshat", and "Rahul" resolve to
 # the already registered Sahil, Akshat Agrawal, and Rahul Batra respectively.
-OFFICIAL_DAY_1_RESULTS_2026 = (
+OFFICIAL_RESULTS_2026 = (
     {
         "fixture_number": 1,
         "government_team": "Akali Dinosaurs",
-        "opposition_team": "Damsel Inflicting Distress",
-        "winner_team": "Damsel Inflicting Distress",
+        "opposition_team": "Damsel Inflicting Stress",
+        "winner_team": "Damsel Inflicting Stress",
+        "government_reply_score": 37.0,
+        "opposition_reply_score": 37.0,
         "performances": (
             ("Akali Dinosaurs", "Sahil", "Prime Minister", 71.0),
             ("Akali Dinosaurs", "Harasees", "Deputy Prime Minister", 73.0),
             ("Akali Dinosaurs", "Guransh", "Government Whip", 74.0),
-            ("Damsel Inflicting Distress", "Rachel", "Leader of Opposition", 73.0),
-            ("Damsel Inflicting Distress", "Mudit", "Deputy Leader of Opposition", 73.5),
-            ("Damsel Inflicting Distress", "Prabhleen", "Opposition Whip", 74.5),
+            ("Damsel Inflicting Stress", "Rachel", "Leader of Opposition", 73.0),
+            ("Damsel Inflicting Stress", "Mudit", "Deputy Leader of Opposition", 73.5),
+            ("Damsel Inflicting Stress", "Prabhleen", "Opposition Whip", 74.5),
         ),
     },
     {
@@ -117,6 +119,8 @@ OFFICIAL_DAY_1_RESULTS_2026 = (
         "government_team": "Broken Orators",
         "opposition_team": "Goodfellas",
         "winner_team": "Broken Orators",
+        "government_reply_score": 37.0,
+        "opposition_reply_score": 37.0,
         "performances": (
             ("Broken Orators", "Akshat Agrawal", "Prime Minister", 73.0),
             ("Broken Orators", "Dhruv", "Deputy Prime Minister", 72.0),
@@ -126,16 +130,82 @@ OFFICIAL_DAY_1_RESULTS_2026 = (
             ("Goodfellas", "Manroop Singh", "Opposition Whip", 72.5),
         ),
     },
+    {
+        "fixture_number": 3,
+        "government_team": "Rhetoric Rebels",
+        "opposition_team": "Mechanised Yappers",
+        "winner_team": "Mechanised Yappers",
+        "government_reply_score": 37.0,
+        "opposition_reply_score": 37.0,
+        "performances": (
+            ("Rhetoric Rebels", "Ramneet", "Prime Minister", 73.0),
+            ("Rhetoric Rebels", "Priyanshi", "Deputy Prime Minister", 72.0),
+            ("Rhetoric Rebels", "Ashmita", "Government Whip", 73.0),
+            ("Mechanised Yappers", "Manav", "Leader of Opposition", 72.0),
+            ("Mechanised Yappers", "Ketan Kumar", "Deputy Leader of Opposition", 72.5),
+            ("Mechanised Yappers", "Lakshit Chaudhary", "Opposition Whip", 74.0),
+        ),
+    },
+    {
+        "fixture_number": 4,
+        "government_team": "Motion Granted",
+        "opposition_team": "Fifth Amendment",
+        "winner_team": "Fifth Amendment",
+        "government_reply_score": 36.0,
+        "opposition_reply_score": 37.0,
+        "performances": (
+            ("Motion Granted", "Tvishaa Patnaik", "Prime Minister", 73.0),
+            ("Motion Granted", "Keshav", "Deputy Prime Minister", 72.5),
+            ("Motion Granted", "Agamjot", "Government Whip", 72.5),
+            ("Fifth Amendment", "Satyam", "Leader of Opposition", 73.0),
+            ("Fifth Amendment", "Mohit Verma", "Deputy Leader of Opposition", 72.0),
+            ("Fifth Amendment", "Hridya", "Opposition Whip", 72.5),
+        ),
+    },
+    {
+        "fixture_number": 5,
+        "government_team": "Mechanised Yappers",
+        "opposition_team": "Broken Orators",
+        "winner_team": "Mechanised Yappers",
+        "government_reply_score": 36.0,
+        "opposition_reply_score": 36.0,
+        "performances": (
+            ("Mechanised Yappers", "Bhavya Issarani", "Prime Minister", 73.5),
+            ("Mechanised Yappers", "Ketan Kumar", "Deputy Prime Minister", 72.5),
+            ("Mechanised Yappers", "Lakshit Chaudhary", "Government Whip", 74.5),
+            ("Broken Orators", "Akshat Agrawal", "Leader of Opposition", 73.0),
+            ("Broken Orators", "Dhruv", "Deputy Leader of Opposition", 72.5),
+            ("Broken Orators", "Mohit Sharma", "Opposition Whip", 74.0),
+        ),
+    },
+    {
+        "fixture_number": 6,
+        "government_team": "Fifth Amendment",
+        "opposition_team": "Akali Dinosaurs",
+        "winner_team": "Fifth Amendment",
+        "government_reply_score": 36.0,
+        "opposition_reply_score": 37.0,
+        "performances": (
+            ("Fifth Amendment", "Ankit", "Prime Minister", 73.0),
+            ("Fifth Amendment", "Mohit Verma", "Deputy Prime Minister", 73.5),
+            ("Fifth Amendment", "Mohit Verma", "Government Whip", 72.0, True),
+            ("Akali Dinosaurs", "Beerdavinder", "Leader of Opposition", 72.0),
+            ("Akali Dinosaurs", "Harasees", "Deputy Leader of Opposition", 72.0),
+            ("Akali Dinosaurs", "Guransh", "Opposition Whip", 72.5),
+        ),
+    },
 )
 
-OFFICIAL_DAY_1_RESULTS_BY_FIXTURE_2026 = {
+OFFICIAL_DAY_1_RESULTS_2026 = OFFICIAL_RESULTS_2026[:2]
+
+OFFICIAL_RESULTS_BY_FIXTURE_2026 = {
     result["fixture_number"]: result
-    for result in OFFICIAL_DAY_1_RESULTS_2026
+    for result in OFFICIAL_RESULTS_2026
 }
 
 
 TEAM_NAME_ALIASES_2026 = {
-    "Damsel Inflicting Stress": "Damsel Inflicting Distress",
+    "Damsel Inflicting Distress": "Damsel Inflicting Stress",
 }
 
 
@@ -153,7 +223,7 @@ def validate_official_group_stage() -> None:
     assert fixtures[0][1:] == (
         date(2026, 8, 17),
         "Pool B",
-        "Damsel Inflicting Distress",
+        "Damsel Inflicting Stress",
         "Akali Dinosaurs",
     )
     assert fixtures[1][1:] == (
@@ -198,7 +268,7 @@ def validate_official_group_stage() -> None:
         "Mechanised Yappers": {18, 19, 21},
         "Rhetoric Rebels": {18, 20, 21},
         "Akali Dinosaurs": {17, 19, 20},
-        "Damsel Inflicting Distress": {17, 20, 21},
+        "Damsel Inflicting Stress": {17, 20, 21},
         "Fifth Amendment": {18, 19, 20},
         "Motion Granted": {18, 20, 21},
     }
@@ -213,7 +283,7 @@ def fixture_details(team1_name: str, team2_name: str):
     pairing = frozenset((team1_name, team2_name))
     for number, fixture_date, pool, team1, team2 in OFFICIAL_GROUP_STAGE_2026:
         if pairing == frozenset((team1, team2)):
-            official_result = OFFICIAL_DAY_1_RESULTS_BY_FIXTURE_2026.get(number)
+            official_result = OFFICIAL_RESULTS_BY_FIXTURE_2026.get(number)
             sides = {}
             if official_result:
                 sides = {
@@ -271,6 +341,24 @@ def _normalise_auction_teams(db: Session) -> None:
     if not auction:
         return
 
+    old_name = "Damsel Inflicting Distress"
+    new_name = "Damsel Inflicting Stress"
+    old_team = next((team for team in auction.teams if team.team_name == old_name), None)
+    new_team = next((team for team in auction.teams if team.team_name == new_name), None)
+    if old_team and new_team and old_team.id != new_team.id:
+        existing_players = {player.player_name.casefold() for player in old_team.players}
+        for player in list(new_team.players):
+            if player.player_name.casefold() not in existing_players:
+                old_team.players.append(AuctionPlayer(
+                    player_name=player.player_name,
+                    price=player.price,
+                ))
+        db.delete(new_team)
+        db.flush()
+        old_team.team_name = new_name
+    elif old_team:
+        old_team.team_name = new_name
+
     official_names = {entry[0] for entry in OFFICIAL_2026_AUCTION}
     for team in list(auction.teams):
         canonical_name = TEAM_NAME_ALIASES_2026.get(team.team_name, team.team_name)
@@ -302,6 +390,76 @@ def _delete_debate(db: Session, debate: Debate) -> None:
     db.delete(debate)
 
 
+def _canonical_team_name(name: str, official_names: set[str]) -> str:
+    """Resolve legacy and case-only variants without creating a replacement row."""
+    cleaned = name.strip()
+    alias = next(
+        (
+            canonical
+            for legacy, canonical in TEAM_NAME_ALIASES_2026.items()
+            if legacy.casefold() == cleaned.casefold()
+        ),
+        None,
+    )
+    if alias:
+        return alias
+    return next(
+        (
+            official_name
+            for official_name in official_names
+            if official_name.casefold() == cleaned.casefold()
+        ),
+        cleaned,
+    )
+
+
+def _team_reference_score(db: Session, team: Team) -> tuple[int, ...]:
+    """Prefer the row that already owns results, performances, and history."""
+    debates = db.query(Debate).filter(
+        (Debate.team1_id == team.id)
+        | (Debate.team2_id == team.id)
+        | (Debate.winner_team_id == team.id)
+    ).all()
+    completed_debates = sum(
+        debate.winner_team_id is not None
+        and team.id in (debate.team1_id, debate.team2_id)
+        for debate in debates
+    )
+    wins = sum(debate.winner_team_id == team.id for debate in debates)
+    performance_count = db.query(SpeakerPerformance).join(
+        Speaker,
+        Speaker.id == SpeakerPerformance.speaker_id,
+    ).filter(
+        Speaker.team_id == team.id
+    ).count()
+    speaker_count = db.query(Speaker).filter(Speaker.team_id == team.id).count()
+    return (
+        completed_debates,
+        wins,
+        performance_count,
+        len(debates),
+        speaker_count,
+        -team.id,
+    )
+
+
+def _merge_team_into(db: Session, duplicate: Team, canonical: Team) -> None:
+    """Move every real Team foreign key before deleting a duplicate row."""
+    db.query(Speaker).filter(Speaker.team_id == duplicate.id).update(
+        {Speaker.team_id: canonical.id}, synchronize_session="fetch"
+    )
+    db.query(Debate).filter(Debate.team1_id == duplicate.id).update(
+        {Debate.team1_id: canonical.id}, synchronize_session="fetch"
+    )
+    db.query(Debate).filter(Debate.team2_id == duplicate.id).update(
+        {Debate.team2_id: canonical.id}, synchronize_session="fetch"
+    )
+    db.query(Debate).filter(Debate.winner_team_id == duplicate.id).update(
+        {Debate.winner_team_id: canonical.id}, synchronize_session="fetch"
+    )
+    db.delete(duplicate)
+
+
 def _sync_pools_and_teams(db: Session):
     pools = {}
     for pool_name in OFFICIAL_POOLS_2026:
@@ -317,36 +475,30 @@ def _sync_pools_and_teams(db: Session):
         for pool_teams in OFFICIAL_POOLS_2026.values()
         for team_name, _ in pool_teams
     }
-    for team in db.query(Team).all():
-        canonical_name = TEAM_NAME_ALIASES_2026.get(team.name, team.name)
-        if canonical_name in official_names:
-            team.name = canonical_name
-
     teams = {}
     for pool_name, pool_teams in OFFICIAL_POOLS_2026.items():
         for team_name, _ in pool_teams:
-            matches = db.query(Team).filter(Team.name == team_name).order_by(Team.id).all()
-            team = matches[0] if matches else Team(name=team_name, pool_id=pools[pool_name].id)
+            matches = [
+                team
+                for team in db.query(Team).order_by(Team.id).all()
+                if _canonical_team_name(team.name, official_names) == team_name
+            ]
+            team = (
+                max(matches, key=lambda candidate: _team_reference_score(db, candidate))
+                if matches
+                else Team(name=team_name, pool_id=pools[pool_name].id)
+            )
             if not matches:
                 db.add(team)
                 db.flush()
+            team.name = team_name
             team.pool_id = pools[pool_name].id
             teams[team_name] = team
 
-            for duplicate in matches[1:]:
-                db.query(Speaker).filter(Speaker.team_id == duplicate.id).update(
-                    {Speaker.team_id: team.id}, synchronize_session=False
-                )
-                db.query(Debate).filter(Debate.team1_id == duplicate.id).update(
-                    {Debate.team1_id: team.id}, synchronize_session=False
-                )
-                db.query(Debate).filter(Debate.team2_id == duplicate.id).update(
-                    {Debate.team2_id: team.id}, synchronize_session=False
-                )
-                db.query(Debate).filter(Debate.winner_team_id == duplicate.id).update(
-                    {Debate.winner_team_id: team.id}, synchronize_session=False
-                )
-                db.delete(duplicate)
+            for duplicate in matches:
+                if duplicate.id != team.id:
+                    _merge_team_into(db, duplicate, team)
+            db.flush()
     return teams, official_names
 
 
@@ -379,6 +531,8 @@ def _merge_speaker_aliases(
             existing = db.query(SpeakerPerformance).filter(
                 SpeakerPerformance.speaker_id == canonical.id,
                 SpeakerPerformance.debate_id == performance.debate_id,
+                SpeakerPerformance.role == performance.role,
+                SpeakerPerformance.is_swing == performance.is_swing,
             ).first()
             if existing:
                 db.delete(performance)
@@ -393,6 +547,31 @@ def _sync_registered_speakers(db: Session, teams) -> None:
     auction = db.query(Auction).filter(Auction.year == 2026).first()
     auction_by_name = {team.team_name: team for team in auction.teams} if auction else {}
     for team_name, team in teams.items():
+        speakers_by_name = {}
+        for speaker in db.query(Speaker).filter(
+            Speaker.team_id == team.id
+        ).order_by(Speaker.id).all():
+            key = speaker.name.strip().casefold()
+            canonical = speakers_by_name.get(key)
+            if canonical is None:
+                speakers_by_name[key] = speaker
+                continue
+            for performance in db.query(SpeakerPerformance).filter(
+                SpeakerPerformance.speaker_id == speaker.id
+            ).all():
+                existing = db.query(SpeakerPerformance).filter(
+                    SpeakerPerformance.speaker_id == canonical.id,
+                    SpeakerPerformance.debate_id == performance.debate_id,
+                    SpeakerPerformance.role == performance.role,
+                    SpeakerPerformance.is_swing == performance.is_swing,
+                ).first()
+                if existing:
+                    db.delete(performance)
+                else:
+                    performance.speaker_id = canonical.id
+            db.delete(speaker)
+        db.flush()
+
         auction_team = auction_by_name.get(team_name)
         if not auction_team:
             continue
@@ -466,14 +645,18 @@ def _sync_group_stage(db: Session, teams):
     return debates_by_number
 
 
-def _sync_official_day_1_results(db: Session, teams, debates_by_number) -> None:
+def _sync_official_results(db: Session, teams, debates_by_number) -> None:
     """Reconcile published results without creating speakers or duplicate scores."""
-    for result in OFFICIAL_DAY_1_RESULTS_2026:
+    for result in OFFICIAL_RESULTS_2026:
         debate = debates_by_number[result["fixture_number"]]
         debate.winner_team_id = teams[result["winner_team"]].id
+        debate.government_reply_score = result["government_reply_score"]
+        debate.opposition_reply_score = result["opposition_reply_score"]
 
         expected = {}
-        for team_name, speaker_name, role, score in result["performances"]:
+        for official_performance in result["performances"]:
+            team_name, speaker_name, role, score = official_performance[:4]
+            is_swing = bool(official_performance[4]) if len(official_performance) > 4 else False
             team = teams[team_name]
             speaker = db.query(Speaker).filter(
                 Speaker.team_id == team.id,
@@ -483,33 +666,36 @@ def _sync_official_day_1_results(db: Session, teams, debates_by_number) -> None:
                 raise RuntimeError(
                     f"Registered speaker {speaker_name!r} is missing from {team_name!r}"
                 )
-            expected[speaker.id] = (role, score)
+            expected[(speaker.id, role, is_swing)] = score
 
-        existing_by_speaker = {}
+        existing_by_key = {}
         for performance in db.query(SpeakerPerformance).filter(
             SpeakerPerformance.debate_id == debate.id
         ).order_by(SpeakerPerformance.id).all():
+            key = (performance.speaker_id, performance.role, performance.is_swing)
             if (
-                performance.speaker_id not in expected
-                or performance.speaker_id in existing_by_speaker
+                key not in expected
+                or key in existing_by_key
             ):
                 db.delete(performance)
                 continue
-            existing_by_speaker[performance.speaker_id] = performance
+            existing_by_key[key] = performance
 
-        for speaker_id, (role, score) in expected.items():
-            performance = existing_by_speaker.get(speaker_id)
+        for (speaker_id, role, is_swing), score in expected.items():
+            performance = existing_by_key.get((speaker_id, role, is_swing))
             if performance is None:
                 performance = SpeakerPerformance(
                     debate_id=debate.id,
                     speaker_id=speaker_id,
                     role=role,
                     score=score,
+                    is_swing=is_swing,
                 )
                 db.add(performance)
             else:
                 performance.role = role
                 performance.score = score
+                performance.is_swing = is_swing
 
 
 def _remove_unreferenced_placeholder_teams(db: Session, official_names) -> None:
@@ -542,7 +728,7 @@ def sync_official_2026_tournament(db: Session) -> None:
     teams, official_names = _sync_pools_and_teams(db)
     _sync_registered_speakers(db, teams)
     debates_by_number = _sync_group_stage(db, teams)
-    _sync_official_day_1_results(db, teams, debates_by_number)
+    _sync_official_results(db, teams, debates_by_number)
     _remove_unreferenced_placeholder_teams(db, official_names)
     db.commit()
 

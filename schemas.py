@@ -32,11 +32,14 @@ class PerformanceInput(BaseModel):
     speaker_id: int
     role: str
     score: float
+    is_swing: bool = False
 
 
 class ResultCreate(BaseModel):
     winner_team_id: int
     performances: list[PerformanceInput]
+    government_reply_score: float | None = None
+    opposition_reply_score: float | None = None
 
 class TeamUpdate(BaseModel):
     name: str

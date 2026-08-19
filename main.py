@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from database import SessionLocal, engine, get_db
+from database import SessionLocal, engine, get_db, migrate_existing_schema
 
 from models import (
     Base,
@@ -56,6 +56,7 @@ app = FastAPI(
 Base.metadata.create_all(
     bind=engine
 )
+migrate_existing_schema(engine)
 
 # Reuse current rows while enforcing the published 2026 pools and group draw.
 with SessionLocal() as seed_db:
@@ -697,19 +698,30 @@ def submit_result(
         )
 
     validated = []
-    used_speakers = set()
+    normal_speakers = set()
+    performance_keys = set()
 
     for performance in data.performances:
 
-        if performance.speaker_id in used_speakers:
+        performance_key = (
+            performance.speaker_id,
+            performance.role.strip().casefold(),
+            performance.is_swing,
+        )
+        if performance_key in performance_keys:
             raise HTTPException(
                 status_code=400,
-                detail="Same speaker entered more than once"
+                detail="Duplicate speaker performance entered"
+            )
+        if not performance.is_swing and performance.speaker_id in normal_speakers:
+            raise HTTPException(
+                status_code=400,
+                detail="Same speaker entered more than once as a normal performance"
             )
 
-        used_speakers.add(
-            performance.speaker_id
-        )
+        performance_keys.add(performance_key)
+        if not performance.is_swing:
+            normal_speakers.add(performance.speaker_id)
 
         speaker = db.get(
             Speaker,
@@ -767,6 +779,8 @@ def submit_result(
     debate.winner_team_id = (
         data.winner_team_id
     )
+    debate.government_reply_score = data.government_reply_score
+    debate.opposition_reply_score = data.opposition_reply_score
 
     db.query(
         SpeakerPerformance
@@ -783,7 +797,8 @@ def submit_result(
                 debate_id=debate.id,
                 speaker_id=speaker.id,
                 role=performance.role,
-                score=performance.score
+                score=performance.score,
+                is_swing=performance.is_swing,
             )
         )
 
@@ -811,6 +826,8 @@ def speaker_rankings(
 
     performances = db.query(
         SpeakerPerformance
+    ).filter(
+        SpeakerPerformance.is_swing.is_(False)
     ).all()
 
     ranking_data = {}
@@ -931,6 +948,95 @@ def debate_team_averages(db: Session, debate: Debate):
     }
 
 
+def debate_side_team_ids(db: Session, debate: Debate, fixture=None):
+    """Resolve Government/Opposition from official metadata or entered roles."""
+    side_ids = {"Government": None, "Opposition": None}
+    teams = {
+        team.id: team
+        for team in db.query(Team).filter(
+            Team.id.in_((debate.team1_id, debate.team2_id))
+        )
+    }
+    if fixture:
+        for team_id, team in teams.items():
+            if team.name == fixture.get("government_team"):
+                side_ids["Government"] = team_id
+            elif team.name == fixture.get("opposition_team"):
+                side_ids["Opposition"] = team_id
+
+    if None in side_ids.values():
+        government_roles = {"Prime Minister", "Deputy Prime Minister", "Government Whip"}
+        opposition_roles = {
+            "Leader of Opposition",
+            "Deputy Leader of Opposition",
+            "Opposition Whip",
+        }
+        rows = db.query(SpeakerPerformance.role, Speaker.team_id).join(
+            Speaker,
+            Speaker.id == SpeakerPerformance.speaker_id,
+        ).filter(
+            SpeakerPerformance.debate_id == debate.id
+        ).all()
+        for role, team_id in rows:
+            if role in government_roles:
+                side_ids["Government"] = team_id
+            elif role in opposition_roles:
+                side_ids["Opposition"] = team_id
+    return side_ids
+
+
+def debate_result_breakdown(db: Session, debate: Debate, fixture=None):
+    """Return constructive and reply scores separately, grouped by team."""
+    role_order = {
+        "Prime Minister": 0,
+        "Leader of Opposition": 0,
+        "Deputy Prime Minister": 1,
+        "Deputy Leader of Opposition": 1,
+        "Government Whip": 2,
+        "Opposition Whip": 2,
+    }
+    breakdown = {
+        debate.team1_id: {"performances": [], "reply_score": None, "total_score": None},
+        debate.team2_id: {"performances": [], "reply_score": None, "total_score": None},
+    }
+    rows = db.query(SpeakerPerformance, Speaker).join(
+        Speaker,
+        Speaker.id == SpeakerPerformance.speaker_id,
+    ).filter(
+        SpeakerPerformance.debate_id == debate.id
+    ).all()
+    for performance, speaker in rows:
+        if speaker.team_id not in breakdown:
+            continue
+        breakdown[speaker.team_id]["performances"].append({
+            "speaker_id": speaker.id,
+            "speaker_name": speaker.name,
+            "role": performance.role,
+            "score": performance.score,
+            "is_swing": performance.is_swing,
+        })
+
+    for details in breakdown.values():
+        details["performances"].sort(
+            key=lambda item: (role_order.get(item["role"], 99), item["speaker_name"].casefold())
+        )
+
+    side_ids = debate_side_team_ids(db, debate, fixture)
+    if side_ids["Government"] in breakdown:
+        breakdown[side_ids["Government"]]["reply_score"] = debate.government_reply_score
+    if side_ids["Opposition"] in breakdown:
+        breakdown[side_ids["Opposition"]]["reply_score"] = debate.opposition_reply_score
+
+    for details in breakdown.values():
+        reply_score = details["reply_score"]
+        if details["performances"] and reply_score is not None:
+            details["total_score"] = round(
+                sum(item["score"] for item in details["performances"]) + reply_score,
+                2,
+            )
+    return breakdown
+
+
 # ==================================================
 # PUBLIC WEBSITE PAGES
 # ==================================================
@@ -1048,6 +1154,16 @@ def schedule_page(
             else None
         )
         team_averages = debate_team_averages(db, debate)
+        result_breakdown = debate_result_breakdown(db, debate, fixture)
+        side_ids = debate_side_team_ids(db, debate, fixture)
+        team1_side = next(
+            (side for side, team_id in side_ids.items() if team_id == debate.team1_id),
+            None,
+        )
+        team2_side = next(
+            (side for side, team_id in side_ids.items() if team_id == debate.team2_id),
+            None,
+        )
 
         schedule.append({
             "id": debate.id,
@@ -1063,10 +1179,12 @@ def schedule_page(
             ),
             "pool": pool,
             "fixture": fixture,
-            "team1_side": fixture.get("team1_side") if fixture else None,
-            "team2_side": fixture.get("team2_side") if fixture else None,
+            "team1_side": team1_side,
+            "team2_side": team2_side,
             "team1_average_score": team_averages.get(debate.team1_id),
             "team2_average_score": team_averages.get(debate.team2_id),
+            "team1_result": result_breakdown[debate.team1_id],
+            "team2_result": result_breakdown[debate.team2_id],
             "status": (
                 "Completed"
                 if winner
@@ -1272,6 +1390,8 @@ def team_detail_page(
             if debate.stage == "pool" and opponent
             else None
         )
+        result_breakdown = debate_result_breakdown(db, debate, fixture)
+        side_ids = debate_side_team_ids(db, debate, fixture)
         debate_number = (
             fixture["number"]
             if fixture
@@ -1288,7 +1408,10 @@ def team_detail_page(
                 else debate.stage.replace("_", " ").title()
             ),
             "fixture": fixture,
-            "side": fixture.get("team1_side") if fixture else None,
+            "side": next(
+                (side for side, side_team_id in side_ids.items() if side_team_id == team.id),
+                None,
+            ),
             "debate_number": debate_number,
             "scheduled_time": (
                 fixture.get("time_label")
@@ -1309,7 +1432,15 @@ def team_detail_page(
             "team_average_score":
                 team_average,
             "opponent_average_score":
-                opponent_average
+                opponent_average,
+            "team_reply_score": result_breakdown[team.id]["reply_score"],
+            "opponent_reply_score": (
+                result_breakdown[opponent.id]["reply_score"] if opponent else None
+            ),
+            "team_total_score": result_breakdown[team.id]["total_score"],
+            "opponent_total_score": (
+                result_breakdown[opponent.id]["total_score"] if opponent else None
+            ),
         })
 
     history.sort(key=lambda item: (
@@ -1377,7 +1508,8 @@ def speaker_detail_page(
         SpeakerPerformance
     ).filter(
         SpeakerPerformance.speaker_id
-        == speaker.id
+        == speaker.id,
+        SpeakerPerformance.is_swing.is_(False),
     ).all()
 
     history = []
@@ -1693,6 +1825,8 @@ def clear_debate_result(
     )
 
     debate.winner_team_id = None
+    debate.government_reply_score = None
+    debate.opposition_reply_score = None
 
 
 def knockouts_exist(
@@ -2214,41 +2348,30 @@ def get_debate_result(
         else None
     )
     team_averages = debate_team_averages(db, debate)
+    result_breakdown = debate_result_breakdown(db, debate, fixture)
+    side_ids = debate_side_team_ids(db, debate, fixture)
 
     return {
         "debate_id": debate.id,
         "winner_team_id": debate.winner_team_id,
-        "government_team_id": (
-            next(
-                (
-                    team.id
-                    for team in (team1, team2)
-                    if team and fixture
-                    and team.name == fixture.get("government_team")
-                ),
-                None,
-            )
-        ),
-        "opposition_team_id": (
-            next(
-                (
-                    team.id
-                    for team in (team1, team2)
-                    if team and fixture
-                    and team.name == fixture.get("opposition_team")
-                ),
-                None,
-            )
-        ),
+        "government_reply_score": debate.government_reply_score,
+        "opposition_reply_score": debate.opposition_reply_score,
+        "government_team_id": side_ids["Government"],
+        "opposition_team_id": side_ids["Opposition"],
         "team_averages": {
             str(team_id): average
             for team_id, average in team_averages.items()
+        },
+        "team_total_scores": {
+            str(team_id): details["total_score"]
+            for team_id, details in result_breakdown.items()
         },
         "performances": [
             {
                 "speaker_id": performance.speaker_id,
                 "role": performance.role,
-                "score": performance.score
+                "score": performance.score,
+                "is_swing": performance.is_swing,
             }
             for performance in performances
         ]
@@ -2898,6 +3021,16 @@ def schedule_api(
             else None
         )
         team_averages = debate_team_averages(db, debate)
+        result_breakdown = debate_result_breakdown(db, debate, fixture)
+        side_ids = debate_side_team_ids(db, debate, fixture)
+        team1_side = next(
+            (side for side, team_id in side_ids.items() if team_id == debate.team1_id),
+            None,
+        )
+        team2_side = next(
+            (side for side, team_id in side_ids.items() if team_id == debate.team2_id),
+            None,
+        )
 
         schedule.append({
             "debate_id": debate.id,
@@ -2926,15 +3059,21 @@ def schedule_api(
                 "id": team1.id,
                 "name": team1.name,
                 "emoji": TEAM_EMOJIS_2026.get(team1.name),
-                "side": fixture.get("team1_side") if fixture else None,
+                "side": team1_side,
                 "average_score": team_averages.get(team1.id),
+                "reply_score": result_breakdown[team1.id]["reply_score"],
+                "total_score": result_breakdown[team1.id]["total_score"],
+                "performances": result_breakdown[team1.id]["performances"],
             } if team1 else None,
             "team2": {
                 "id": team2.id,
                 "name": team2.name,
                 "emoji": TEAM_EMOJIS_2026.get(team2.name),
-                "side": fixture.get("team2_side") if fixture else None,
+                "side": team2_side,
                 "average_score": team_averages.get(team2.id),
+                "reply_score": result_breakdown[team2.id]["reply_score"],
+                "total_score": result_breakdown[team2.id]["total_score"],
+                "performances": result_breakdown[team2.id]["performances"],
             } if team2 else None,
             "room": debate.room,
             "winner": {
