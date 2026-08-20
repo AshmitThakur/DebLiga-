@@ -73,6 +73,9 @@ class OfficialTournamentDataTests(unittest.TestCase):
             connection.execute(text(
                 "CREATE TABLE speaker_performances (id INTEGER PRIMARY KEY)"
             ))
+            connection.execute(text(
+                "CREATE TABLE speakers (id INTEGER PRIMARY KEY)"
+            ))
 
         migrate_existing_schema(legacy_engine)
         migrate_existing_schema(legacy_engine)
@@ -88,6 +91,11 @@ class OfficialTournamentDataTests(unittest.TestCase):
             for column in inspect(legacy_engine).get_columns("speaker_performances")
         }
         self.assertIn("is_swing", performance_column_names)
+        speaker_column_names = {
+            column["name"]
+            for column in inspect(legacy_engine).get_columns("speakers")
+        }
+        self.assertIn("active", speaker_column_names)
         legacy_engine.dispose()
 
     def test_database_sync_is_complete_and_idempotent(self):
@@ -98,7 +106,7 @@ class OfficialTournamentDataTests(unittest.TestCase):
         self.assertEqual(len(teams), 8)
         self.assertEqual(len(debates), 12)
         self.assertEqual(self.db.query(Speaker).count(), 40)
-        self.assertEqual(self.db.query(SpeakerPerformance).count(), 36)
+        self.assertEqual(self.db.query(SpeakerPerformance).count(), 54)
 
         daily_counts = Counter()
         pool_counts = Counter()
@@ -477,6 +485,123 @@ class OfficialTournamentDataTests(unittest.TestCase):
         )
         self.assertEqual(self.db.query(Speaker).count(), speaker_count)
 
+    def test_day_four_results_roster_and_idempotency(self):
+        debates = {
+            number: debate
+            for debate, number in self.db.query(Debate, Round.number).join(Round).filter(
+                Round.number.in_([7, 8, 9])
+            ).all()
+        }
+        teams = {team.name: team for team in self.db.query(Team).all()}
+        expected = Counter({
+            (7, "Rhetoric Rebels", "Naman", "Prime Minister", 73.0): 1,
+            (7, "Rhetoric Rebels", "Priyanshi", "Deputy Prime Minister", 74.5): 1,
+            (7, "Rhetoric Rebels", "Ashmita", "Government Whip", 73.5): 1,
+            (7, "Goodfellas", "Vallari", "Leader of Opposition", 72.5): 1,
+            (7, "Goodfellas", "Rahul Batra", "Deputy Leader of Opposition", 74.5): 1,
+            (7, "Goodfellas", "Manroop Singh", "Opposition Whip", 73.0): 1,
+            (8, "Motion Granted", "Sanjeevan", "Prime Minister", 71.5): 1,
+            (8, "Motion Granted", "Keshav", "Deputy Prime Minister", 71.0): 1,
+            (8, "Motion Granted", "Agamjot", "Government Whip", 72.0): 1,
+            (8, "Akali Dinosaurs", "Sahil", "Leader of Opposition", 72.0): 1,
+            (8, "Akali Dinosaurs", "Vikramjit", "Deputy Leader of Opposition", 72.5): 1,
+            (8, "Akali Dinosaurs", "Guransh", "Opposition Whip", 73.5): 1,
+            (9, "Fifth Amendment", "Rahul", "Prime Minister", 73.0): 1,
+            (9, "Fifth Amendment", "Satyam", "Deputy Prime Minister", 73.5): 1,
+            (9, "Fifth Amendment", "Hridya", "Government Whip", 72.5): 1,
+            (9, "Damsel Inflicting Stress", "Soumya", "Leader of Opposition", 72.0): 1,
+            (9, "Damsel Inflicting Stress", "Saksham", "Deputy Leader of Opposition", 74.5): 1,
+            (9, "Damsel Inflicting Stress", "Prabhleen", "Opposition Whip", 74.5): 1,
+        })
+        actual = Counter()
+        for fixture_number, debate in debates.items():
+            for performance, speaker, team in self.db.query(
+                SpeakerPerformance, Speaker, Team
+            ).join(
+                Speaker, Speaker.id == SpeakerPerformance.speaker_id
+            ).join(
+                Team, Team.id == Speaker.team_id
+            ).filter(SpeakerPerformance.debate_id == debate.id):
+                self.assertFalse(performance.is_swing)
+                actual[(
+                    fixture_number,
+                    team.name,
+                    speaker.name,
+                    performance.role,
+                    performance.score,
+                )] += 1
+        self.assertEqual(actual, expected)
+
+        expected_results = {
+            7: ("Rhetoric Rebels", "Rhetoric Rebels", "Goodfellas", 37.0, 36.0,
+                {"Rhetoric Rebels": 258.0, "Goodfellas": 256.0}),
+            8: ("Akali Dinosaurs", "Motion Granted", "Akali Dinosaurs", 35.0, 35.0,
+                {"Motion Granted": 249.5, "Akali Dinosaurs": 253.0}),
+            9: ("Damsel Inflicting Stress", "Fifth Amendment", "Damsel Inflicting Stress", 38.0, 37.0,
+                {"Fifth Amendment": 257.0, "Damsel Inflicting Stress": 258.0}),
+        }
+        for fixture_number, expected_result in expected_results.items():
+            winner, government, opposition, government_reply, opposition_reply, totals = expected_result
+            payload = get_debate_result(debates[fixture_number].id, db=self.db)
+            self.assertEqual(self.db.get(Team, payload["winner_team_id"]).name, winner)
+            self.assertEqual(self.db.get(Team, payload["government_team_id"]).name, government)
+            self.assertEqual(self.db.get(Team, payload["opposition_team_id"]).name, opposition)
+            self.assertEqual(payload["government_reply_score"], government_reply)
+            self.assertEqual(payload["opposition_reply_score"], opposition_reply)
+            self.assertEqual(
+                {teams[name].id: score for name, score in totals.items()},
+                {int(team_id): score for team_id, score in payload["team_total_scores"].items()},
+            )
+
+        motion_granted = teams["Motion Granted"]
+        sanjeevan = self.db.query(Speaker).filter(
+            Speaker.team_id == motion_granted.id,
+            Speaker.name == "Sanjeevan",
+        ).one()
+        self.assertTrue(sanjeevan.active)
+        self.assertEqual(self.db.query(Speaker).filter(
+            Speaker.team_id == motion_granted.id,
+            Speaker.name == "Simran",
+            Speaker.active.is_(True),
+        ).count(), 0)
+        auction_roster = self.db.query(AuctionTeam).filter(
+            AuctionTeam.team_name == "Motion Granted"
+        ).one()
+        self.assertIn("Sanjeevan", {player.player_name for player in auction_roster.players})
+        self.assertNotIn("Simran", {player.player_name for player in auction_roster.players})
+        rankings = {row["speaker_name"]: row for row in speaker_rankings(db=self.db)}
+        self.assertEqual(
+            (rankings["Sanjeevan"]["average_score"], rankings["Sanjeevan"]["debates"]),
+            (71.5, 1),
+        )
+
+        future_debates = self.db.query(Debate).join(Round).filter(
+            Round.number.in_([10, 11, 12])
+        ).all()
+        self.assertTrue(all(debate.winner_team_id is None for debate in future_debates))
+        self.assertEqual(self.db.query(SpeakerPerformance).filter(
+            SpeakerPerformance.debate_id.in_([debate.id for debate in future_debates])
+        ).count(), 0)
+        self.assertEqual(self.db.query(Debate).filter(Debate.stage == "pool").count(), 12)
+        self.assertEqual(self.db.query(Team).filter(
+            Team.name == "Damsel Inflicting Stress"
+        ).count(), 1)
+
+        day_four_ids = {
+            performance.id
+            for performance in self.db.query(SpeakerPerformance).filter(
+                SpeakerPerformance.debate_id.in_([debate.id for debate in debates.values()])
+            )
+        }
+        sync_official_2026_tournament(self.db)
+        sync_official_2026_tournament(self.db)
+        self.assertEqual(day_four_ids, {
+            performance.id
+            for performance in self.db.query(SpeakerPerformance).filter(
+                SpeakerPerformance.debate_id.in_([debate.id for debate in debates.values()])
+            )
+        })
+
     def test_completed_result_ui_classes_are_data_driven(self):
         def request_for(path):
             return Request({
@@ -496,16 +621,16 @@ class OfficialTournamentDataTests(unittest.TestCase):
             request_for("/schedule"),
             db=self.db,
         ).body.decode()
-        self.assertEqual(schedule_html.count("matchup-team-winner"), 6)
-        self.assertEqual(schedule_html.count("matchup-team-loser"), 6)
-        self.assertEqual(schedule_html.count(">Winner</span>"), 6)
-        self.assertEqual(schedule_html.count(">Lost</span>"), 6)
-        self.assertEqual(schedule_html.count('class="reply-score"'), 12)
+        self.assertEqual(schedule_html.count("matchup-team-winner"), 9)
+        self.assertEqual(schedule_html.count("matchup-team-loser"), 9)
+        self.assertEqual(schedule_html.count(">Winner</span>"), 9)
+        self.assertEqual(schedule_html.count(">Lost</span>"), 9)
+        self.assertEqual(schedule_html.count('class="reply-score"'), 18)
         self.assertIn("Total debate points", schedule_html)
         self.assertIn('class="swing-label">Swing</span>', schedule_html)
         self.assertIn("Mohit Verma", schedule_html)
 
-        pending_start = schedule_html.index("Debate 7")
+        pending_start = schedule_html.index("Debate 10")
         pending_end = schedule_html.index("</article>", pending_start)
         pending_card = schedule_html[pending_start:pending_end]
         self.assertNotIn("matchup-team-winner", pending_card)
@@ -526,7 +651,7 @@ class OfficialTournamentDataTests(unittest.TestCase):
         self.assertIn("fixture-row result-won", damsel_html)
         self.assertIn("fixture-row result-lost", akali_html)
         self.assertIn("fixture-row result-pending", damsel_html)
-        self.assertIn("fixture-row result-pending", akali_html)
+        self.assertNotIn("fixture-row result-pending", akali_html)
 
         standings_html = standings_page(
             request_for("/standings"),
@@ -535,7 +660,7 @@ class OfficialTournamentDataTests(unittest.TestCase):
         self.assertIn('class="standings-wins"', standings_html)
         self.assertIn('class="standings-losses"', standings_html)
 
-    def test_day_three_standings_and_speaker_rankings_are_derived(self):
+    def test_day_four_standings_and_speaker_rankings_are_derived(self):
         pools = {pool.name: pool for pool in self.db.query(Pool).all()}
         pool_a = {
             row["team_name"]: row
@@ -549,12 +674,12 @@ class OfficialTournamentDataTests(unittest.TestCase):
         expected_records = {
             "Mechanised Yappers": (2, 2, 0),
             "Broken Orators": (2, 1, 1),
-            "Goodfellas": (1, 0, 1),
-            "Rhetoric Rebels": (1, 0, 1),
-            "Fifth Amendment": (2, 2, 0),
-            "Damsel Inflicting Stress": (1, 1, 0),
-            "Akali Dinosaurs": (2, 0, 2),
-            "Motion Granted": (1, 0, 1),
+            "Goodfellas": (2, 0, 2),
+            "Rhetoric Rebels": (2, 1, 1),
+            "Fifth Amendment": (3, 2, 1),
+            "Damsel Inflicting Stress": (2, 2, 0),
+            "Akali Dinosaurs": (3, 1, 2),
+            "Motion Granted": (2, 0, 2),
         }
         for team_name, expected in expected_records.items():
             pool_table = pool_a if team_name in pool_a else pool_b
@@ -566,8 +691,8 @@ class OfficialTournamentDataTests(unittest.TestCase):
 
         self.assertEqual(pool_a["Mechanised Yappers"]["average_team_score"], 73.17)
         self.assertEqual(pool_a["Broken Orators"]["average_team_score"], 73.08)
-        self.assertEqual(pool_b["Fifth Amendment"]["average_team_score"], 72.67)
-        self.assertEqual(pool_b["Akali Dinosaurs"]["average_team_score"], 72.42)
+        self.assertEqual(pool_b["Fifth Amendment"]["average_team_score"], 72.78)
+        self.assertEqual(pool_b["Akali Dinosaurs"]["average_team_score"], 72.5)
 
         overall = {row["team_name"]: row for row in standings(db=self.db)}
         self.assertEqual(len(overall), 8)
@@ -575,11 +700,11 @@ class OfficialTournamentDataTests(unittest.TestCase):
             row["speaker_name"]: row
             for row in speaker_rankings(db=self.db)
         }
-        self.assertEqual(len(rankings), 27)
+        self.assertEqual(len(rankings), 34)
         self.assertEqual(rankings["Prabhleen"]["average_score"], 74.5)
         self.assertEqual(rankings["Mudit"]["average_score"], 73.5)
-        self.assertEqual(rankings["Rahul Batra"]["average_score"], 71.5)
-        expected_day_three_rankings = {
+        self.assertEqual(rankings["Rahul Batra"]["average_score"], 73.0)
+        expected_day_four_rankings = {
             "Bhavya Issarani": (73.5, 1),
             "Ketan Kumar": (72.5, 2),
             "Lakshit Chaudhary": (74.25, 2),
@@ -590,9 +715,13 @@ class OfficialTournamentDataTests(unittest.TestCase):
             "Mohit Verma": (72.75, 2),
             "Beerdavinder": (72.0, 1),
             "Harasees": (72.5, 2),
-            "Guransh": (73.25, 2),
+            "Guransh": (73.33, 3),
+            "Sanjeevan": (71.5, 1),
+            "Vikramjit": (72.5, 1),
+            "Saksham": (74.5, 1),
+            "Soumya": (72.0, 1),
         }
-        for speaker_name, (average, debates) in expected_day_three_rankings.items():
+        for speaker_name, (average, debates) in expected_day_four_rankings.items():
             self.assertEqual(rankings[speaker_name]["average_score"], average)
             self.assertEqual(rankings[speaker_name]["debates"], debates)
 
@@ -671,7 +800,7 @@ class OfficialTournamentDataTests(unittest.TestCase):
         self.db.add(migrated_speaker)
         self.db.flush()
 
-        future = self.db.query(Debate).join(Round).filter(Round.number == 9).one()
+        future = self.db.query(Debate).join(Round).filter(Round.number == 12).one()
         if future.team1_id == historical.id:
             future.team1_id = duplicate.id
         else:
@@ -752,7 +881,7 @@ class OfficialTournamentDataTests(unittest.TestCase):
                 standings_by_team["Damsel Inflicting Stress"]["losses"],
                 standings_by_team["Damsel Inflicting Stress"]["average_team_score"],
             ),
-            (1, 1, 0, 73.67),
+            (2, 2, 0, 73.67),
         )
         self.assertEqual(
             self.db.query(AuctionTeam).filter(
@@ -770,7 +899,7 @@ class OfficialTournamentDataTests(unittest.TestCase):
             performance.id
             for performance in self.db.query(SpeakerPerformance).filter(
                 SpeakerPerformance.debate_id.in_(
-                    [debate_ids[number] for number in (1, 2, 3, 4, 5, 6)]
+                    [debate_ids[number] for number in range(1, 10)]
                 )
             )
         }
@@ -799,7 +928,7 @@ class OfficialTournamentDataTests(unittest.TestCase):
         ])
         debate1.winner_team_id = debate1.team2_id
 
-        future = self.db.get(Debate, debate_ids[7])
+        future = self.db.get(Debate, debate_ids[10])
         future.winner_team_id = future.team1_id
         future_speaker = self.db.query(Speaker).filter(
             Speaker.team_id == future.team1_id
@@ -829,7 +958,7 @@ class OfficialTournamentDataTests(unittest.TestCase):
                 performance.id
                 for performance in self.db.query(SpeakerPerformance).filter(
                     SpeakerPerformance.debate_id.in_(
-                        [debate_ids[number] for number in (1, 2, 3, 4, 5, 6)]
+                        [debate_ids[number] for number in range(1, 10)]
                     )
                 )
             },
@@ -847,7 +976,7 @@ class OfficialTournamentDataTests(unittest.TestCase):
                 Team.name == "Damsel Inflicting Stress"
             ).one().id,
         )
-        future = self.db.get(Debate, debate_ids[7])
+        future = self.db.get(Debate, debate_ids[10])
         self.assertEqual(future.winner_team_id, future.team1_id)
         future_performance = self.db.get(SpeakerPerformance, future_performance_id)
         self.assertIsNotNone(future_performance)
@@ -889,6 +1018,57 @@ class OfficialTournamentDataTests(unittest.TestCase):
             self.assertIn(full_name, names)
             self.assertNotIn("Mohit", names)
 
+    def test_sanjeevan_replacement_preserves_historical_simran_data(self):
+        team = self.db.query(Team).filter(Team.name == "Motion Granted").one()
+        sanjeevan = self.db.query(Speaker).filter(
+            Speaker.team_id == team.id,
+            Speaker.name == "Sanjeevan",
+        ).one()
+        sanjeevan.name = "Simran"
+        auction_team = self.db.query(AuctionTeam).filter(
+            AuctionTeam.team_name == "Motion Granted"
+        ).one()
+        auction_sanjeevan = next(
+            player for player in auction_team.players if player.player_name == "Sanjeevan"
+        )
+        auction_sanjeevan.player_name = "Simran"
+        future = self.db.query(Debate).join(Round).filter(Round.number == 12).one()
+        historical = SpeakerPerformance(
+            debate_id=future.id,
+            speaker_id=sanjeevan.id,
+            role="Historical reserve appearance",
+            score=70.0,
+        )
+        self.db.add(historical)
+        self.db.commit()
+        historical_id = historical.id
+        simran_id = sanjeevan.id
+
+        sync_official_2026_tournament(self.db)
+        sync_official_2026_tournament(self.db)
+
+        simran = self.db.get(Speaker, simran_id)
+        self.assertEqual(simran.name, "Simran")
+        self.assertFalse(simran.active)
+        self.assertEqual(
+            self.db.get(SpeakerPerformance, historical_id).speaker_id,
+            simran.id,
+        )
+        current_sanjeevan = self.db.query(Speaker).filter(
+            Speaker.team_id == team.id,
+            Speaker.name == "Sanjeevan",
+        ).one()
+        self.assertTrue(current_sanjeevan.active)
+        self.assertNotEqual(current_sanjeevan.id, simran.id)
+        self.assertEqual(self.db.query(Speaker).filter(
+            Speaker.team_id == team.id,
+            Speaker.name == "Sanjeevan",
+        ).count(), 1)
+        self.assertEqual(
+            {player.player_name for player in auction_team.players},
+            {"Agamjot", "Keshav", "Shaurya", "Sanjeevan"},
+        )
+
     def test_guransh_duplicate_merge_preserves_performances(self):
         team = self.db.query(Team).filter(Team.name == "Akali Dinosaurs").one()
         canonical = self.db.query(Speaker).filter(
@@ -898,19 +1078,29 @@ class OfficialTournamentDataTests(unittest.TestCase):
         duplicate = Speaker(name="Gurnash", team_id=team.id)
         self.db.add(duplicate)
         self.db.flush()
-        debates = self.db.query(Debate).join(Round).filter(
-            ((Debate.team1_id == team.id) | (Debate.team2_id == team.id)),
-            Round.number.in_([6, 8]),
-        ).order_by(Round.number).all()
+        official_debate = self.db.query(Debate).join(Round).filter(
+            Round.number == 6
+        ).one()
+        extra_round = Round(number=99, motion="Historical exhibition")
+        self.db.add(extra_round)
+        self.db.flush()
+        extra_debate = Debate(
+            round_id=extra_round.id,
+            team1_id=team.id,
+            team2_id=self.db.query(Team).filter(Team.id != team.id).first().id,
+            stage="semifinal",
+        )
+        self.db.add(extra_debate)
+        self.db.flush()
         self.db.add_all([
             SpeakerPerformance(
-                debate_id=debates[0].id,
+                debate_id=official_debate.id,
                 speaker_id=canonical.id,
                 role="Prime Minister",
                 score=75,
             ),
             SpeakerPerformance(
-                debate_id=debates[1].id,
+                debate_id=extra_debate.id,
                 speaker_id=duplicate.id,
                 role="Deputy Prime Minister",
                 score=77,
@@ -927,8 +1117,8 @@ class OfficialTournamentDataTests(unittest.TestCase):
         performances = self.db.query(SpeakerPerformance).filter(
             SpeakerPerformance.speaker_id == canonical.id
         ).all()
-        self.assertEqual(len(performances), 3)
-        self.assertEqual({performance.score for performance in performances}, {72.5, 74, 77})
+        self.assertEqual(len(performances), 4)
+        self.assertEqual({performance.score for performance in performances}, {72.5, 73.5, 74, 77})
 
 
 if __name__ == "__main__":

@@ -55,6 +55,16 @@ def migrate_existing_schema(bind) -> None:
                     "ADD COLUMN is_swing BOOLEAN NOT NULL DEFAULT 0"
                 ))
 
+        if "speakers" in table_names:
+            speaker_columns = {
+                column["name"] for column in inspector.get_columns("speakers")
+            }
+            if "active" not in speaker_columns:
+                connection.execute(text(
+                    "ALTER TABLE speakers "
+                    "ADD COLUMN active BOOLEAN NOT NULL DEFAULT 1"
+                ))
+
 
 SessionLocal = sessionmaker(
     bind=engine,

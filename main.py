@@ -422,6 +422,8 @@ def get_speakers(
 
     speakers = db.query(
         Speaker
+    ).filter(
+        Speaker.active.is_(True)
     ).all()
 
     return [
@@ -1284,7 +1286,8 @@ def team_detail_page(
     speakers = db.query(
         Speaker
     ).filter(
-        Speaker.team_id == team.id
+        Speaker.team_id == team.id,
+        Speaker.active.is_(True),
     ).all()
 
     pool = db.get(

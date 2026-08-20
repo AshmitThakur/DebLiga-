@@ -68,6 +68,12 @@ class Speaker(Base):
         nullable=False
     )
 
+    active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+    )
+
 
 # --------------------
 # ROUND
@@ -125,6 +131,7 @@ class Debate(Base):
         ForeignKey("teams.id"),
         nullable=True
     )
+
     government_reply_score: Mapped[Optional[float]] = mapped_column(
         Float,
         nullable=True,

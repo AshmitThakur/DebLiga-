@@ -57,7 +57,7 @@ OFFICIAL_2026_AUCTION = (
         ("Mudit", 6000), ("Prabhleen", 20000), ("Soumya", 6000), ("Saksham", 18000),
     )),
     ("Motion Granted", "Tvishaa Patnaik", "#58a879", (
-        ("Agamjot", 20500), ("Keshav", 15500), ("Shaurya", 5000), ("Simran", 9000),
+        ("Agamjot", 20500), ("Keshav", 15500), ("Shaurya", 5000), ("Sanjeevan", 9000),
     )),
 )
 
@@ -192,6 +192,54 @@ OFFICIAL_RESULTS_2026 = (
             ("Akali Dinosaurs", "Beerdavinder", "Leader of Opposition", 72.0),
             ("Akali Dinosaurs", "Harasees", "Deputy Leader of Opposition", 72.0),
             ("Akali Dinosaurs", "Guransh", "Opposition Whip", 72.5),
+        ),
+    },
+    {
+        "fixture_number": 7,
+        "government_team": "Rhetoric Rebels",
+        "opposition_team": "Goodfellas",
+        "winner_team": "Rhetoric Rebels",
+        "government_reply_score": 37.0,
+        "opposition_reply_score": 36.0,
+        "performances": (
+            ("Rhetoric Rebels", "Naman", "Prime Minister", 73.0),
+            ("Rhetoric Rebels", "Priyanshi", "Deputy Prime Minister", 74.5),
+            ("Rhetoric Rebels", "Ashmita", "Government Whip", 73.5),
+            ("Goodfellas", "Vallari", "Leader of Opposition", 72.5),
+            ("Goodfellas", "Rahul Batra", "Deputy Leader of Opposition", 74.5),
+            ("Goodfellas", "Manroop Singh", "Opposition Whip", 73.0),
+        ),
+    },
+    {
+        "fixture_number": 8,
+        "government_team": "Motion Granted",
+        "opposition_team": "Akali Dinosaurs",
+        "winner_team": "Akali Dinosaurs",
+        "government_reply_score": 35.0,
+        "opposition_reply_score": 35.0,
+        "performances": (
+            ("Motion Granted", "Sanjeevan", "Prime Minister", 71.5),
+            ("Motion Granted", "Keshav", "Deputy Prime Minister", 71.0),
+            ("Motion Granted", "Agamjot", "Government Whip", 72.0),
+            ("Akali Dinosaurs", "Sahil", "Leader of Opposition", 72.0),
+            ("Akali Dinosaurs", "Vikramjit", "Deputy Leader of Opposition", 72.5),
+            ("Akali Dinosaurs", "Guransh", "Opposition Whip", 73.5),
+        ),
+    },
+    {
+        "fixture_number": 9,
+        "government_team": "Fifth Amendment",
+        "opposition_team": "Damsel Inflicting Stress",
+        "winner_team": "Damsel Inflicting Stress",
+        "government_reply_score": 38.0,
+        "opposition_reply_score": 37.0,
+        "performances": (
+            ("Fifth Amendment", "Rahul", "Prime Minister", 73.0),
+            ("Fifth Amendment", "Satyam", "Deputy Prime Minister", 73.5),
+            ("Fifth Amendment", "Hridya", "Government Whip", 72.5),
+            ("Damsel Inflicting Stress", "Soumya", "Leader of Opposition", 72.0),
+            ("Damsel Inflicting Stress", "Saksham", "Deputy Leader of Opposition", 74.5),
+            ("Damsel Inflicting Stress", "Prabhleen", "Opposition Whip", 74.5),
         ),
     },
 )
@@ -381,6 +429,19 @@ def _normalise_auction_teams(db: Session) -> None:
             for player in team.players:
                 if player.player_name in revised_bids:
                     player.price = revised_bids[player.player_name]
+        if canonical_name == "Motion Granted":
+            sanjeevan = next(
+                (player for player in team.players if player.player_name == "Sanjeevan"),
+                None,
+            )
+            simran = next(
+                (player for player in team.players if player.player_name == "Simran"),
+                None,
+            )
+            if simran and sanjeevan:
+                db.delete(simran)
+            elif simran:
+                simran.player_name = "Sanjeevan"
 
 
 def _delete_debate(db: Session, debate: Debate) -> None:
@@ -575,6 +636,29 @@ def _sync_registered_speakers(db: Session, teams) -> None:
         auction_team = auction_by_name.get(team_name)
         if not auction_team:
             continue
+        if team_name == "Motion Granted":
+            simran = db.query(Speaker).filter(
+                Speaker.team_id == team.id,
+                Speaker.name == "Simran",
+            ).one_or_none()
+            sanjeevan = db.query(Speaker).filter(
+                Speaker.team_id == team.id,
+                Speaker.name == "Sanjeevan",
+            ).one_or_none()
+            if simran:
+                has_history = db.query(SpeakerPerformance).filter(
+                    SpeakerPerformance.speaker_id == simran.id
+                ).first() is not None
+                if has_history:
+                    simran.active = False
+                elif sanjeevan:
+                    db.delete(simran)
+                else:
+                    simran.name = "Sanjeevan"
+                    simran.active = True
+                    sanjeevan = simran
+            if sanjeevan:
+                sanjeevan.active = True
         if team_name == "Akali Dinosaurs":
             _merge_speaker_aliases(
                 db,
@@ -598,7 +682,12 @@ def _sync_registered_speakers(db: Session, teams) -> None:
         }
         for speaker_name in registered_names:
             if speaker_name not in existing_names:
-                db.add(Speaker(name=speaker_name, team_id=team.id))
+                db.add(Speaker(name=speaker_name, team_id=team.id, active=True))
+            else:
+                db.query(Speaker).filter(
+                    Speaker.team_id == team.id,
+                    Speaker.name == speaker_name,
+                ).update({Speaker.active: True}, synchronize_session=False)
 
 
 def _sync_group_stage(db: Session, teams):
