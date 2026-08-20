@@ -3617,6 +3617,43 @@ footer { flex-wrap:wrap; }
     color: var(--danger);
     font-weight: 900;
 }
+.qualification-status {
+    display: inline-flex;
+    min-width: 1.75rem;
+    min-height: 1.75rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text-muted);
+    background: var(--bg-surface-elevated);
+    font-size: .72rem;
+    font-weight: 900;
+    line-height: 1;
+}
+.qualification-status-q {
+    border-color: var(--success);
+    color: var(--success);
+    background: var(--success-soft);
+}
+.qualification-status-e {
+    border-color: var(--danger);
+    color: var(--danger);
+    background: var(--danger-soft);
+}
+.qualification-key {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .45rem .65rem;
+    color: var(--text-muted);
+    font-size: .82rem;
+}
+.qualification-key .qualification-status {
+    min-width: 1.45rem;
+    min-height: 1.45rem;
+    font-size: .65rem;
+}
 [data-theme="dark"] .standings-pool .table-wrap .standings-wins {
     color: var(--success);
 }

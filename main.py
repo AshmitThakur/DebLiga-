@@ -1968,6 +1968,49 @@ def calculate_pool_standings(
         )
     )
 
+    team_ids = {team["team_id"] for team in table}
+    remaining_debates = [
+        debate
+        for debate in debates
+        if debate.winner_team_id is None
+        and debate.team1_id in team_ids
+        and debate.team2_id in team_ids
+    ]
+
+    if remaining_debates:
+        possible_win_totals = [{team["team_id"]: team["wins"] for team in table}]
+        for debate in remaining_debates:
+            next_totals = []
+            for totals in possible_win_totals:
+                for winner_id in (debate.team1_id, debate.team2_id):
+                    outcome = totals.copy()
+                    outcome[winner_id] += 1
+                    next_totals.append(outcome)
+            possible_win_totals = next_totals
+
+        for team in table:
+            team_id = team["team_id"]
+            is_qualified = all(
+                sum(
+                    other_id != team_id and other_wins >= totals[team_id]
+                    for other_id, other_wins in totals.items()
+                ) <= 1
+                for totals in possible_win_totals
+            )
+            is_eliminated = all(
+                sum(
+                    other_id != team_id and other_wins > totals[team_id]
+                    for other_id, other_wins in totals.items()
+                ) >= 2
+                for totals in possible_win_totals
+            )
+            team["qualification_status"] = (
+                "Q" if is_qualified else "E" if is_eliminated else "—"
+            )
+    else:
+        for position, team in enumerate(table, start=1):
+            team["qualification_status"] = "Q" if position <= 2 else "E"
+
     for position, team in enumerate(
         table,
         start=1

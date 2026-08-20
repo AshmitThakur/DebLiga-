@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Standings | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=20">
+    <link rel="stylesheet" href="/static/style.css?v=21">
 </head>
 <body>
 
@@ -41,6 +41,7 @@
                             <tr>
                                 <th>Rank</th>
                                 <th>Team</th>
+                                <th><span title="Qualification Status">Qual.</span></th>
                                 <th>Played</th>
                                 <th><span class='result-heading result-heading-win' title='Wins' aria-label='Wins'>✅</span></th>
                                 <th><span class='result-heading result-heading-loss' title='Losses' aria-label='Losses'>❌</span></th>
@@ -63,6 +64,15 @@
                                                 <span class="team-name">{{ team.team_name }}</span>
                                             </a>
                                         </td>
+                                        <td data-label="Qualification">
+                                            {% if team.qualification_status == "Q" %}
+                                                <span class="qualification-status qualification-status-q" title="Qualified for Semifinals" aria-label="Qualified for Semifinals">Q</span>
+                                            {% elif team.qualification_status == "E" %}
+                                                <span class="qualification-status qualification-status-e" title="Eliminated" aria-label="Eliminated">E</span>
+                                            {% else %}
+                                                <span class="qualification-status qualification-status-pending" title="Qualification still undecided" aria-label="Qualification still undecided">—</span>
+                                            {% endif %}
+                                        </td>
                                         <td data-label="Played">{{ team.played }}</td>
                                         <td class="standings-wins" data-label="Wins">{{ team.wins }}</td>
                                         <td class="standings-losses" data-label="Losses">{{ team.losses }}</td>
@@ -76,7 +86,7 @@
 
                             {% if pool_rows.count == 0 %}
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="8">
                                         No teams in this pool yet.
                                     </td>
                                 </tr>
@@ -88,6 +98,13 @@
         {% else %}
             <p>No pools have been created yet.</p>
         {% endfor %}
+
+        <p class="qualification-key">
+            <strong>Qualification:</strong>
+            <span class="qualification-status qualification-status-q" aria-hidden="true">Q</span> Qualified for Semifinals
+            <span class="qualification-status qualification-status-e" aria-hidden="true">E</span> Eliminated
+            <span class="qualification-status qualification-status-pending" aria-hidden="true">—</span> Still undecided
+        </p>
 
         <p class="standings-note">
             If qualification is still exactly tied on both points and average

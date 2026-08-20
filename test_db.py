@@ -659,6 +659,21 @@ class OfficialTournamentDataTests(unittest.TestCase):
         ).body.decode()
         self.assertIn('class="standings-wins"', standings_html)
         self.assertIn('class="standings-losses"', standings_html)
+        self.assertEqual(
+            standings_html.count("qualification-status qualification-status-q"),
+            4,
+        )
+        self.assertEqual(
+            standings_html.count("qualification-status qualification-status-e"),
+            4,
+        )
+        self.assertEqual(
+            standings_html.count("qualification-status qualification-status-pending"),
+            3,
+        )
+        self.assertEqual(standings_html.count('data-label="Qualification"'), 8)
+        self.assertIn("Qualified for Semifinals", standings_html)
+        self.assertIn("Still undecided", standings_html)
 
     def test_day_four_standings_and_speaker_rankings_are_derived(self):
         pools = {pool.name: pool for pool in self.db.query(Pool).all()}
@@ -688,6 +703,20 @@ class OfficialTournamentDataTests(unittest.TestCase):
                 (row["played"], row["wins"], row["losses"]),
                 expected,
             )
+
+        expected_qualification = {
+            "Mechanised Yappers": "Q",
+            "Broken Orators": "—",
+            "Rhetoric Rebels": "—",
+            "Goodfellas": "E",
+            "Damsel Inflicting Stress": "Q",
+            "Fifth Amendment": "Q",
+            "Akali Dinosaurs": "E",
+            "Motion Granted": "E",
+        }
+        for team_name, expected in expected_qualification.items():
+            pool_table = pool_a if team_name in pool_a else pool_b
+            self.assertEqual(pool_table[team_name]["qualification_status"], expected)
 
         self.assertEqual(pool_a["Mechanised Yappers"]["average_team_score"], 73.17)
         self.assertEqual(pool_a["Broken Orators"]["average_team_score"], 73.08)
@@ -724,6 +753,15 @@ class OfficialTournamentDataTests(unittest.TestCase):
         for speaker_name, (average, debates) in expected_day_four_rankings.items():
             self.assertEqual(rankings[speaker_name]["average_score"], average)
             self.assertEqual(rankings[speaker_name]["debates"], debates)
+
+        for debate in self.db.query(Debate).filter(Debate.stage == "pool"):
+            debate.winner_team_id = None
+        early_pool_a = calculate_pool_standings(self.db, pools["Pool A"].id)
+        early_pool_b = calculate_pool_standings(self.db, pools["Pool B"].id)
+        self.assertEqual(
+            {row["qualification_status"] for row in early_pool_a + early_pool_b},
+            {"—"},
+        )
 
     def test_team_rename_preserves_record_and_all_references(self):
         team = self.db.query(Team).filter(
