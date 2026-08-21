@@ -1958,6 +1958,98 @@ tbody tr:hover {
     margin-top: 70px;
 }
 
+.knockout-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--border);
+}
+
+.knockout-heading h2,
+.knockout-heading p {
+    margin: 0;
+}
+
+.knockout-heading > p {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+    color: var(--text-secondary);
+    text-align: right;
+}
+
+.knockout-heading > p strong {
+    color: var(--text-primary);
+}
+
+.semifinal-bracket {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.semifinal-card {
+    margin-bottom: 0;
+}
+
+.semifinal-matchup {
+    display: grid;
+    gap: 10px;
+}
+
+.semifinal-matchup > .versus {
+    justify-self: center;
+    color: var(--dark-gold);
+    font-size: .76rem;
+    font-weight: 900;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.semifinal-slot {
+    width: 100%;
+    min-height: 58px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    background: var(--bg-surface);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+a.semifinal-slot:hover {
+    border-color: var(--gold);
+    color: var(--text-primary);
+}
+
+.semifinal-slot-tbd {
+    border-style: dashed;
+    color: var(--text-secondary);
+    background: var(--bg-surface-secondary);
+}
+
+.tbd-mark {
+    display: inline-grid;
+    flex: 0 0 26px;
+    width: 26px;
+    height: 26px;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--dark-gold);
+    background: var(--warning-soft);
+}
+
+.bracket-note {
+    margin: 18px 0 0;
+    color: var(--text-secondary);
+    font-size: .92rem;
+}
+
 .debate-card {
     position: relative;
 
@@ -3927,6 +4019,7 @@ footer { flex-wrap:wrap; }
 
 /* Schedule-only dark contrast: retain the existing hierarchy and accents. */
 [data-theme="dark"] .schedule-page .schedule-section > h2,
+[data-theme="dark"] .schedule-page .knockout-heading h2,
 [data-theme="dark"] .schedule-page .schedule-day h3 {
     color: #f5f8fc;
 }
@@ -3945,6 +4038,22 @@ footer { flex-wrap:wrap; }
 }
 [data-theme="dark"] .schedule-page .debate-card:hover {
     border-left-color: #f2c24d;
+}
+[data-theme="dark"] .schedule-page .knockout-heading > p strong,
+[data-theme="dark"] .schedule-page .semifinal-slot {
+    color: #f7fbff;
+}
+[data-theme="dark"] .schedule-page .semifinal-slot {
+    border-color: #506b86;
+    background: #192a40;
+}
+[data-theme="dark"] .schedule-page .semifinal-slot-tbd {
+    color: #b8c7d8;
+    background: #142237;
+}
+[data-theme="dark"] .schedule-page .bracket-note,
+[data-theme="dark"] .schedule-page .knockout-heading > p {
+    color: #c5d3e2;
 }
 [data-theme="dark"] .schedule-page .matchup a {
     border-color: #506b86;
@@ -4006,6 +4115,10 @@ footer { flex-wrap:wrap; }
     .tournament-facts { grid-template-columns: 1fr; }
     .group-stage-rules { grid-template-columns: 1fr; padding: 22px 18px; }
     .schedule-day { margin-top: 26px; }
+    .knockout-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
+    .knockout-heading > p { align-items: flex-start; text-align: left; }
+    .semifinal-bracket { grid-template-columns: 1fr; }
+    .semifinal-card { padding: 22px 18px; }
 }
 
 /* Team detail schedule/history: canonical fixtures with persistent results. */

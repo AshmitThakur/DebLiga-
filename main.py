@@ -804,8 +804,13 @@ def submit_result(
             )
         )
 
+    db.flush()
+
+    # The last pool result resolves the bracket from the final standings.
+    if debate.stage == "pool":
+        sync_official_2026_semifinals(db)
     # Both semifinals completed -> Final + Third Place appear.
-    if debate.stage == "semifinal":
+    elif debate.stage == "semifinal":
         sync_knockout_after_semifinals(
             db
         )
@@ -1166,7 +1171,6 @@ def schedule_page(
             (side for side, team_id in side_ids.items() if team_id == debate.team2_id),
             None,
         )
-
         schedule.append({
             "id": debate.id,
             "round": round_obj,
@@ -1206,7 +1210,8 @@ def schedule_page(
         request=request,
         name="schedule.html",
         context={
-            "schedule": schedule
+            "schedule": schedule,
+            "semifinal_bracket": official_2026_semifinal_bracket(db),
         }
     )
 
@@ -1814,6 +1819,12 @@ ALLOWED_STAGES = {
     "final"
 }
 
+SEMIFINAL_DATE_2026 = "2026-08-22"
+SEMIFINAL_DATE_LABEL_2026 = "22 August 2026"
+SEMIFINAL_DAY_2026 = "Saturday"
+SEMIFINAL_TIME_2026 = "10:00 AM onwards"
+SEMIFINAL_ROUND_NUMBERS_2026 = (13, 14)
+
 
 def clear_debate_result(
     db: Session,
@@ -2202,6 +2213,162 @@ def get_or_create_round(
         db.flush()
 
     return round_obj
+
+
+def finalized_pool_standings(
+    db: Session,
+    pool_name: str,
+):
+    """Return final seeds only after the pool and its tie-breaks are complete."""
+    pool = db.query(Pool).filter(
+        Pool.name.ilike(pool_name)
+    ).one_or_none()
+    if not pool:
+        return None
+
+    try:
+        return validate_pool_complete(db, pool)
+    except HTTPException:
+        return None
+
+
+def official_2026_semifinal_bracket(
+    db: Session,
+):
+    """Build the public bracket, retaining TBD slots until a pool is final."""
+    standings_a = finalized_pool_standings(db, "Pool A")
+    standings_b = finalized_pool_standings(db, "Pool B")
+    teams = {team.id: team for team in db.query(Team).all()}
+    rounds = {round_obj.id: round_obj for round_obj in db.query(Round).all()}
+
+    debates_by_number = {}
+    for debate in db.query(Debate).filter(
+        Debate.stage == "semifinal"
+    ).order_by(Debate.id).all():
+        round_obj = rounds.get(debate.round_id)
+        if round_obj and round_obj.number in SEMIFINAL_ROUND_NUMBERS_2026:
+            debates_by_number[round_obj.number] = debate
+
+    slots = (
+        (
+            standings_a[0]["team_id"] if standings_a else None,
+            standings_b[1]["team_id"] if standings_b else None,
+            "Pool A #1 (TBD)",
+            "Pool B #2 (TBD)",
+        ),
+        (
+            standings_b[0]["team_id"] if standings_b else None,
+            standings_a[1]["team_id"] if standings_a else None,
+            "Pool B #1 (TBD)",
+            "Pool A #2 (TBD)",
+        ),
+    )
+
+    bracket = []
+    for index, (team1_id, team2_id, team1_placeholder, team2_placeholder) in enumerate(
+        slots,
+        start=1,
+    ):
+        round_number = SEMIFINAL_ROUND_NUMBERS_2026[index - 1]
+        debate = debates_by_number.get(round_number)
+        if debate:
+            team1_id = debate.team1_id
+            team2_id = debate.team2_id
+
+        bracket.append({
+            "number": index,
+            "label": f"Semifinal {index}",
+            "date": SEMIFINAL_DATE_2026,
+            "date_label": SEMIFINAL_DATE_LABEL_2026,
+            "day": SEMIFINAL_DAY_2026,
+            "time": SEMIFINAL_TIME_2026,
+            "debate": debate,
+            "team1": teams.get(team1_id),
+            "team2": teams.get(team2_id),
+            "team1_placeholder": team1_placeholder,
+            "team2_placeholder": team2_placeholder,
+            "winner": teams.get(debate.winner_team_id) if debate and debate.winner_team_id else None,
+            "status": "Completed" if debate and debate.winner_team_id else "Pending",
+        })
+
+    return bracket
+
+
+def sync_official_2026_semifinals(
+    db: Session,
+):
+    """Create or reconcile the cross-pool semifinals once both pools are final."""
+    standings_a = finalized_pool_standings(db, "Pool A")
+    standings_b = finalized_pool_standings(db, "Pool B")
+    if not standings_a or not standings_b:
+        return []
+
+    desired_teams = (
+        (standings_a[0]["team_id"], standings_b[1]["team_id"]),
+        (standings_b[0]["team_id"], standings_a[1]["team_id"]),
+    )
+    existing = db.query(Debate).filter(
+        Debate.stage == "semifinal"
+    ).order_by(Debate.id).all()
+    rounds = {round_obj.id: round_obj for round_obj in db.query(Round).all()}
+    existing_by_round = {
+        rounds[debate.round_id].number: debate
+        for debate in existing
+        if debate.round_id in rounds
+        and rounds[debate.round_id].number in SEMIFINAL_ROUND_NUMBERS_2026
+    }
+
+    semifinals = []
+    for index, (team1_id, team2_id) in enumerate(desired_teams):
+        round_number = SEMIFINAL_ROUND_NUMBERS_2026[index]
+        round_obj = get_or_create_round(db, round_number)
+        debate = existing_by_round.get(round_number)
+        if not debate:
+            debate = next(
+                (
+                    candidate
+                    for candidate in existing
+                    if candidate not in semifinals
+                    and (candidate.team1_id, candidate.team2_id) == (team1_id, team2_id)
+                ),
+                None,
+            )
+        if not debate:
+            debate = Debate(
+                round_id=round_obj.id,
+                team1_id=team1_id,
+                team2_id=team2_id,
+                room=None,
+                winner_team_id=None,
+                stage="semifinal",
+            )
+            db.add(debate)
+        elif (debate.team1_id, debate.team2_id) != (team1_id, team2_id):
+            has_result_data = (
+                debate.winner_team_id is not None
+                or debate.government_reply_score is not None
+                or debate.opposition_reply_score is not None
+                or db.query(SpeakerPerformance).filter(
+                    SpeakerPerformance.debate_id == debate.id
+                ).first() is not None
+            )
+            if has_result_data:
+                continue
+            debate.team1_id = team1_id
+            debate.team2_id = team2_id
+
+        debate.round_id = round_obj.id
+        debate.stage = "semifinal"
+        semifinals.append(debate)
+
+    db.flush()
+    return semifinals
+
+
+# Keep Railway's persistent SQLite database reconciled on every deployment.
+with SessionLocal() as knockout_sync_db:
+    sync_official_2026_semifinals(knockout_sync_db)
+    knockout_sync_db.commit()
 
 
 def semifinal_loser(
@@ -3078,17 +3245,39 @@ def schedule_api(
             None,
         )
 
+        semifinal_number = None
+        if debate.stage == "semifinal" and round_obj:
+            if round_obj.number in SEMIFINAL_ROUND_NUMBERS_2026:
+                semifinal_number = SEMIFINAL_ROUND_NUMBERS_2026.index(round_obj.number) + 1
+
         schedule.append({
             "debate_id": debate.id,
             "debate_number": fixture["number"] if fixture else None,
-            "date": fixture["date"].isoformat() if fixture else None,
-            "date_label": fixture["date_label"] if fixture else None,
-            "day": fixture["day"] if fixture else None,
-            "time": fixture["time_label"] if fixture else None,
+            "date": (
+                fixture["date"].isoformat()
+                if fixture
+                else SEMIFINAL_DATE_2026 if semifinal_number else None
+            ),
+            "date_label": (
+                fixture["date_label"]
+                if fixture
+                else SEMIFINAL_DATE_LABEL_2026 if semifinal_number else None
+            ),
+            "day": (
+                fixture["day"]
+                if fixture
+                else SEMIFINAL_DAY_2026 if semifinal_number else None
+            ),
+            "time": (
+                fixture["time_label"]
+                if fixture
+                else SEMIFINAL_TIME_2026 if semifinal_number else None
+            ),
             "stage": debate.stage,
-            "stage_name": stage_names.get(
-                debate.stage,
-                debate.stage
+            "stage_name": (
+                f"Semifinal {semifinal_number}"
+                if semifinal_number
+                else stage_names.get(debate.stage, debate.stage)
             ),
             "round_number": (
                 round_obj.number

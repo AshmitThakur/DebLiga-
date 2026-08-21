@@ -32,6 +32,9 @@ TEAM_EMOJIS_2026 = {
 
 GROUP_STAGE_TIME_2026 = "6:30 PM"
 GROUP_STAGE_TIME_SORT_2026 = "18:30"
+GROUP_STAGE_TIME_OVERRIDES_2026 = {
+    12: ("9:00 AM", "09:00"),
+}
 
 
 OFFICIAL_2026_AUCTION = (
@@ -88,9 +91,9 @@ OFFICIAL_GROUP_STAGE_2026 = (
     (7, date(2026, 8, 20), "Pool A", "Goodfellas", "Rhetoric Rebels"),
     (8, date(2026, 8, 20), "Pool B", "Akali Dinosaurs", "Motion Granted"),
     (9, date(2026, 8, 20), "Pool B", "Damsel Inflicting Stress", "Fifth Amendment"),
-    (10, date(2026, 8, 21), "Pool A", "Broken Orators", "Rhetoric Rebels"),
-    (11, date(2026, 8, 21), "Pool A", "Goodfellas", "Mechanised Yappers"),
-    (12, date(2026, 8, 21), "Pool B", "Damsel Inflicting Stress", "Motion Granted"),
+    (10, date(2026, 8, 21), "Pool A", "Goodfellas", "Mechanised Yappers"),
+    (11, date(2026, 8, 21), "Pool B", "Damsel Inflicting Stress", "Motion Granted"),
+    (12, date(2026, 8, 22), "Pool A", "Broken Orators", "Rhetoric Rebels"),
 )
 
 
@@ -242,6 +245,38 @@ OFFICIAL_RESULTS_2026 = (
             ("Damsel Inflicting Stress", "Prabhleen", "Opposition Whip", 74.5),
         ),
     },
+    {
+        "fixture_number": 10,
+        "government_team": "Goodfellas",
+        "opposition_team": "Mechanised Yappers",
+        "winner_team": "Goodfellas",
+        "government_reply_score": 37.0,
+        "opposition_reply_score": 36.0,
+        "performances": (
+            ("Goodfellas", "Pranay", "Prime Minister", 72.5),
+            ("Goodfellas", "Vallari", "Deputy Prime Minister", 73.5),
+            ("Goodfellas", "Rahul Batra", "Government Whip", 74.0),
+            ("Mechanised Yappers", "Bhavya Issarani", "Leader of Opposition", 72.0),
+            ("Mechanised Yappers", "Shayan", "Deputy Leader of Opposition", 73.0),
+            ("Mechanised Yappers", "Lakshit Chaudhary", "Opposition Whip", 73.5),
+        ),
+    },
+    {
+        "fixture_number": 11,
+        "government_team": "Damsel Inflicting Stress",
+        "opposition_team": "Motion Granted",
+        "winner_team": "Motion Granted",
+        "government_reply_score": 37.0,
+        "opposition_reply_score": 37.0,
+        "performances": (
+            ("Damsel Inflicting Stress", "Rachel", "Prime Minister", 72.5),
+            ("Damsel Inflicting Stress", "Saksham", "Deputy Prime Minister", 72.0),
+            ("Damsel Inflicting Stress", "Mudit", "Government Whip", 73.5),
+            ("Motion Granted", "Shaurya", "Leader of Opposition", 73.5),
+            ("Motion Granted", "Agamjot", "Deputy Leader of Opposition", 74.0),
+            ("Motion Granted", "Tvishaa Patnaik", "Opposition Whip", 72.5),
+        ),
+    },
 )
 
 OFFICIAL_DAY_1_RESULTS_2026 = OFFICIAL_RESULTS_2026[:2]
@@ -309,12 +344,12 @@ def validate_official_group_stage() -> None:
     assert set(team_counts) == official_teams
     assert set(team_counts.values()) == {3}
     assert pool_counts == {"Pool A": 6, "Pool B": 6}
-    assert [daily_counts[date(2026, 8, day)] for day in range(17, 22)] == [2, 2, 2, 3, 3]
+    assert [daily_counts[date(2026, 8, day)] for day in range(17, 23)] == [2, 2, 2, 3, 2, 1]
     expected_team_days = {
-        "Broken Orators": {17, 19, 21},
+        "Broken Orators": {17, 19, 22},
         "Goodfellas": {17, 20, 21},
         "Mechanised Yappers": {18, 19, 21},
-        "Rhetoric Rebels": {18, 20, 21},
+        "Rhetoric Rebels": {18, 20, 22},
         "Akali Dinosaurs": {17, 19, 20},
         "Damsel Inflicting Stress": {17, 20, 21},
         "Fifth Amendment": {18, 19, 20},
@@ -332,6 +367,10 @@ def fixture_details(team1_name: str, team2_name: str):
     for number, fixture_date, pool, team1, team2 in OFFICIAL_GROUP_STAGE_2026:
         if pairing == frozenset((team1, team2)):
             official_result = OFFICIAL_RESULTS_BY_FIXTURE_2026.get(number)
+            time_label, time_sort = GROUP_STAGE_TIME_OVERRIDES_2026.get(
+                number,
+                (GROUP_STAGE_TIME_2026, GROUP_STAGE_TIME_SORT_2026),
+            )
             sides = {}
             if official_result:
                 sides = {
@@ -344,8 +383,8 @@ def fixture_details(team1_name: str, team2_name: str):
                 "day": fixture_date.strftime("%A"),
                 "date_label": fixture_date.strftime("%d %B %Y").lstrip("0"),
                 "short_date_label": fixture_date.strftime("%a, %d %b").replace(", 0", ", "),
-                "time_label": GROUP_STAGE_TIME_2026,
-                "time_sort": GROUP_STAGE_TIME_SORT_2026,
+                "time_label": time_label,
+                "time_sort": time_sort,
                 "pool": pool,
                 "team1_side": sides.get(team1_name),
                 "team2_side": sides.get(team2_name),
