@@ -1401,7 +1401,7 @@ main {
     letter-spacing: -0.05em;
 }
 
-body:not([data-theme="dark"]) .page-header > p {
+html:not([data-theme="dark"]) body .page-header > p {
         position: relative;
         z-index: 1;
 
@@ -2431,7 +2431,7 @@ td strong {
     text-align: center;
 }
 
-body:not([data-theme="dark"]) .table-wrap tbody tr td {
+html:not([data-theme="dark"]) body .table-wrap tbody tr td {
     color: #475569 !important;
     opacity: 1 !important;
 }
@@ -3308,7 +3308,7 @@ footer a:hover {
 .homepage-feature-grid { display: none; }
 
 /* LADC light-blue accent polish for inner public pages */
-body:not([data-theme="dark"]) > nav + main .page-header {
+html:not([data-theme="dark"]) body > nav + main .page-header {
     border-color: rgba(82,185,232,.32); border-left-color: var(--gold);
     background: linear-gradient(112deg,var(--bg-surface) 0%,var(--lighter-blue) 72%,rgba(223,244,255,.7) 100%);
 }
@@ -3316,17 +3316,17 @@ body > nav + main .page-header::before {
     content: ''; position: absolute; top: 0; right: 0; width: 34%; height: 4px;
     background: linear-gradient(90deg,transparent,var(--blue));
 }
-body:not([data-theme="dark"]) > nav + main .section-heading {
+html:not([data-theme="dark"]) body > nav + main .section-heading {
     padding: 18px 20px; border: 1px solid rgba(82,185,232,.2); border-radius: var(--radius-md);
     background: linear-gradient(105deg,rgba(238,249,255,.85),rgba(255,255,255,.35));
 }
 body > nav + main .section-heading .section-label { color: var(--mid-blue); }
-body:not([data-theme="dark"]) > nav + main .team-card,
-body:not([data-theme="dark"]) > nav + main .debate-card,
-body:not([data-theme="dark"]) > nav + main .flow-card,
-body:not([data-theme="dark"]) > nav + main .value-card,
-body:not([data-theme="dark"]) > nav + main .auction-team-card,
-body:not([data-theme="dark"]) > nav + main .top-purchase-card {
+html:not([data-theme="dark"]) body > nav + main .team-card,
+html:not([data-theme="dark"]) body > nav + main .debate-card,
+html:not([data-theme="dark"]) body > nav + main .flow-card,
+html:not([data-theme="dark"]) body > nav + main .value-card,
+html:not([data-theme="dark"]) body > nav + main .auction-team-card,
+html:not([data-theme="dark"]) body > nav + main .top-purchase-card {
     background: linear-gradient(145deg,var(--bg-surface) 65%,rgba(223,244,255,.55));
 }
 body > nav + main .team-card,
@@ -3339,28 +3339,28 @@ body > nav + main .team-card:hover,
 body > nav + main .debate-card:hover,
 body > nav + main .auction-team-card:hover,
 body > nav + main .top-purchase-card:hover { border-color: var(--blue); }
-body:not([data-theme="dark"]) > nav + main .table-wrap,
-body:not([data-theme="dark"]) > nav + main .archive-table-wrap {
+html:not([data-theme="dark"]) body > nav + main .table-wrap,
+html:not([data-theme="dark"]) body > nav + main .archive-table-wrap {
     border-color: rgba(82,185,232,.28); box-shadow: 0 7px 24px rgba(47,147,194,.08);
 }
-body:not([data-theme="dark"]) > nav + main tbody tr:nth-child(even) { background: rgba(238,249,255,.65); }
-body:not([data-theme="dark"]) > nav + main tbody tr:hover { background: var(--light-blue); }
+html:not([data-theme="dark"]) body > nav + main tbody tr:nth-child(even) { background: rgba(238,249,255,.65); }
+html:not([data-theme="dark"]) body > nav + main tbody tr:hover { background: var(--light-blue); }
 body > nav + main .standings-pool > h2,
 body > nav + main .schedule-section > h2 {
     border-bottom-color: rgba(82,185,232,.4);
     background: linear-gradient(90deg,rgba(82,185,232,.1),transparent 70%);
 }
-body:not([data-theme="dark"]) > nav + main .motion,
-body:not([data-theme="dark"]) > nav + main .matchup a,
-body:not([data-theme="dark"]) > nav + main .speaker-list li a,
-body:not([data-theme="dark"]) > nav + main .speaker-summary span,
-body:not([data-theme="dark"]) > nav + main .team-record strong {
+html:not([data-theme="dark"]) body > nav + main .motion,
+html:not([data-theme="dark"]) body > nav + main .matchup a,
+html:not([data-theme="dark"]) body > nav + main .speaker-list li a,
+html:not([data-theme="dark"]) body > nav + main .speaker-summary span,
+html:not([data-theme="dark"]) body > nav + main .team-record strong {
     border-color: rgba(82,185,232,.28); background-color: rgba(238,249,255,.72);
 }
 body > nav + main .matchup a:hover,
 body > nav + main .speaker-list li a:hover { border-color: var(--blue); background-color: var(--lighter-blue); }
-body:not([data-theme="dark"]) > nav + main .archive-section,
-body:not([data-theme="dark"]) > nav + main .auction-history-section {
+html:not([data-theme="dark"]) body > nav + main .archive-section,
+html:not([data-theme="dark"]) body > nav + main .auction-history-section {
     border-color: rgba(82,185,232,.25);
     background: linear-gradient(150deg,var(--bg-surface-secondary),rgba(223,244,255,.45));
 }
@@ -3404,7 +3404,7 @@ body:not([data-theme="dark"]) > nav + main .auction-history-section {
 html, body { max-width:100%; }
 img, video, svg { max-width:100%; }
 [data-theme=dark] .auction-team-card footer { background:var(--bg-surface-elevated); }
-@media (max-width:720px) {
+@media (max-width:768px) {
   .site-header { position:relative; z-index:100; }
   .menu-toggle { width:44px; height:44px; }
   body > nav a, .top-navigation a { min-height:44px; display:flex; align-items:center; }
@@ -4325,4 +4325,566 @@ footer { flex-wrap:wrap; }
     .team-detail-page .team-history-table tbody tr.result-lost {
         border-color: rgba(180, 35, 24, .34);
     }
+}
+
+/* =========================================================
+   2026 MOBILE EXPERIENCE PASS
+   Page-specific rules intentionally follow the generic card
+   table styles so 320-430px layouts keep their hierarchy.
+   ========================================================= */
+
+:where(.page-header, .debate-card, .team-card, .table-wrap, .matchup, .semifinal-card) {
+    min-width: 0;
+    max-width: 100%;
+}
+
+:where(h1, h2, h3, p, a, td, th, .team-name, .speaker-name) {
+    overflow-wrap: anywhere;
+}
+
+.matchup .team-name {
+    color: inherit;
+    font-size: inherit;
+    line-height: 1.2;
+    text-transform: none;
+}
+
+.page-header h1.team-name-lock {
+    display: flex;
+    align-items: flex-start;
+    max-width: 100%;
+}
+
+@media (max-width: 768px) {
+    .table-wrap table,
+    .team-history-wrap .team-history-table,
+    .speaker-history-wrap .speaker-history-table {
+        min-width: 0;
+    }
+
+    body > .menu-toggle ~ main {
+        padding-top: 76px;
+    }
+
+    .menu-toggle {
+        top: max(12px, env(safe-area-inset-top));
+        right: max(12px, env(safe-area-inset-right));
+    }
+
+    body > nav,
+    .top-navigation {
+        width: min(88vw, 320px);
+        padding-right: max(20px, env(safe-area-inset-right));
+        padding-bottom: max(24px, env(safe-area-inset-bottom));
+    }
+
+    main {
+        width: calc(100% - 28px);
+        padding-bottom: 48px;
+    }
+
+    main > section {
+        margin-top: 32px;
+    }
+
+    main > section > h2,
+    .schedule-section > h2,
+    .knockout-heading h2 {
+        font-size: clamp(1.45rem, 7vw, 1.9rem);
+        line-height: 1.12;
+    }
+
+    .page-header {
+        margin-bottom: 28px;
+        padding: 24px 18px;
+        border-left-width: 5px;
+    }
+
+    .page-header h1 {
+        font-size: clamp(1.9rem, 9vw, 2.55rem);
+        line-height: 1.04;
+        letter-spacing: -.04em;
+    }
+
+    .page-header > p,
+    html:not([data-theme="dark"]) body .page-header > p {
+        margin-top: 12px;
+        font-size: .94rem;
+        line-height: 1.55;
+    }
+
+    .team-record,
+    .speaker-summary {
+        margin-top: 18px;
+        gap: 8px;
+    }
+
+    .team-record strong,
+    .speaker-summary span {
+        padding: 8px 11px;
+        font-size: .84rem;
+    }
+
+    .speaker-list {
+        gap: 8px;
+    }
+
+    .speaker-list li {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .speaker-list li a {
+        min-height: 42px;
+        max-width: 100%;
+        padding: 10px 13px;
+        display: inline-flex;
+        align-items: center;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .table-wrap {
+        width: 100%;
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    .home-page .hall-of-fame-columns {
+        display: none;
+    }
+
+    .home-page .hall-of-fame-item {
+        grid-template-columns: 48px minmax(0, 1fr);
+        gap: 5px 9px;
+        padding: 13px 11px;
+    }
+
+    .home-page .hall-of-fame-year {
+        grid-row: 1 / 3;
+        align-self: center;
+    }
+
+    .home-page .hall-of-fame-team,
+    .home-page .hall-of-fame-winner {
+        grid-column: 2;
+        min-width: 0;
+    }
+
+    .home-page .hall-of-fame-winner {
+        color: var(--text-muted);
+        font-size: .78rem;
+    }
+
+    .archive-table-wrap {
+        width: 100%;
+        margin: 0;
+        overflow: visible;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .archive-table-wrap table,
+    .archive-table-wrap tbody {
+        display: block;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .archive-table-wrap thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    .archive-table-wrap tbody {
+        display: grid;
+        gap: 9px;
+    }
+
+    .archive-table-wrap tbody tr {
+        display: grid;
+        grid-template-columns: 40px minmax(0, 1fr) repeat(3, 48px);
+        gap: 7px;
+        align-items: center;
+        padding: 11px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--bg-surface);
+    }
+
+    .archive-table-wrap tbody td {
+        min-width: 0;
+        padding: 4px 2px;
+        border: 0;
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+
+    .archive-table-wrap tbody td::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 3px;
+        color: var(--text-muted);
+        font-size: .6rem;
+        font-weight: 900;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+    }
+
+    .archive-table-wrap tbody td:nth-child(2) {
+        text-align: left;
+        white-space: normal;
+        font-weight: 800;
+    }
+
+    /* Compact standings cards: identity first, then W/L/P summary. */
+    .standings-pool .table-wrap tbody tr {
+        grid-template-columns: 46px repeat(2, minmax(0, 1fr)) 42px;
+        gap: 0 7px;
+        padding: 12px;
+    }
+
+    .standings-pool .table-wrap tbody td {
+        grid-column: auto;
+        min-height: 42px;
+    }
+
+    .standings-pool .table-wrap tbody td:nth-child(1) {
+        grid-column: 1;
+        order: -3;
+        justify-content: flex-start;
+    }
+
+    .standings-pool .table-wrap tbody td:nth-child(2) {
+        grid-column: 2 / 4;
+        order: -3;
+        justify-content: flex-start;
+        font-size: .98rem;
+        text-align: left;
+    }
+
+    .standings-pool .table-wrap tbody td:nth-child(3) {
+        grid-column: 4;
+        order: -3;
+        justify-content: flex-end;
+    }
+
+    .standings-pool .table-wrap tbody td:nth-child(1)::before,
+    .standings-pool .table-wrap tbody td:nth-child(2)::before,
+    .standings-pool .table-wrap tbody td:nth-child(3)::before {
+        display: none;
+    }
+
+    .standings-pool .table-wrap tbody td:nth-child(n+4):nth-child(-n+7) {
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        text-align: center;
+        font-size: .96rem;
+        font-weight: 800;
+    }
+
+    .standings-pool .table-wrap tbody td:nth-child(4) { grid-column: 1; }
+    .standings-pool .table-wrap tbody td:nth-child(5) { grid-column: 2; }
+    .standings-pool .table-wrap tbody td:nth-child(6) { grid-column: 3; }
+    .standings-pool .table-wrap tbody td:nth-child(7) { grid-column: 4; }
+
+    .standings-pool .table-wrap tbody td:nth-child(8) {
+        grid-column: 1 / -1;
+        justify-content: flex-start;
+        border-bottom: 0;
+        color: var(--text-secondary);
+        font-size: .82rem;
+    }
+
+    .qualification-key {
+        gap: 8px;
+        line-height: 1.45;
+    }
+
+    /* Speaker leaderboard: rank/name/average stay on the lead row. */
+    .speaker-rankings-table tbody tr {
+        grid-template-columns: 46px minmax(0, 1fr) 76px;
+        gap: 0 8px;
+    }
+
+    .speaker-rankings-table tbody td {
+        grid-column: auto;
+        min-height: 42px;
+    }
+
+    .speaker-rankings-table tbody td:nth-child(1) {
+        grid-column: 1;
+        order: -4;
+        justify-content: flex-start;
+    }
+
+    .speaker-rankings-table tbody td:nth-child(2) {
+        grid-column: 2;
+        order: -4;
+        justify-content: flex-start;
+        font-size: 1rem;
+        text-align: left;
+    }
+
+    .speaker-rankings-table tbody td:nth-child(6) {
+        grid-column: 3;
+        order: -4;
+        flex-direction: column;
+        justify-content: center;
+        gap: 3px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .speaker-rankings-table tbody td:nth-child(1)::before,
+    .speaker-rankings-table tbody td:nth-child(2)::before {
+        display: none;
+    }
+
+    .speaker-rankings-table tbody td:nth-child(3) {
+        grid-column: 1 / -1;
+        order: -3;
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    .speaker-rankings-table tbody td:nth-child(4) {
+        grid-column: 1 / 2;
+    }
+
+    .speaker-rankings-table tbody td:nth-child(5) {
+        grid-column: 2 / 4;
+    }
+
+    .speaker-rankings-table a {
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    /* Team and speaker histories become readable two-column cards. */
+    .team-history-table tbody tr,
+    .speaker-history-table tbody tr {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0 12px;
+        padding: 13px;
+    }
+
+    .team-history-table tbody td,
+    .speaker-history-table tbody td {
+        grid-column: auto;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .team-history-table tbody .fixture-date-cell,
+    .team-history-table tbody .fixture-opponent-cell,
+    .speaker-history-table tbody td:nth-child(3),
+    .speaker-history-table tbody td:nth-child(6) {
+        grid-column: 1 / -1;
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    .team-history-table tbody .fixture-date-cell { order: -4; }
+    .team-history-table tbody .fixture-opponent-cell { order: -3; }
+    .team-history-table tbody .fixture-time-cell { order: -2; }
+    .speaker-history-table tbody td:nth-child(3) { order: -3; }
+    .speaker-history-table tbody td:nth-child(6) { order: -2; }
+
+    .team-history-table tbody td::before,
+    .speaker-history-table tbody td::before {
+        flex: 0 0 auto;
+    }
+
+    .team-history-table .fixture-opponent-cell a,
+    .speaker-history-table td a {
+        max-width: 100%;
+        white-space: normal;
+    }
+
+    /* Schedule/results use a true vertical fixture flow on phones. */
+    .schedule-section {
+        margin-bottom: 38px;
+    }
+
+    .schedule-day {
+        margin-top: 24px;
+        padding: 10px 12px;
+    }
+
+    .debate-card {
+        margin-bottom: 14px;
+        padding: 17px 14px;
+    }
+
+    .debate-meta {
+        margin-bottom: 14px;
+        flex-direction: row;
+        align-items: center;
+        gap: 7px;
+    }
+
+    .debate-meta strong,
+    .debate-meta span {
+        max-width: 100%;
+        padding: 5px 8px;
+        white-space: normal;
+        font-size: .68rem;
+        line-height: 1.25;
+    }
+
+    .matchup {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 7px;
+        margin: 14px 0;
+        font-size: clamp(1.02rem, 5.2vw, 1.22rem);
+    }
+
+    .matchup a {
+        min-height: 54px;
+        padding: 12px 13px;
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    .matchup > .versus {
+        justify-self: center;
+        padding: 1px 0;
+        font-size: .67rem;
+        letter-spacing: .12em;
+    }
+
+    .matchup .matchup-team small {
+        margin-left: auto;
+        white-space: normal;
+        text-align: right;
+    }
+
+    .matchup .matchup-outcome-badge {
+        margin-left: auto;
+    }
+
+    .debate-card > p {
+        line-height: 1.55;
+    }
+
+    .debate-score-grid {
+        gap: 10px;
+    }
+
+    .debate-score-side {
+        padding: 12px;
+    }
+
+    .debate-score-side dl div {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .debate-score-side dt {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .debate-score-side dd {
+        flex: 0 0 auto;
+    }
+
+    .knockout-heading {
+        margin-bottom: 16px;
+    }
+
+    .semifinal-bracket {
+        gap: 14px;
+    }
+
+    .semifinal-slot {
+        min-height: 52px;
+        padding: 12px 13px;
+    }
+
+    .bracket-note {
+        line-height: 1.55;
+    }
+
+    /* Team collection cards keep long squad names and members contained. */
+    .current-team-card {
+        padding: 18px 16px;
+    }
+
+    .current-team-card h2 {
+        align-items: flex-start;
+        font-size: clamp(1.12rem, 6vw, 1.35rem);
+    }
+
+    .squad-list li,
+    .current-team-card li {
+        min-width: 0;
+        gap: 10px;
+    }
+
+    .squad-list li span,
+    .current-team-card li span {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+@media (max-width: 390px) {
+    main {
+        width: calc(100% - 20px);
+    }
+
+    body > .menu-toggle ~ main {
+        padding-top: 70px;
+    }
+
+    .page-header,
+    .debate-card,
+    .standings-pool .table-wrap tbody tr,
+    .speaker-rankings-table tbody tr {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+
+    .standings-pool .table-wrap tbody tr {
+        grid-template-columns: 42px repeat(2, minmax(0, 1fr)) 38px;
+    }
+
+    .speaker-rankings-table tbody tr {
+        grid-template-columns: 42px minmax(0, 1fr) 68px;
+    }
+
+    .team-history-table tbody tr,
+    .speaker-history-table tbody tr {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .qualification-status {
+        min-width: 1.6rem;
+        min-height: 1.6rem;
+    }
+}
+
+[data-theme="dark"] .table-wrap tbody tr,
+[data-theme="dark"] .speaker-rankings-table tbody tr,
+[data-theme="dark"] .speaker-history-table tbody tr {
+    border-color: #334b63;
+    background: #101b2d;
+}
+
+[data-theme="dark"] .table-wrap tbody td::before {
+    color: #afc0d2;
+}
+
+[data-theme="dark"] .speaker-rankings-table a,
+[data-theme="dark"] .speaker-history-table a,
+[data-theme="dark"] .team-history-table a {
+    color: #f7fbff;
 }

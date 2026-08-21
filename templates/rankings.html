@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speaker Rankings | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=19">
+    <link rel="stylesheet" href="/static/style.css?v=24">
 </head>
-<body>
+<body class="rankings-page">
 
     <nav>
         <a href="/">Home</a>
@@ -30,13 +30,13 @@
         </header>
 
         <div class="table-wrap">
-            <table>
+            <table class="speaker-rankings-table">
                 <thead>
                     <tr>
                         <th>Rank</th>
                         <th>Speaker</th>
                         <th>Team</th>
-                        <th>Debates</th>
+                        <th>Speeches</th>
                         <th>Total Score</th>
                         <th>Average Score</th>
                     </tr>
@@ -46,7 +46,7 @@
                     {% for speaker in rankings %}
                         <tr>
                             <td data-label="Rank"><span class="rank-badge">#{{ loop.index }}</span></td>
-                            <td>
+                            <td data-label="Speaker">
                                 <a href="/speakers/{{ speaker.speaker_id }}">
                                     {{ speaker.speaker_name }}
                                 </a>
@@ -61,9 +61,9 @@
                                     —
                                 {% endif %}
                             </td>
-                            <td data-label="Debates">{{ speaker.debates }}</td>
+                            <td data-label="Speeches">{{ speaker.debates }}</td>
                             <td data-label="Total score">{{ "%.2f"|format(speaker.total_score) }}</td>
-                            <td>
+                            <td data-label="Average">
                                 <strong>
                                     {{ "%.2f"|format(speaker.average_score) }}
                                 </strong>

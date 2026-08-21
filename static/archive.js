@@ -58,7 +58,7 @@
 
     function poolCard(name, teams) {
         const rows = teams.map(function (team, index) {
-            return `<tr><td><strong>${index + 1}</strong></td><td>${teamName(team[0])}</td><td>${team[1]}</td><td>${team[2]}</td><td>${team[3]}</td></tr>`;
+            return `<tr><td data-label="Rank"><strong>${index + 1}</strong></td><td data-label="Team">${teamName(team[0])}</td><td data-label="Played">${team[1]}</td><td data-label="Wins">${team[2]}</td><td data-label="Losses">${team[3]}</td></tr>`;
         }).join('');
         return `<section class="archive-pool"><h3>${name}</h3><div class="archive-table-wrap"><table><thead><tr><th>Rank</th><th>Team</th><th>Played</th><th><span class="result-heading" title="Wins" aria-label="Wins">✓</span></th><th><span class="result-heading" title="Losses" aria-label="Losses">✕</span></th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
     }

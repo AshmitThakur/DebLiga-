@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ speaker.name }} | LADC Debate League 2026</title>
-    <link rel="stylesheet" href="/static/style.css?v=19">
+    <link rel="stylesheet" href="/static/style.css?v=24">
 </head>
-<body>
+<body class="speaker-detail-page">
 
     <nav>
         <a href="/">Home</a>
@@ -71,8 +71,8 @@
         <section>
             <h2>Debate History</h2>
 
-            <div class="table-wrap">
-                <table>
+            <div class="table-wrap speaker-history-wrap">
+                <table class="speaker-history-table">
                     <thead>
                         <tr>
                             <th>Stage</th>
@@ -88,13 +88,13 @@
                     <tbody>
                         {% for item in history %}
                             <tr>
-                                <td>
+                                <td data-label="Stage">
                                     {{ item.debate.stage|replace("_", " ")|title }}
                                 </td>
-                                <td>
+                                <td data-label="Round">
                                     {{ item.round.number if item.round else "—" }}
                                 </td>
-                                <td>
+                                <td data-label="Opponent">
                                     {% if item.opponent %}
                                         <a class="team-name-lock" href="/teams/{{ item.opponent.id }}">
                                             {% if team_emoji(item.opponent.name) %}<span class="team-emoji" aria-hidden="true">{{ team_emoji(item.opponent.name) }}</span>{% endif %}
@@ -104,10 +104,10 @@
                                         —
                                     {% endif %}
                                 </td>
-                                <td>{{ item.side or "—" }}</td>
-                                <td>{{ item.result }}</td>
-                                <td>{{ item.role }}</td>
-                                <td>{{ "%.2f"|format(item.score) }}</td>
+                                <td data-label="Side">{{ item.side or "—" }}</td>
+                                <td data-label="Result">{{ item.result }}</td>
+                                <td data-label="Role">{{ item.role }}</td>
+                                <td data-label="Score"><strong>{{ "%.2f"|format(item.score) }}</strong></td>
                             </tr>
                         {% else %}
                             <tr>

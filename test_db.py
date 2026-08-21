@@ -33,9 +33,11 @@ from main import (
     debate_team_averages,
     get_debate_result,
     official_2026_semifinal_bracket,
+    rankings_page,
     schedule_page,
     schedule_api,
     speaker_rankings,
+    speaker_detail_page,
     standings,
     standings_page,
     sync_official_2026_semifinals,
@@ -898,6 +900,50 @@ class OfficialTournamentDataTests(unittest.TestCase):
         self.assertEqual(standings_html.count('data-label="Qualification"'), 8)
         self.assertIn("Qualified for Semifinals", standings_html)
         self.assertIn("Still undecided", standings_html)
+
+    def test_mobile_table_markup_keeps_priority_labels(self):
+        def request_for(path):
+            return Request({
+                "type": "http",
+                "method": "GET",
+                "path": path,
+                "raw_path": path.encode(),
+                "query_string": b"",
+                "headers": [],
+                "client": ("test", 50000),
+                "server": ("test", 80),
+                "scheme": "http",
+                "root_path": "",
+            })
+
+        rankings_html = rankings_page(
+            request_for("/speaker-rankings"),
+            db=self.db,
+        ).body.decode()
+        self.assertIn('class="speaker-rankings-table"', rankings_html)
+        self.assertIn('data-label="Speaker"', rankings_html)
+        self.assertIn('data-label="Team"', rankings_html)
+        self.assertIn('data-label="Speeches"', rankings_html)
+        self.assertIn('data-label="Average"', rankings_html)
+
+        speaker = self.db.query(Speaker).join(Team).filter(
+            Team.name == "Damsel Inflicting Stress",
+            Speaker.name == "Rachel",
+        ).one()
+        speaker_html = speaker_detail_page(
+            speaker.id,
+            request_for(f"/speakers/{speaker.id}"),
+            db=self.db,
+        ).body.decode()
+        self.assertIn('class="speaker-history-table"', speaker_html)
+        for label in ("Stage", "Round", "Opponent", "Side", "Result", "Role", "Score"):
+            self.assertIn(f'data-label="{label}"', speaker_html)
+
+        standings_html = standings_page(
+            request_for("/standings"),
+            db=self.db,
+        ).body.decode()
+        self.assertIn('data-label="Avg team score"', standings_html)
 
     def test_day_five_standings_and_speaker_rankings_are_derived(self):
         pools = {pool.name: pool for pool in self.db.query(Pool).all()}
