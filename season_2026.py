@@ -279,20 +279,18 @@ OFFICIAL_RESULTS_2026 = (
     },
     {
         "fixture_number": 12,
-        "government_team": "Rhetoric Rebels",
-        "opposition_team": "Broken Orators",
-        "winner_team": "Broken Orators",
+        "government_team": "Broken Orators",
+        "opposition_team": "Rhetoric Rebels",
+        "winner_team": "Rhetoric Rebels",
         "government_reply_score": 37.0,
         "opposition_reply_score": 38.0,
-        # Resolve the already assigned live lineup by team and role. This avoids
-        # guessing speaker names or creating duplicate Speaker records.
-        "role_scores": (
-            ("Rhetoric Rebels", "Prime Minister", 73.0),
-            ("Rhetoric Rebels", "Deputy Prime Minister", 73.5),
-            ("Rhetoric Rebels", "Government Whip", 74.5),
-            ("Broken Orators", "Leader of Opposition", 73.5),
-            ("Broken Orators", "Deputy Leader of Opposition", 75.0),
-            ("Broken Orators", "Opposition Whip", 73.5),
+        "performances": (
+            ("Broken Orators", "Divsargun", "Prime Minister", 73.0),
+            ("Broken Orators", "Akansh", "Deputy Prime Minister", 73.5),
+            ("Broken Orators", "Mohit Sharma", "Government Whip", 74.5),
+            ("Rhetoric Rebels", "Prachi", "Leader of Opposition", 73.5),
+            ("Rhetoric Rebels", "Priyanshi", "Deputy Leader of Opposition", 75.0),
+            ("Rhetoric Rebels", "Ashmita", "Opposition Whip", 73.5),
         ),
     },
 
@@ -795,50 +793,6 @@ def _sync_official_results(db: Session, teams, debates_by_number) -> None:
     """Reconcile published results without creating speakers or duplicate scores."""
     for result in OFFICIAL_RESULTS_2026:
         debate = debates_by_number[result["fixture_number"]]
-
-        # Fixture 12 already has its lineup assigned in persistent storage.
-        # Update those exact rows instead of embedding or inventing speakers.
-        if "role_scores" in result:
-            team_names_by_id = {
-                team.id: team_name
-                for team_name, team in teams.items()
-            }
-            assigned = {}
-            for performance, speaker in db.query(
-                SpeakerPerformance,
-                Speaker,
-            ).join(
-                Speaker,
-                Speaker.id == SpeakerPerformance.speaker_id,
-            ).filter(
-                SpeakerPerformance.debate_id == debate.id,
-                SpeakerPerformance.is_swing.is_(False),
-            ).all():
-                key = (
-                    team_names_by_id.get(speaker.team_id),
-                    performance.role,
-                )
-                if key in assigned:
-                    raise RuntimeError(
-                        "Fixture 12 has more than one assigned speaker for "
-                        f"{key[0]!r} / {key[1]!r}"
-                    )
-                assigned[key] = performance
-
-            expected_keys = {
-                (team_name, role)
-                for team_name, role, _ in result["role_scores"]
-            }
-            if set(assigned) != expected_keys:
-                continue
-
-            for team_name, role, score in result["role_scores"]:
-                assigned[(team_name, role)].score = score
-            debate.winner_team_id = teams[result["winner_team"]].id
-            debate.government_reply_score = result["government_reply_score"]
-            debate.opposition_reply_score = result["opposition_reply_score"]
-            continue
-
         debate.winner_team_id = teams[result["winner_team"]].id
         debate.government_reply_score = result["government_reply_score"]
         debate.opposition_reply_score = result["opposition_reply_score"]
