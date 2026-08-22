@@ -828,6 +828,123 @@ class OfficialTournamentDataTests(unittest.TestCase):
         }
         self.assertEqual(after_semifinals, before_semifinals)
 
+    def test_final_pool_a_result_uses_assigned_speakers_and_finalizes_bracket(self):
+        teams = {team.name: team for team in self.db.query(Team).all()}
+        debate12 = self.db.query(Debate).join(Round).filter(
+            Round.number == 12
+        ).one()
+        assigned_lineup = (
+            ("Rhetoric Rebels", "Prachi", "Prime Minister"),
+            ("Rhetoric Rebels", "Priyanshi", "Deputy Prime Minister"),
+            ("Rhetoric Rebels", "Ashmita", "Government Whip"),
+            ("Broken Orators", "Akshat Agrawal", "Leader of Opposition"),
+            ("Broken Orators", "Dhruv", "Deputy Leader of Opposition"),
+            ("Broken Orators", "Mohit Sharma", "Opposition Whip"),
+        )
+        assigned_ids = set()
+        for team_name, speaker_name, role in assigned_lineup:
+            speaker = self.db.query(Speaker).filter(
+                Speaker.team_id == teams[team_name].id,
+                Speaker.name == speaker_name,
+            ).one()
+            performance = SpeakerPerformance(
+                debate_id=debate12.id,
+                speaker_id=speaker.id,
+                role=role,
+                score=0.0,
+            )
+            self.db.add(performance)
+            self.db.flush()
+            assigned_ids.add(performance.id)
+        self.db.commit()
+        speaker_count = self.db.query(Speaker).count()
+
+        sync_official_2026_tournament(self.db)
+        sync_official_2026_tournament(self.db)
+
+        debate12 = self.db.get(Debate, debate12.id)
+        self.assertEqual(debate12.winner_team_id, teams["Broken Orators"].id)
+        self.assertEqual(
+            (debate12.government_reply_score, debate12.opposition_reply_score),
+            (37.0, 38.0),
+        )
+        performances = self.db.query(SpeakerPerformance).filter(
+            SpeakerPerformance.debate_id == debate12.id
+        ).all()
+        self.assertEqual({row.id for row in performances}, assigned_ids)
+        self.assertEqual(self.db.query(Speaker).count(), speaker_count)
+        self.assertEqual(
+            {row.role: row.score for row in performances},
+            {
+                "Prime Minister": 73.0,
+                "Deputy Prime Minister": 73.5,
+                "Government Whip": 74.5,
+                "Leader of Opposition": 73.5,
+                "Deputy Leader of Opposition": 75.0,
+                "Opposition Whip": 73.5,
+            },
+        )
+
+        result = get_debate_result(debate12.id, db=self.db)
+        self.assertEqual(
+            result["team_total_scores"],
+            {
+                str(teams["Rhetoric Rebels"].id): 258.0,
+                str(teams["Broken Orators"].id): 260.0,
+            },
+        )
+        pools = {pool.name: pool for pool in self.db.query(Pool).all()}
+        pool_a = calculate_pool_standings(self.db, pools["Pool A"].id)
+        self.assertEqual(
+            [row["team_name"] for row in pool_a],
+            [
+                "Broken Orators",
+                "Mechanised Yappers",
+                "Rhetoric Rebels",
+                "Goodfellas",
+            ],
+        )
+        self.assertEqual(
+            {
+                row["team_name"]: (
+                    row["played"], row["wins"], row["losses"],
+                    row["qualification_status"],
+                )
+                for row in pool_a
+            },
+            {
+                "Broken Orators": (3, 2, 1, "Q"),
+                "Mechanised Yappers": (3, 2, 1, "Q"),
+                "Rhetoric Rebels": (3, 1, 2, "E"),
+                "Goodfellas": (3, 1, 2, "E"),
+            },
+        )
+
+        first_sync = sync_official_2026_semifinals(self.db)
+        self.db.flush()
+        semifinal_ids = [debate.id for debate in first_sync]
+        second_sync = sync_official_2026_semifinals(self.db)
+        self.assertEqual([debate.id for debate in second_sync], semifinal_ids)
+        self.assertEqual(
+            [(self.db.get(Team, debate.team1_id).name,
+              self.db.get(Team, debate.team2_id).name) for debate in first_sync],
+            [
+                ("Broken Orators", "Fifth Amendment"),
+                ("Damsel Inflicting Stress", "Mechanised Yappers"),
+            ],
+        )
+        bracket = official_2026_semifinal_bracket(self.db)
+        self.assertTrue(all(item["team1"] and item["team2"] for item in bracket))
+        self.assertEqual({item["status"] for item in bracket}, {"Pending"})
+        semifinal_schedule = [
+            item for item in schedule_api(db=self.db)
+            if item["stage"] == "semifinal"
+        ]
+        self.assertEqual(
+            [item["stage_name"] for item in semifinal_schedule],
+            ["Semifinal 1", "Semifinal 2"],
+        )
+
     def test_completed_result_ui_classes_are_data_driven(self):
         def request_for(path):
             return Request({
